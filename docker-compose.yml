@@ -1,0 +1,10 @@
+services:
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "3000:5174"
+    volumes:
+      - /app/node_modules
+      - ./front-end:/app
