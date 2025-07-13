@@ -7,6 +7,39 @@ export class RegisterView {
             const style = document.createElement('style');
             style.id = 'auth-styles';
             style.textContent = `
+                :root {
+                    /* Light Mode Colors */
+                    --primary-light: #ffffff;
+                    --secondary-light: #f5f5f5;
+                    --accent-light: #1a73e8;
+                    --text-light: #202124;
+                    --text-secondary-light: #5f6368;
+                    --success-light: #34a853;
+                    --danger-light: #ea4335;
+
+                    /* Dark Mode Colors */
+                    --primary-dark: #0d1117;
+                    --secondary-dark: #161b22;
+                    --accent-dark: #58a6ff;
+                    --text-dark: #e6edf3;
+                    --text-secondary-dark: #8b949e;
+                    --success-dark: #3fb950;
+                    --danger-dark: #f85149;
+
+                    /* Default to light mode */
+                    --primary: var(--primary-light);
+                    --secondary: var(--secondary-light);
+                    --accent: var(--accent-light);
+                    --text: var(--text-light);
+                    --text-secondary: var(--text-secondary-light);
+                    --success: var(--success-light);
+                    --danger: var(--danger-light);
+                }
+                body {
+                    background-color: var(--primary);
+                    color: var(--text);
+                    line-height: 1.6;
+                }
                 .auth-section {
                     display: flex;
                     justify-content: center;

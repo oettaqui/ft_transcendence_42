@@ -51,7 +51,7 @@ function navigateTo(path: string) {
 document.addEventListener('DOMContentLoaded', () => {
   renderCurrentRoute();
 
-  // Intercept internal link clicks
+  
   document.body.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     if (target.tagName === 'A') {
