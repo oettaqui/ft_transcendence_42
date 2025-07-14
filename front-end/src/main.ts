@@ -40,8 +40,6 @@ function renderCurrentRoute() {
 }
 
 
-// document.addEventListener('DOMContentLoaded', renderCurrentRoute);
-// window.addEventListener('popstate', renderCurrentRoute);
 
 function navigateTo(path: string) {
   history.pushState(null, '', path);
