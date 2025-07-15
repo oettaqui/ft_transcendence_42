@@ -425,7 +425,7 @@ export class HomeView {
                         <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
                             <div class=" ">
                                 <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                    <img src="/assets/Ettaqui_1.png" alt="Team Member" class="w-full h-full object-cover">
+                                    <img src="/assets/oettaqui.jpeg" alt="Team Member" class="w-full h-full object-cover">
                                 </div>
                             </div>
                             <h3 class="text-xl font-semibold text-center">Oussama Ettaqui</h3>
@@ -435,18 +435,18 @@ export class HomeView {
 
                         <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
                             <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                <img src="/assets/Ettaqui_1.png" alt="Team Member" class="w-full h-full object-cover">
+                                <img src="/assets/bchokri.jpeg" alt="Team Member" class="w-full h-full object-cover">
                             </div>
-                            <h3 class="text-xl font-semibold text-center">Oussama Ettaqui</h3>
+                            <h3 class="text-xl font-semibold text-center">Badr Eddine Chokri</h3>
                             <p class="text-[var(--accent)] text-center !mt-3">Backend</p>
                             
                         </div>
 
                         <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
                             <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                <img src="/assets/Ettaqui_1.png" alt="Team Member" class="w-full h-full object-cover">
+                                <img src="/assets/user.png" alt="Team Member" class="w-full h-full object-cover">
                             </div>
-                            <h3 class="text-xl font-semibold text-center">Oussama Ettaqui</h3>
+                            <h3 class="text-xl font-semibold text-center">User</h3>
                             <p class="text-[var(--accent)] text-center !mt-3">Security</p>
                            
                         </div>
@@ -454,9 +454,9 @@ export class HomeView {
 
                         <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
                             <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                <img src="/assets/Ettaqui_1.png" alt="Team Member" class="w-full h-full object-cover">
+                                <img src="/assets/user.png" alt="Team Member" class="w-full h-full object-cover">
                             </div>
-                            <h3 class="text-xl font-semibold text-center">Oussama Ettaqui</h3>
+                            <h3 class="text-xl font-semibold text-center">User </h3>
                             <p class="text-[var(--accent)] text-center !mt-3">Web Socket</p>
                            
                         </div>
