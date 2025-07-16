@@ -402,7 +402,7 @@ export class HomeView {
                 </div>
             </section>
 
-            <section class="cta !pt-24  bg-[var(--primary)]">
+            <section class="cta !pt-24">
                 <div class="container flex flex-col items-center justify-center gap-5 !pb-24">
                     <h2 class="cta-title text-4xl font-bold text-center">Ready to Play?</h2>
                     <p class="cta-description text-[var(--text-secondary)] max-w-[600px] !m-auto">
@@ -414,56 +414,7 @@ export class HomeView {
                 </div>
             </section>
     
-            <section class="!pt-24 !pb-24">
-                <div class="container">
-                    <h2 class="text-4xl font-bold text-center !mb-4">The Minds Behind the Code</h2>
-                    <p class="text-[16px] text-center max-w-[500px] text-[var(--text-secondary)] !mx-auto !mb-16">
-                        The passionate team who transformed ideas into digital reality
-                    </p>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
-                            <div class=" ">
-                                <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                    <img src="/assets/oettaqui.jpeg" alt="Team Member" class="w-full h-full object-cover">
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-semibold text-center">Oussama Ettaqui</h3>
-                            <p class="text-[var(--accent)] text-center !mt-3">Frontend</p>
-                            
-                        </div>
-
-                        <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
-                            <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                <img src="/assets/bchokri.jpeg" alt="Team Member" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-semibold text-center">Badr Eddine Chokri</h3>
-                            <p class="text-[var(--accent)] text-center !mt-3">Backend</p>
-                            
-                        </div>
-
-                        <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
-                            <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                <img src="/assets/user.png" alt="Team Member" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-semibold text-center">User</h3>
-                            <p class="text-[var(--accent)] text-center !mt-3">Security</p>
-                           
-                        </div>
-
-
-                        <div class="group relative bg-[var(--primary)] backdrop-blur-sm rounded-xl !p-6 border border-white/10 hover:border-[var(--accent)] transition-all duration-300 hover:-translate-y-2">
-                            <div class="w-32 h-32 !mx-auto !mb-6 overflow-hidden rounded-full border-2 border-white/20 group-hover:bg-[var(--accent)]">
-                                <img src="/assets/user.png" alt="Team Member" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-semibold text-center">User </h3>
-                            <p class="text-[var(--accent)] text-center !mt-3">Web Socket</p>
-                           
-                        </div>
-
-                    </div>
-                </div>
-            </section>
+            
 
             <footer class="!pt-12 !pb-10  bg-[var(--primary)]">
                 <div class="container  items-center">

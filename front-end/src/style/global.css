@@ -372,3 +372,31 @@ header a:hover {
 
 
 
+/* ------- */
+
+
+
+.auth-input {
+    padding: 0.8rem;
+    border: 1px solid var(--text-secondary);
+    border-radius: 6px;
+    background: var(--primary);
+    color: var(--text);
+}
+.auth-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+.auth-switch {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+.auth-switch a {
+    color: var(--accent);
+    text-decoration: none;
+}
+.auth-switch a:hover {
+    text-decoration: underline;
+}

@@ -3,119 +3,179 @@ export class LoginView {
     constructor() {}
 
     render(): HTMLElement {
-        if (!document.getElementById('auth-styles')) {
-            const style = document.createElement('style');
-            style.id = 'auth-styles';
-            style.textContent = `
-                
-                :root {
-                    /* Light Mode Colors */
-                    --primary-light: #ffffff;
-                    --secondary-light: #f5f5f5;
-                    --accent-light: #1a73e8;
-                    --text-light: #202124;
-                    --text-secondary-light: #5f6368;
-                    --success-light: #34a853;
-                    --danger-light: #ea4335;
-
-                    /* Dark Mode Colors */
-                    --primary-dark: #0d1117;
-                    --secondary-dark: #161b22;
-                    --accent-dark: #58a6ff;
-                    --text-dark: #e6edf3;
-                    --text-secondary-dark: #8b949e;
-                    --success-dark: #3fb950;
-                    --danger-dark: #f85149;
-
-                    /* Default to light mode */
-                    --primary: var(--primary-light);
-                    --secondary: var(--secondary-light);
-                    --accent: var(--accent-light);
-                    --text: var(--text-light);
-                    --text-secondary: var(--text-secondary-light);
-                    --success: var(--success-light);
-                    --danger: var(--danger-light);
-                }
-                body {
-                    background-color: var(--primary);
-                    color: var(--text);
-                    line-height: 1.6;
-                }
-                .auth-section {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                    padding: 2rem;
-                    background-color: var(--primary);
-                    color: var(--text);
-                }
-                .auth-container {
-                    background-color: var(--secondary);
-                    padding: 2rem;
-                    border-radius: 12px;
-                    max-width: 400px;
-                    width: 100%;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-                }
-                .auth-title {
-                    font-size: 1.8rem;
-                    font-weight: 700;
-                    text-align: center;
-                    margin-bottom: 1.5rem;
-                }
-                .auth-form {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                }
-                .auth-input {
-                    padding: 0.8rem;
-                    border: 1px solid var(--text-secondary);
-                    border-radius: 6px;
-                    background: var(--primary);
-                    color: var(--text);
-                }
-                .auth-input:focus {
-                    outline: none;
-                    border-color: var(--accent);
-                    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
-                }
-                .auth-switch {
-                    text-align: center;
-                    font-size: 0.9rem;
-                    color: var(--text-secondary);
-                }
-                .auth-switch a {
-                    color: var(--accent);
-                    text-decoration: none;
-                }
-                .auth-switch a:hover {
-                    text-decoration: underline;
-                }
-            `;
-            document.head.appendChild(style);
-        }
+       
         const element = document.createElement('div');
 
         element.innerHTML = `
-            <section class="auth-section">
-                <div class="auth-container">
-                    <h2 class="auth-title">Login to PINGPONG</h2>
-                    <form class="auth-form" id="loginForm">
-                        <input type="email" placeholder="Email" required class="auth-input" />
-                        <input type="password" placeholder="Password" required class="auth-input" />
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <p class="auth-switch">Don't have an account? <a href="/register">Register here</a></p>
-                    </form>
+           <header class="h-20 py-7 px-0 fixed flex items-center w-[100%] z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md">
+                <div class="container">
+                    <nav class="flex justify-between items-center">
+                        <a href="/" class="text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</a>
+                    
+                    </nav>
+                </div>
+            </header>
+
+            <section class="min-h-[90vh] flex items-center  bg-grid-pattern">
+                <div class="container">
+                    <div class="flex items-center gap-[4rem]">
+
+                        <div class="flex-1 relative">
+                            <div class="pong-field1 w-[100%] aspect-[4/3] bg-[var(--secondary)] relative overflow-hidden border border-[rgba(0,0,0,0.1)] shadow-[0_0_40px_rgba(243,156,18,0.1)] rounded-[12px]">
+                                <div class="pong-field w-[100%] h-[100%] relative">
+                                    <!-- Particle effects container -->
+                                    <div class="particles-container absolute inset-0 pointer-events-none z-[0]"></div>
+                                    
+                                    <div class="center-line absolute top-0 left-[50%] w-[8px] h-[100%] bg-[rgba(204,204,204,0.1)] z-[1] -translate-x-1/2"></div>
+                                    <div class="score absolute top-[20px] w-[100%] flex justify-center gap-[100px] text-4xl z-[2] text-[var(--text-secondary)]">
+                                        <div class="player-1-score">5</div>
+                                        <div class="player-2-score">1</div>
+                                    </div>
+                                    <div class="paddle paddle-left left-[20px] -translate-y-1/2 animated-paddle"></div>
+                                    <div class="paddle paddle-right right-[20px] -translate-y-1/2 animated-paddle"></div>
+                                    <div class="ball pulsing-ball absolute w-[20px] h-[20px] bg-[var(--accent)] rounded-[50%]  top-1/2 left-[52%] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_15px_rgba(243,156,18,0.4)]"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="flex flex-col justify-center items-center gap-8"> 
+                                <h2  class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h2>
+                                <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Sing In to you account</p>
+                                <form class="auth-form flex flex-col gap-7" id="loginForm">
+                                    <div class="flex flex-col gap-1"> <span class="text-[13px] font-medium">Email Address:* </span> <input type="email" required  class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent  focus:border-[var(--accent)] transition-colors" /></div>
+                                    <div class="flex flex-col gap-1"> <span class="text-[13px] font-medium">Password:* </span> <input type="password" required  class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent  focus:border-[var(--accent)] transition-colors" /></div>
+                                    
+                                    <a href="" class="enhanced-btn secondary-btn">
+                                        <span class="flex items-center justify-center !mt-1"> Sing In </span>
+                                    </a>
+                                    <p class="auth-switch ">Don't have an account? <a href="/register" class="">Register here</a></p>
+                                </form>
+                                <div class="flex justify-between items-center gap-6">
+                                    <span class="block  w-[130px] h-0.5 bg-[var(--text-secondary)] rounded-2xl"></span>
+                                    <span class="block text-[var(--text-secondary)] text-sm">OR</span>
+                                    <span class="block w-[130px] h-0.5 bg-[var(--text-secondary)] rounded-2xl"></span>
+                                </div>
+
+                                <div class="flex items-center justify-center gap-4 w-full">
+                                    <!-- Google OAuth Button -->
+                                    <a href="/auth/google" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)]  hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
+                                        <svg class="w-6 h-6" viewBox="0 0 24 24">
+                                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                        </svg>
+                                    </a>
+                                    
+                                    <!-- 42 Intra OAuth Button -->
+                                    <a href="/auth/42" 
+                                        class=" w-[70px] h-[50px]
+                                            flex items-center justify-center gap-3 
+                                            border border-[var(--text-secondary)] 
+                                            hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 
+                                            rounded-lg transition-all hover:scale-105 bg-[url('../../public/assets/Intra-icon.png')] 
+                                            bg-no-repeat bg-center bg-[length:70px_70px]">
+                                    </a>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </section>
+
         `;
 
-        // the logic of the login
+        
         console.log('login submitted');
         
-
+        this.add3DTiltEffect(element);
+        this.addParticleEffects(element);
         return element;
+    }
+
+    private add3DTiltEffect(container: HTMLElement): void {
+            setTimeout(() => {
+                const pongField = container.querySelector('.pong-field1') as HTMLElement;
+                
+                if (!pongField) return;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .pong-field1 {
+                    transition: transform 0.3s ease-out;
+                    transform-style: preserve-3d;
+                    perspective: 1000px;
+                }
+                .pong-field1::before {
+                    content: '';
+                    position: absolute;
+                    top: 5%;
+                    left: 5%;
+                    right: 5%;
+                    bottom: 5%;
+                    background: rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    filter: blur(10px);
+                    z-index: -1;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                }
+                .pong-field1:hover::before {
+                    opacity: 1;
+                }
+            `;
+            document.head.appendChild(style);
+
+            pongField.addEventListener('mousemove', (e) => {
+                const rect = pongField.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xPercent = x / rect.width;
+                const yPercent = y / rect.height;
+                const rotateY = (xPercent - 0.5) * 10;
+                const rotateX = (0.5 - yPercent) * 10;
+                
+                pongField.style.transform = `
+                    perspective(1000px) 
+                    rotateX(${rotateX}deg) 
+                    rotateY(${rotateY}deg)
+                    translateZ(10px)
+                `;
+            });
+
+            pongField.addEventListener('mouseleave', () => {
+                pongField.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        }, 0);
+    }
+
+    private addParticleEffects(container: HTMLElement): void {
+        setTimeout(() => {
+            const particlesContainer = container.querySelector('.particles-container') as HTMLElement;
+            if (!particlesContainer) return;
+
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    background: var(--accent);
+                    border-radius: 50%;
+                    opacity: 0.6;
+                    animation: floatParticle ${8 + Math.random() * 4}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 2}s;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                `;
+                particlesContainer.appendChild(particle);
+            }
+        }, 100);
     }
 }
