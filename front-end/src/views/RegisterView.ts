@@ -1,7 +1,10 @@
 
+import {View} from "../app/View"
 
-export class RegisterView {
-    constructor() {}
+export class RegisterView extends View {
+    constructor() {
+        super();
+    }
 
     render(): HTMLElement {
        
@@ -17,7 +20,7 @@ export class RegisterView {
                 </div>
             </header>
 
-            <section class="min-h-[90vh] flex items-center bg-grid-pattern !pt-24 !pb-24">
+            <section class="min-h-[90vh] flex items-center bg-grid-pattern !pt-28 !pb-24">
                 <div class="container">
                     <div class="flex items-center gap-[4rem]">
 
@@ -75,85 +78,5 @@ export class RegisterView {
         return element;
     }
 
-    private add3DTiltEffect(container: HTMLElement): void {
-            setTimeout(() => {
-                const pongField = container.querySelector('.pong-field1') as HTMLElement;
-                
-                if (!pongField) return;
-
-            const style = document.createElement('style');
-            style.textContent = `
-                .pong-field1 {
-                    transition: transform 0.3s ease-out;
-                    transform-style: preserve-3d;
-                    perspective: 1000px;
-                }
-                .pong-field1::before {
-                    content: '';
-                    position: absolute;
-                    top: 5%;
-                    left: 5%;
-                    right: 5%;
-                    bottom: 5%;
-                    background: rgba(0, 0, 0, 0.1);
-                    border-radius: 8px;
-                    filter: blur(10px);
-                    z-index: -1;
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                }
-                .pong-field1:hover::before {
-                    opacity: 1;
-                }
-            `;
-            document.head.appendChild(style);
-
-            pongField.addEventListener('mousemove', (e) => {
-                const rect = pongField.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const xPercent = x / rect.width;
-                const yPercent = y / rect.height;
-                const rotateY = (xPercent - 0.5) * 10;
-                const rotateX = (0.5 - yPercent) * 10;
-                
-                pongField.style.transform = `
-                    perspective(1000px) 
-                    rotateX(${rotateX}deg) 
-                    rotateY(${rotateY}deg)
-                    translateZ(10px)
-                `;
-            });
-
-            pongField.addEventListener('mouseleave', () => {
-                pongField.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-            });
-        }, 0);
-    }
-
-    private addParticleEffects(container: HTMLElement): void {
-        setTimeout(() => {
-            const particlesContainer = container.querySelector('.particles-container') as HTMLElement;
-            if (!particlesContainer) return;
-
-            
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.cssText = `
-                    position: absolute;
-                    width: 2px;
-                    height: 2px;
-                    background: var(--accent);
-                    border-radius: 50%;
-                    opacity: 0.6;
-                    animation: floatParticle ${8 + Math.random() * 4}s ease-in-out infinite;
-                    animation-delay: ${Math.random() * 2}s;
-                    left: ${Math.random() * 100}%;
-                    top: ${Math.random() * 100}%;
-                `;
-                particlesContainer.appendChild(particle);
-            }
-        }, 100);
-    }
+   
 }

@@ -1,5 +1,9 @@
-export class ErrorView404 {
-    constructor() {}
+import { View } from "../../app/View";
+
+export class ErrorView404 extends View {
+    constructor() {
+        super();
+    }
 
     render(): HTMLElement {
         const container = document.createElement('div');
@@ -13,7 +17,6 @@ export class ErrorView404 {
             </div>
         `;
 
-        // Inject styles only once
         if (!document.getElementById('error-404-styles')) {
             const style = document.createElement('style');
             style.id = 'error-404-styles';
@@ -34,7 +37,7 @@ export class ErrorView404 {
     }
 
     private getStyles(): string {
-        // Copy your entire <style> content here as a single string
+       
         return `
         * {
             margin: 0;
