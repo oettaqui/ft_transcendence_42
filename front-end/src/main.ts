@@ -5,6 +5,7 @@ import { HomeView } from "./views/HomeView";
 import { LoginView } from "./views/LoginView";
 import { RegisterView } from "./views/RegisterView";
 import { RouteConfig } from "./types/RouteConfig";
+import  {DashboardView} from "./views/DashboardView"
 import { Router } from "./app/Router";
 
 
@@ -12,7 +13,8 @@ import { Router } from "./app/Router";
 export const routes: RouteConfig[] = [
   { path: '/', view: HomeView},
   { path: '/login', view: LoginView},
-  { path: '/register', view: RegisterView}
+  { path: '/register', view: RegisterView},
+  { path: '/dashboard', view: DashboardView}
 ];
 
 const router = new Router(routes);

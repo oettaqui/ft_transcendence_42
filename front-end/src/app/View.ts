@@ -1,23 +1,5 @@
 
 
-// export abstract class View {
-//     protected element: HTMLElement | null = null;
-
-//     abstract render(): HTMLElement;
-
-//     mount(parent: HTMLElement) {
-//         this.element = this.render();
-//         parent.appendChild(this.element);
-//     }
-
-//     unmount() {
-//         if (this.element && this.element.parentElement) {
-//             this.element.parentElement.removeChild(this.element);
-//             this.element = null;
-//         }
-//     }
-// }
-
 export abstract class View {
     protected element: HTMLElement | null = null;
     protected eventListeners: Array<{
@@ -41,6 +23,7 @@ export abstract class View {
     }
 
     protected removeAllEventListeners(): void {
+    
         this.eventListeners.forEach(({ element, event, handler }) => {
             element.removeEventListener(event, handler);
         });
@@ -56,6 +39,8 @@ export abstract class View {
 
     public unmount(): void {
         if (this.element && this.element.parentNode) {
+            console.log(this.element);
+            console.log(this.element.parentNode);
             this.element.parentNode.removeChild(this.element);
         }
         this.onUnmount();

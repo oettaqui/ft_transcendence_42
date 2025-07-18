@@ -29,29 +29,26 @@ export class Router {
         if (!route) {
           console.warn(`Route not found: ${currentPath}. Redirecting to 404.`);
           route = { path: '/404', view: ErrorView404 };
+          console.log(`EROOR Navigating to: ${route.path}`);
         }
         
-        console.log(`🔄 Navigating to: ${route.path}`);
 
         if (this.currentView) {
-          console.log('🧹 Unmounting previous view...');
+          console.log(' Unmounting new view...');
           this.currentView.unmount();
         }
 
       
         this.root.innerHTML = '';
 
-    
+  
         const ViewClass = route.view;
         this.currentView = new ViewClass();
         
-        console.log('📱 Mounting new view...');
+        console.log(' Mounting new view...');
         this.currentView.mount(this.root);
         
-        console.log('✅ View mounted successfully!');
-        
     } catch (error) {
-        console.error('❌ Error during navigation:', error);
         
         
         this.root.innerHTML = `
