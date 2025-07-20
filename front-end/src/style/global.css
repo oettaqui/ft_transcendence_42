@@ -404,10 +404,10 @@ header a:hover {
 
 /* dashboard  */
 
- @keyframes pulse-glow {
+ /* @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 5px rgba(243, 156, 18, 0.4); }
             50% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.6), 0 0 30px rgba(243, 156, 18, 0.3); }
-}
+} */
 
 @keyframes slide-in {
     from { opacity: 0; transform: translateX(-20px); }
@@ -452,3 +452,8 @@ header a:hover {
         opacity: 0;
     }
 }
+
+
+/*  */
+
+

@@ -40,16 +40,15 @@ export class DashboardView extends View {
                 
                 <main class="flex h-[100vh] !p-24">
                    
-                    <aside class="w-[300px] flex flex-col items-center justify-center  gap-52">
+                    <aside class="w-[350px] flex flex-col items-start justify-center ">
                         <div class="absolute top-10 right-10 w-20 h-20 bg-accent opacity-10 rounded-full blur-xl animate-pulse"></div>
                         <div class="absolute bottom-20 left-10 w-16 h-16 bg-accent opacity-5 rounded-full blur-2xl animate-bounce"></div>
                         
-                    
 
                         <!-- Navigation -->
                         <nav class="">
                             <ul class="flex flex-col itmes-center justify-center gap-10 ">
-                                <li class=" nav-item-animated opacity-0">
+                                <li class="nav-item-animated opacity-0">
                                     <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <!-- Slide effect -->
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
@@ -124,7 +123,32 @@ export class DashboardView extends View {
 
                     
                     </aside>
-                    <section class=" bg-[var(--secondary)] w-[100%] h-[100%] rounded-4xl !pt-24">
+                    <section class="bg-[var(--primary)] w-[100%] h-[100%] rounded-4xl !mt-[24px] flex items-cente">
+                        <aside class="flex flex-col justify-between w-[70%] h-[95%] gap-10 !m-auto ">
+                            <div class="w-full h-[70%] ">
+                                <div class=" bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full h-full rounded-3xl !p-4 !pl-8 flex flex-col justify-center gap-15" >
+                                    <div class="z-[10] flex justify-start items-center gap-8">
+                                        <div class="relative flex justify-center items-center w-[110px] h-[110px]">
+                                            <div class="absolute w-[102px] h-[102px] bg-[var(--accent)] rounded-full"> </div>
+                                            <img class="w-[100px] h-[100px] bg-contain bg-no-repeat bg-center  rounded-full z-[11] flex justify-center items-center" src="/public/assets/oettaqui.jpeg" />
+                                        </div>
+                                        <div class="flex flex-col justify-center items-start">
+                                            <h2 class="text-[28px] font-bold"> Oussama Ettaqui </h2>
+                                            <p class="font-light text-[14px]">oettaqui</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="h-[10px] w-[400px] bg-[var(--text)] rounded-3xl"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)]">
+
+                            </div>
+                        </aside>
+                        <aside class="w-[25%] h-[95%] !m-auto">
+                            <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)]"></div>
+                        </aside>
                     </section>
 
                 </main>
@@ -194,83 +218,3 @@ export class DashboardView extends View {
     
 }
 
-
-// <i class="ti ti-bell text-4xl font-light text-[var(--accent)]"></i>
-
-//  <aside class="w-[300px] flex flex-col items-center justify-center  gap-52  ">
-                
-                        
-//                         <nav class="">
-//                             <div class="">
-//                                 <ul class="flex flex-col itmes-center justify-center gap-10">
-//                                     <li>
-//                                         <a href="#" class="flex items-cente justify-start !px-3 !py-2 text-[var(--text)] rounded-lg hover:bg-[var(--accent)] transition-colors">
-                                           
-//                                            <div class="flex items-center gap-6"> <i class="ti ti-home text-4xl text-center"></i> <div class="font-bold text-[18px]" > Home</div> </div>
-//                                         </a>
-//                                     </li>
-//                                     <li>
-//                                         <a href="#" class="flex items-cente justify-start !px-3 !py-2 text-[var(--text)] rounded-lg hover:bg-[var(--accent)] transition-colors">
-//                                            <div class="flex items-center gap-6"> <i class="ti ti-device-gamepad-2 text-4xl text-center"></i> <div class="font-bold text-[18px]" > Game</div> </div>
-//                                         </a>
-//                                     </li>
-                                   
-//                                     <li>
-//                                         <a href="#" class="flex items-center justify-start !px-3 !py-2 text-[var(--text)] rounded-lg hover:bg-[var(--accent)] transition-colors">
-                                           
-//                                            <div class="flex items-center gap-6"> <i class="ti ti-message text-4xl text-center"></i> <div class="font-bold text-[18px]" > Chat</div> </div>
-                                            
-//                                         </a>
-//                                     </li>
-//                                     <li>
-//                                         <a href="#" class="flex items-center justify-start !px-3 !py-2 text-[var(--text)] rounded-lg hover:bg-[var(--accent)] transition-colors">
-                                           
-//                                            <div class="flex items-center gap-6"> <i class="ti ti-laurel-wreath-1  text-4xl text-center"></i> <div class="font-bold text-[18px]" > Tournament</div> </div>
-                                            
-//                                         </a>
-//                                     </li>
-//                                     <li>
-//                                         <a href="#" class="flex items-center justify-start !px-3 !py-2 text-[var(--text)] rounded-lg hover:bg-[var(--accent)] transition-colors">
-//                                             <div class="flex items-center gap-6"> <i class="ti ti-settings text-4xl text-center"></i> <div class="font-bold text-[18px]" > Settings</div> </div>
-                                            
-//                                         </a>
-//                                     </li>
-//                                 </ul>
-//                             </div>
-//                         </nav>
-//                     </aside>
-
-
-
-// window.addEventListener('load', function() {
-//             const navItems = document.querySelectorAll('.nav-item-animated');
-//             navItems.forEach((item, index) => {
-//                 setTimeout(() => {
-//                     item.style.opacity = '1';
-//                 }, index * 100);
-//             });
-//         });
-
-//         // Add interactive click effects
-//         document.querySelectorAll('nav a').forEach(link => {
-//             link.addEventListener('click', function(e) {
-//                 e.preventDefault();
-                
-//                 // Create ripple effect
-//                 const ripple = document.createElement('div');
-//                 ripple.style.position = 'absolute';
-//                 ripple.style.borderRadius = '50%';
-//                 ripple.style.background = 'rgba(243, 156, 18, 0.6)';
-//                 ripple.style.transform = 'scale(0)';
-//                 ripple.style.animation = 'ripple 600ms linear';
-//                 ripple.style.left = e.offsetX - 10 + 'px';
-//                 ripple.style.top = e.offsetY - 10 + 'px';
-//                 ripple.style.width = ripple.style.height = '20px';
-                
-//                 this.appendChild(ripple);
-                
-//                 setTimeout(() => {
-//                     ripple.remove();
-//                 }, 600);
-//             });
-//         });

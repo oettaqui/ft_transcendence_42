@@ -14,7 +14,12 @@ export const routes: RouteConfig[] = [
   { path: '/', view: HomeView},
   { path: '/login', view: LoginView},
   { path: '/register', view: RegisterView},
-  { path: '/dashboard', view: DashboardView}
+  { path: '/dashboard', view: DashboardView},
+  // { path: '/dashboard/chat', view: ChatView}
+  // { path: '/dashboard/game', view: GameView}
+  // { path: '/dashboard/tournament', view: TournamentView}
+  // { path: '/dashboard/settings', view: SettingsView}
+  // { path: '/dashboard/profil', view: ProfileView}
 ];
 
 const router = new Router(routes);
