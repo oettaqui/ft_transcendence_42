@@ -27,7 +27,6 @@ export class LoginView extends View{
                         <div class="flex-1 relative">
                             <div class="pong-field1 w-[100%] aspect-[4/3] bg-[var(--secondary)] relative overflow-hidden border border-[rgba(0,0,0,0.1)] shadow-[0_0_40px_rgba(243,156,18,0.1)] rounded-[12px]">
                                 <div class="pong-field w-[100%] h-[100%] relative">
-                                    <!-- Particle effects container -->
                                     <div class="particles-container absolute inset-0 pointer-events-none z-[0]"></div>
                                     
                                     <div class="center-line absolute top-0 left-[50%] w-[8px] h-[100%] bg-[rgba(204,204,204,0.1)] z-[1] -translate-x-1/2"></div>
