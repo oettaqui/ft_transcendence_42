@@ -1,7 +1,7 @@
 import { View } from "../app/View";
 
 
-export class HomeView extends View{
+export class GameView extends View{
     
     constructor(){
         super()
@@ -20,7 +20,7 @@ export class HomeView extends View{
                     <aside class="flex flex-col justify-between w-[70%] h-[95%] gap-10 !m-auto ">
                         <div class="w-full h-[70%] relative">
                             <!-- bg coalition -->
-                            <div class=" bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full h-full rounded-3xl !p-4 !pl-10 flex flex-col justify-center gap-10" >
+                            <div class=" bg-[url(/public/assets/Commodore_BG.jpg)] bg-cover w-full h-full rounded-3xl !p-4 !pl-10 flex flex-col justify-center gap-10" >
                                 <div class="z-[10] flex justify-start items-center gap-8">
                                     <div class="relative flex justify-center items-center w-[110px] h-[110px]">
                                         <div class="absolute w-[102px] h-[102px] bg-[var(--accent)] rounded-full"> </div>
@@ -46,7 +46,7 @@ export class HomeView extends View{
                                 <!-- location -->
                                 <div class="flex justify-center items-center gap-2">
                                     <div class="w-[10px] h-[10px] bg-[var(--success)] rounded-full"></div>
-                                    <div class="text-[12px] font-light">c3r4p9</div>
+                                    <div class="text-[12px] font-light">c4r4p4</div>
                                 </div>
                                     <div class="absolute top-[140px]">
                                         <span class="!px-4 !py-2 rounded-xl bg-[var(--freax)] font-bold text-[12px]"> Freax </span>
@@ -70,7 +70,7 @@ export class HomeView extends View{
     }
 
     onMount(): void {
-       
+      
         setTimeout(() => this.animateProgress(), 500);
     }
 

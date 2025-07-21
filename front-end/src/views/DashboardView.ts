@@ -1,10 +1,10 @@
 import { View } from "../app/View";
-
+import  { HomeView } from "./HomeView"
+import { GameView } from "./GameView";
 
 export class DashboardView extends View {
-    private li: HTMLElement | null = null;
-    private event: string | null = null;
-    private handler: EventListener | null = null;
+    private sectionContainer!: HTMLElement;
+    private currentView!: View | null;
     constructor() {
         super();
     }
@@ -12,6 +12,8 @@ export class DashboardView extends View {
     render (): HTMLElement{
         
         const element = document.createElement('div');
+        element.classList.add('.w-[100%]');
+        element.classList.add('.h-[100%]');
         element.innerHTML = `
             <div class= "max-w-[100%] !m-auto">
                 <header class="h-20 !pt-[20px] w-[100%] fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-40">
@@ -48,41 +50,41 @@ export class DashboardView extends View {
                         <!-- Navigation -->
                         <nav class="">
                             <ul class="flex flex-col itmes-center justify-center gap-10 ">
-                                <li class="nav-item-animated opacity-0">
-                                    <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
+                                <li class="nav-item-animated opacity-0 home-parent 1">
+                                    <a href="/dashboard" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light  hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <!-- Slide effect -->
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">
-                                            <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
+                                            <div class="icon-hover w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-home text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors duration-300">Home</span>
+                                            <span class="home text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors duration-300">Home</span>
                                             
                                         </div>
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0">
-                                    <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
+                                <li class="nav-item-animated opacity-0 game-parent 1">
+                                    <a href="/dashboard/game" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">
-                                            <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
+                                            <div class="icon-hover w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-device-gamepad-2 text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors duration-300">Games</span>
+                                            <span class="game text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors duration-300">Games</span>
                                         
                                         </div>
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0">
+                                <li class="nav-item-animated opacity-0 chat 1">
                                     <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">
-                                            <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
+                                            <div class="icon-hover w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-message text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
                                             <span class="text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors  duration-300">Chat</span>
@@ -91,12 +93,12 @@ export class DashboardView extends View {
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0">
+                                <li class="nav-item-animated opacity-0 tournament 1">
                                     <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-[210px]">
-                                            <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
+                                            <div class="icon-hover w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-trophy text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
                                             <span class="text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors duration-300">Tournament</span>
@@ -105,12 +107,12 @@ export class DashboardView extends View {
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0">
+                                <li class="nav-item-animated opacity-0 settings">
                                     <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">
-                                            <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
+                                            <div class="icon-hover w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-settings text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
                                             <span class="text-animation font-semibold !pl-[12px] text-lg group-hover:text-accent transition-colors duration-300">Settings</span>
@@ -123,44 +125,44 @@ export class DashboardView extends View {
 
                     
                     </aside>
-                    <section class="bg-[var(--primary)] w-[100%] h-[100%] rounded-4xl !mt-[24px] flex items-cente">
-                        <aside class="flex flex-col justify-between w-[70%] h-[95%] gap-10 !m-auto ">
-                            <div class="w-full h-[70%] ">
-                                <div class=" bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full h-full rounded-3xl !p-4 !pl-8 flex flex-col justify-center gap-15" >
-                                    <div class="z-[10] flex justify-start items-center gap-8">
-                                        <div class="relative flex justify-center items-center w-[110px] h-[110px]">
-                                            <div class="absolute w-[102px] h-[102px] bg-[var(--accent)] rounded-full"> </div>
-                                            <img class="w-[100px] h-[100px] bg-contain bg-no-repeat bg-center  rounded-full z-[11] flex justify-center items-center" src="/public/assets/oettaqui.jpeg" />
-                                        </div>
-                                        <div class="flex flex-col justify-center items-start">
-                                            <h2 class="text-[28px] font-bold"> Oussama Ettaqui </h2>
-                                            <p class="font-light text-[14px]">oettaqui</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="h-[10px] w-[400px] bg-[var(--text)] rounded-3xl"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)]">
-
-                            </div>
-                        </aside>
-                        <aside class="w-[25%] h-[95%] !m-auto">
-                            <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)]"></div>
-                        </aside>
-                    </section>
+                    
+                    <div class="new-section w-full h-full">
+                        
+                    </div>
 
                 </main>
                 
             </div>
         `;
+
+        this.sectionContainer = element.querySelector(
+            ".new-section"
+        ) as HTMLElement;
+
+        this.handleSubRoute();
+
+        window.addEventListener("popstate", () => this.handleSubRoute());
+
+        element.querySelectorAll("a").forEach(anchor => {
+            anchor.addEventListener("click", (e) => {
+                const target = e.currentTarget as HTMLAnchorElement;
+                if (
+                    target.tagName === 'A' &&
+                    target.href.startsWith(window.location.origin + "/dashboard")
+                ) {
+                    e.preventDefault();
+                    const path = new URL(target.href).pathname;
+                    history.pushState(null, '', path);
+                    this.handleSubRoute();
+                    this.updateSidebarActiveStates(path);
+                }
+            });
+        });
         return element;
     }
 
     
    onMount(): void {
-        // Animate nav items on load
         this.addEventListener(window, 'load', () => {
             const navItems = document.querySelectorAll<HTMLElement>('.nav-item-animated');
             navItems.forEach((item, index) => {
@@ -170,7 +172,6 @@ export class DashboardView extends View {
             });
         });
 
-        // Add ripple effect on nav link clicks
         const navLinks = document.querySelectorAll<HTMLElement>('aside nav a');
 
         navLinks.forEach(link => {
@@ -195,26 +196,102 @@ export class DashboardView extends View {
                 }, 600);
             });
         });
-         // Add smooth move-to-right on hover for nav items
-    const navItems = document.querySelectorAll<HTMLElement>('.nav-item-animated');
-     navItems.forEach(item => {
-        // Select .text-animation inside this item
-        const textItem = item.querySelector<HTMLElement>('.text-animation');
-        if (!textItem) return;
+        
+        const navItems = document.querySelectorAll<HTMLElement>('.nav-item-animated');
+        navItems.forEach((item) => {
+           
+            const textItem = item.querySelector<HTMLElement>('.text-animation');
+            const path = window.location.pathname;
+            if (!textItem) return;
+            const home = document.querySelector('.home');
+            const homeParent = document.querySelector('.home-parent');
+            
+            if (!home || !homeParent) {
+                console.log('Element with class .home not found');
+                return;
+            }
+            if (path === "/dashboard") {
+                home.classList.add('active-nav');
+                homeParent.classList.add('active');
+            }
+            
+            if (!home)
+            {
+                textItem.style.transition = 'transform 0.3s ease';
+                this.addEventListener(item, 'mouseenter', () => {
+                    textItem.style.transform = 'translateX(10px)'; 
+                });
 
-        // Add transition for smooth movement
-        textItem.style.transition = 'transform 0.3s ease';
-
-        this.addEventListener(item, 'mouseenter', () => {
-            textItem.style.transform = 'translateX(10px)'; // move right 80px on hover
+                this.addEventListener(item, 'mouseleave', () => {
+                    textItem.style.transform = 'translateX(0)';
+                });
+            }
+            
+          
         });
+  
 
-        this.addEventListener(item, 'mouseleave', () => {
-            textItem.style.transform = 'translateX(0)'; // reset on hover out
-        });
-    });
 
-    }
     
+    }
+
+    handleSubRoute() {
+        const path = window.location.pathname;
+
+
+        switch (path) {
+            case "/dashboard":
+                this.currentView = new HomeView();
+                break;
+            case "/dashboard/game":
+                this.currentView = new GameView();
+                break;
+            default:
+                this.currentView = new HomeView();
+                break;
+        }
+        this.sectionContainer.innerHTML = "";
+        // this.sectionContainer.appendChild(this.currentView.render());
+        this.currentView.mount(this.sectionContainer);
+    }
+
+    updateSidebarActiveStates(path: string): void {
+        const navItems = document.querySelectorAll<HTMLElement>('.nav-item-animated');
+
+        navItems.forEach((item) => {
+            const textItem = item.querySelector<HTMLElement>('.text-animation');
+            if (!textItem) return;
+
+            // Reset all
+            item.classList.remove('active');
+            textItem.classList.remove('active-nav');
+
+            // Determine based on path
+            if (path === "/dashboard" && item.classList.contains('home-parent')) {
+                item.classList.add('active');
+                const homeText = item.querySelector('.home');
+                if (homeText) homeText.classList.add('active-nav');
+            }
+            else if (path === "/dashboard/game" && item.classList.contains('game-parent')) {
+                item.classList.add('active');
+                const gameText = item.querySelector('.game');
+                if (gameText) gameText.classList.add('active-nav');
+            }
+            else {
+                // Enable hover animations for non-active items
+                textItem.style.transition = 'transform 0.3s ease';
+                item.addEventListener('mouseenter', () => {
+                    textItem.style.transform = 'translateX(10px)';
+                });
+                item.addEventListener('mouseleave', () => {
+                    textItem.style.transform = 'translateX(0)';
+                });
+            }
+        });
+}
+
+    
+
+
 }
 

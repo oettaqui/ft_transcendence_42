@@ -1,21 +1,21 @@
 
 
 
-import { HomeView } from "./views/HomeView";
+import { LandingPageView } from "./views/LandingPageView";
 import { LoginView } from "./views/LoginView";
 import { RegisterView } from "./views/RegisterView";
 import { RouteConfig } from "./types/RouteConfig";
-import  {DashboardView} from "./views/DashboardView"
+import { DashboardView } from "./views/DashboardView";
+
 import { Router } from "./app/Router";
 
 
 
 export const routes: RouteConfig[] = [
-  { path: '/', view: HomeView},
+  { path: '/', view: LandingPageView},
   { path: '/login', view: LoginView},
   { path: '/register', view: RegisterView},
   { path: '/dashboard', view: DashboardView},
-  // { path: '/dashboard/chat', view: ChatView}
   // { path: '/dashboard/game', view: GameView}
   // { path: '/dashboard/tournament', view: TournamentView}
   // { path: '/dashboard/settings', view: SettingsView}
@@ -31,9 +31,9 @@ function setupNavigation(): void {
   router.handleRoute();
 
 
-  window.addEventListener('popstate', () => {
-    router.handleRoute();
-  });
+  // window.addEventListener('popstate', () => {
+  //   router.handleRoute();
+  // });
 
 
   document.addEventListener('click', (e) => {
