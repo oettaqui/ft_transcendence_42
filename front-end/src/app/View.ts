@@ -37,11 +37,13 @@ export abstract class View {
         this.onMount();
     }
 
-    public unmount(): void {
+    public unMount(): void {
         if (this.element && this.element.parentNode) {
-            console.log(this.element);
-            console.log(this.element.parentNode);
+            console.log('11111111 | ',this.element);
+            console.log('22222222 | ',this.element.parentNode);
             this.element.parentNode.removeChild(this.element);
+            console.log(this.element);
+            this.element.innerHTML = ``;
         }
         this.onUnmount();
     }
