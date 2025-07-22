@@ -482,3 +482,15 @@ header a:hover {
     background-color: var(--freax);
 }
 
+/* style Friends and requests section */
+
+
+.friends-and-request .active{
+    border-bottom: var(--text) 3px solid;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.friends-and-request .inactive{
+    opacity: 0.6;
+    cursor: pointer;
+}

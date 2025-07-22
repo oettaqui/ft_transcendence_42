@@ -5,7 +5,6 @@ import { LandingPageView } from "./views/LandingPageView";
 import { LoginView } from "./views/LoginView";
 import { RegisterView } from "./views/RegisterView";
 import { RouteConfig } from "./types/RouteConfig";
-// import { DashboardView } from "./views/DashboardView";
 
 import { Router } from "./app/Router";
 import { HomeView } from "./views/HomeView";
@@ -33,9 +32,7 @@ function setupNavigation(): void {
   router.handleRoute();
 
 
-  // window.addEventListener('popstate', () => {
-  //   router.handleRoute();
-  // });
+;
 
 
   document.addEventListener('click', (e) => {

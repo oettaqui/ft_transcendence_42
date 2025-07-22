@@ -58,8 +58,157 @@ export class HomeView extends View{
                                 
                         </div>
                     </aside>
-                    <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto rounded-3xl bg-[var(--secondary)] !p-4">
-                        <div class="space-y-4">
+                    <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto  rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
+                        <div class="flex flex-col h-full ">
+                            <header class="sticky top-0 z-10 !pb-4 !pt-2 flex flex-col items-center gap-6">
+                                <div class="text-xl font-medium text-center !mt-4"> Friends <span class="text-[var(--accent)]">&</span> Requests</div>
+                                <div class="flex justify-between items-center w-[90%] h-12 bg-[var(--light-hover)] rounded-3xl !px-6">
+                                    <div class="active fr-btn">Friends</div>
+                                    <div class="text-[var(--text)] h-6 self-center border-l border-[var(--text)]"></div>
+                                    <div class="inactive fr-btn">Requests</div>
+                                </div>
+                            </header>
+                            <!-- items -->
+                            <div class="friends-list flex-1 overflow-y-auto overflow-x-hidden !pt-4 flex flex-col gap-3 w-full">
+                                <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/yakhay.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Yassin Khay</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">2400PX</div>
+                                        </div>
+
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/bchokri.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Badr Chokri</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
+                                        </div>
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+    
+                         
+                           
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/oettaqui.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Oussama Ettaqui</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
+                                        </div>
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/bchokri.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Badr Chokri</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
+                                        </div>
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/yakhay.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Yassin Khay</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">2400PX</div>
+                                        </div>
+
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/oettaqui.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Oussama Ettaqui</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
+                                        </div>
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/bchokri.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Badr Chokri</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
+                                        </div>
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/yakhay.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Yassin Khay</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">2400PX</div>
+                                        </div>
+
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/oettaqui.jpeg"/>
+                                        <div class="flex flex-col min-w-0">
+                                            <div class="text-sm font-medium truncate">Oussama Ettaqui</div>
+                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
+                                        </div>
+                                    </div>
+                                    <!-- i should pass id of the user -->
+                                    <div class="">
+                                        <i class="ti ti-message text-3xl "></i>
+                                    </div>
+                                </div>
+
+                                
+
+                            </div>
+                             
+
+                          
+
+
                             
                         </div>
                     </aside>
