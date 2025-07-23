@@ -31,15 +31,21 @@ function setupNavigation(): void {
 
   router.handleRoute();
 
-
-;
-
+  window.addEventListener('popstate', () => {
+      router.handleRoute();
+  });
 
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLAnchorElement;
-    if (target.tagName === 'A' && target.href && target.href.startsWith(window.location.origin)) {
+    const link = target.closest('a');
+
+    if (
+      link &&
+      link.href &&
+      link.href.startsWith(window.location.origin)
+    ) {
       e.preventDefault();
-      const path = new URL(target.href).pathname;
+      const path = new URL(link.href).pathname;
       router.navigateTo(path);
     }
   });

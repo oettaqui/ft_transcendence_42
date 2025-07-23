@@ -41,13 +41,19 @@ export class DashboardLayout {
                                 <i class="ti ti-search text-[22px]"></i>
                             </div>
                         </div>
-                        <div class="relative flex items-end gap-8">
-                            <i class="ti ti-bell-filled text-[32px] font-light text-[var(--text)]"></i>
-                            <div class="absolute top-[8px] left-[18px] bg-red-700 rounded-full text-[14px] w-[14px] h-[12px] text-center z-[10] "></div>
-                            <!-- Profil -->
-                            <div >
-                                <div class="profil w-[45px] h-[45px] rounded-full bg-[var(--text-secondary)] flex justify-center items-center">
-                                    <img class="w-[40px] h-[40px] rounded-full" src="../../public/assets/oettaqui.jpeg" />
+                        <div class="flex items-center gap-6">
+                            <div class="bg-[var(--secondary)] !px-4 !py-2 rounded-2xl flex items-center gap-2">
+                                <img class="w-10 h-10 rounded-full object-cover" src="../../public/assets/qoins.png"  /> 
+                                <div class="text-[16px] font-medium">1200</div>
+                            </div>
+                            <div class="relative flex items-end gap-8">
+                                <i class="ti ti-bell-filled text-[32px] font-light text-[var(--text)]"></i>
+                                <div class="absolute top-[8px] left-[18px] bg-red-700 rounded-full text-[14px] w-[14px] h-[12px] text-center z-[10] "></div>
+                                <!-- Profil -->
+                                <div >
+                                    <div class="profil w-[45px] h-[45px] rounded-full bg-[var(--text-secondary)] flex justify-center items-center">
+                                        <img class="w-[40px] h-[40px] rounded-full" src="../../public/assets/oettaqui.jpeg" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +63,6 @@ export class DashboardLayout {
                 <main class="flex h-[100vh] !p-24">
                    
                     <aside class="w-[350px] flex flex-col items-start justify-center ">
-                        <div class="absolute top-10 right-10 w-20 h-20 bg-accent opacity-10 rounded-full blur-xl animate-pulse"></div>
                         <div class="absolute bottom-20 left-10 w-16 h-16 bg-accent opacity-5 rounded-full blur-2xl animate-bounce"></div>
                         
 
@@ -165,8 +170,9 @@ export class DashboardLayout {
         container.appendChild(this.element);
         if (this.view)
         {
+            
             sectionContainer.appendChild(this.view.render());
-
+            this.view.onMount();
         }
         
         // this.setupEventListeners();
@@ -262,6 +268,6 @@ export class DashboardLayout {
 
 
 
-    protected add3DTiltEffect(container: HTMLElement): void {}
-    protected addParticleEffects(container: HTMLElement): void {}
+    // protected add3DTiltEffect(container: HTMLElement): void {}
+    // protected addParticleEffects(container: HTMLElement): void {}
 };

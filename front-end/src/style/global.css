@@ -494,3 +494,13 @@ header a:hover {
     opacity: 0.6;
     cursor: pointer;
 }
+
+.tab-btn {
+  @apply px-3 py-1 rounded-xl text-sm font-medium transition-colors;
+}
+/* .tab-btn.active {
+  @apply bg-[var(--accent)] text-black;
+} */
+.tab-btn:not(.active):hover {
+  @apply bg-[var(--light-hover)];
+}

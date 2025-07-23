@@ -80,7 +80,7 @@ export class Router {
           
           this.currentLayout = new DashboardLayout(this.currentView, this);
           if (this.currentLayout)
-            this.currentLayout .mount(this.root);
+            this.currentLayout.mount(this.root);
         }
         else{
           console.log(' Mounting new view...');

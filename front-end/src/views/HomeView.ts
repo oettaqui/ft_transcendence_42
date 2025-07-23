@@ -60,15 +60,17 @@ export class HomeView extends View{
                     </aside>
                     <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto  rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
                         <div class="flex flex-col h-full ">
-                            <header class="sticky top-0 z-10 !pb-4 !pt-2 flex flex-col items-center gap-6">
-                                <div class="text-xl font-medium text-center !mt-4"> Friends <span class="text-[var(--accent)]">&</span> Requests</div>
-                                <div class="flex justify-between items-center w-[90%] h-12 bg-[var(--light-hover)] rounded-3xl !px-6">
-                                    <div class="active fr-btn">Friends</div>
-                                    <div class="text-[var(--text)] h-6 self-center border-l border-[var(--text)]"></div>
-                                    <div class="inactive fr-btn">Requests</div>
-                                </div>
+
+
+                            <header class="sticky top-0 z-10 flex justify-around !py-4 ">
+                                <button id="tab-online" class="tab-btn active">Online</button>
+                                <button id="tab-all" class="tab-btn">All</button>
+                                <button id="tab-requests" class="tab-btn">Requests</button>
+                                <button id="tab-suggestions" class="tab-btn">Suggestions</button>
                             </header>
+
                             <!-- items -->
+                            <!--
                             <div class="friends-list flex-1 overflow-y-auto overflow-x-hidden !pt-4 flex flex-col gap-3 w-full">
                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full w-[350px] hover:bg-[var(--light-hover)] transition-colors">
                                     <div class="flex items-center gap-3 min-w-0">
@@ -79,7 +81,7 @@ export class HomeView extends View{
                                         </div>
 
                                     </div>
-                                    <!-- i should pass id of the user -->
+                                
                                     <div class="">
                                         <i class="ti ti-message text-3xl "></i>
                                     </div>
@@ -93,7 +95,7 @@ export class HomeView extends View{
                                             <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
                                         </div>
                                     </div>
-                                    <!-- i should pass id of the user -->
+                                    
                                     <div class="">
                                         <i class="ti ti-message text-3xl "></i>
                                     </div>
@@ -109,104 +111,79 @@ export class HomeView extends View{
                                             <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
                                         </div>
                                     </div>
-                                    <!-- i should pass id of the user -->
+                                    
                                     <div class="">
                                         <i class="ti ti-message text-3xl "></i>
                                     </div>
                                 </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/bchokri.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Badr Chokri</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
-                                        </div>
-                                    </div>
-                                    <!-- i should pass id of the user -->
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/yakhay.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Yassin Khay</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">2400PX</div>
-                                        </div>
-
-                                    </div>
-                                    <!-- i should pass id of the user -->
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/oettaqui.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Oussama Ettaqui</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
-                                        </div>
-                                    </div>
-                                    <!-- i should pass id of the user -->
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/bchokri.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Badr Chokri</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
-                                        </div>
-                                    </div>
-                                    <!-- i should pass id of the user -->
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/yakhay.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Yassin Khay</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">2400PX</div>
-                                        </div>
-
-                                    </div>
-                                    <!-- i should pass id of the user -->
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/oettaqui.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Oussama Ettaqui</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
-                                        </div>
-                                    </div>
-                                    <!-- i should pass id of the user -->
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                
 
                             </div>
-                             
+                            -->
+                             <!-- request -->
+                            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="/public/assets/bchokri.jpeg" class="w-10 h-10 rounded-full object-cover" />
+                                    <div class="flex flex-col">
+                                    <span class="text-sm font-medium">Badr Chokri</span>
+                                    <span class="text-xs text-[var(--text-secondary)]">Sent you a request</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="bg-green-500 text-white w-[30px] h-[30px] rounded-full hover:bg-green-600 transition">
+                                        <i class="ti ti-check"></i>
+                                    </button>
+                                    <button class="bg-red-500 text-white w-[30px] h-[30px] rounded-full hover:bg-red-600 transition">
+                                        <i class="ti ti-x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- online -->
+                            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition">
+                                <div class="flex items-center gap-3">
+                                    <img src="/public/assets/oettaqui.jpeg" class="w-10 h-10 rounded-full object-cover" />
+                                    <div class="flex flex-col">
+                                    <span class="text-sm font-medium">Oussama Ettaqui</span>
+                                    <span class="flex items-center justify-start gap-3">
+                                        <span class="block w-[8px] h-[8px] rounded-full bg-[var(--success)]"></span>
+                                        <span class="block text-xs text-[var(--text-secondary)] !pt-1">Online</span></span>
+                                    </div>
+                                </div>
+                                <button class=" !mr-4 flex items-center">
+                                    <i class="ti ti-message text-2xl"></i>
+                                </button>
+                            </div>
+                            <!-- all -->
+                            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !p-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="/public/assets/oettaqui.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                    <div class="font-medium text-sm">Oussama Ettaqui</div>
+                                    <div class="text-xs text-[var(--text-secondary)]">Last seen 2h ago</div>
+                                    </div>
+                                </div>
+                                <button class=" !mr-4 flex items-center">
+                                    <i class="ti ti-message text-2xl"></i>
+                                </button>
+                            </div>
 
-                          
+                            <!-- suggestion -->
+
+                            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !p-3 !mt-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="/public/assets/yakhay.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                    <div class="font-medium text-sm">New Friend</div>
+                                    <div class="text-xs text-[var(--text-secondary)]">Suggested</div>
+                                    </div>
+                                </div>
+                                <button class="bg-[var(--accent)] text-black rounded-md !px-2 !py-1 text-[12px]">Add</button>
+                            </div>
+
+                            <!-- No data found -->
+                            <div class="flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
+                                <i class="ti ti-user-off text-4xl text-[var(--text-secondary)]"></i>
+                                <div class="text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
+                            </div>
 
 
                             
@@ -218,11 +195,13 @@ export class HomeView extends View{
 
     }
 
-    onMount(): void {
-       
-        setTimeout(() => this.animateProgress(), 500);
+    public onMount(): void {
+        this.animateProgress();
+        
     }
-
+   
+    
+    
     animateProgress(): void {
         const percentageElement = document.getElementById('percentageText');
         const progressFillElement = document.getElementById('progressFill');
@@ -270,5 +249,7 @@ export class HomeView extends View{
         
         requestAnimationFrame(update);
     }
+
+   
 
 };

@@ -70,9 +70,15 @@ export class GameView extends View{
     }
 
     onMount(): void {
-      
-        setTimeout(() => this.animateProgress(), 500);
+        this.animateProgress();
     }
+
+    
+    // public mount(){
+    //     // const el = this.render();
+    //     this.onMount();
+    //     // return el;
+    // }
 
     animateProgress(): void {
         const percentageElement = document.getElementById('percentageText');
