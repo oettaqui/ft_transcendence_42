@@ -31,34 +31,36 @@ export class HomeView extends View{
                                         <p class="font-light text-[14px]">oettaqui</p>
                                     </div>
                                 </div>
-                                <div class="level flex justify-start items-center gap-4">
+                                <div class="level flex justify-center items-center gap-4">
                                     <!-- Progress -->
                                     <div class="text-3xl font-bold">08</div>
                                     <div class="flex flex-col items-start justify-center !mb-8">
                                         <div class="percentage text-[14px]" id="percentageText">97%</div>
-                                        <div class="progress-bar h-[10px] w-[400px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
+                                        <div class="progress-bar h-[10px] w-[600px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
                                             <div class="progress-fill h-full rounded-3xl" id="progressFill"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="absolute top-[50px] right-[100px] w-[100px] h-[35px] rounded-3xl bg-[#333333] flex justify-center items-center">
-                                <!-- location -->
-                                <div class="flex justify-center items-center gap-2">
-                                    <div class="w-[10px] h-[10px] bg-[var(--success)] rounded-full"></div>
-                                    <div class="text-[12px] font-light">c3r4p9</div>
-                                </div>
-                                    <div class="absolute top-[140px]">
+                            <div class="absolute top-[90px] right-[100px] w-[100px] h-[35px] rounded-3xlflex justify-center items-center">
+                                    <div class="">
                                         <span class="!px-4 !py-2 rounded-xl bg-[var(--freax)] font-bold text-[12px]"> Freax </span>
-                                        
                                     </div>
                             </div>
                         </div>
-                        <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)]">
+                        <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)] flex justify-between items-center">
+                            
+                            <div class="flex-1">
+                                <div class="text-center">Statistic</div>
+                                <canvas id="donutChart" width="300" height="300"></canvas>
+                            </div>
+                            <div class="flex-1">
+                                d
+                            </div>
                                 
                         </div>
                     </aside>
-                    <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto  rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
+                    <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto overflow-x-hidden rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
                         <div class="flex flex-col h-full ">
 
 
@@ -69,56 +71,7 @@ export class HomeView extends View{
                                 <button id="tab-suggestions" class="tab-btn">Suggestions</button>
                             </header>
 
-                            <!-- items -->
-                            <!--
-                            <div class="friends-list flex-1 overflow-y-auto overflow-x-hidden !pt-4 flex flex-col gap-3 w-full">
-                                <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/yakhay.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Yassin Khay</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">2400PX</div>
-                                        </div>
-
-                                    </div>
-                                
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/bchokri.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Badr Chokri</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-    
-                         
                            
-                                 <div class="flex items-center justify-between border border-[var(--border)] !px-4 !py-3 rounded-full  w-[350px] hover:bg-[var(--light-hover)] transition-colors">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <img class="w-12 h-12 rounded-full object-cover" src="../../public/assets/oettaqui.jpeg"/>
-                                        <div class="flex flex-col min-w-0">
-                                            <div class="text-sm font-medium truncate">Oussama Ettaqui</div>
-                                            <div class="text-xs font-light text-[var(--text-secondary)] truncate">1200PX</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="">
-                                        <i class="ti ti-message text-3xl "></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                            -->
                              <!-- request -->
                             <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
                                 <div class="flex items-center gap-3">
@@ -197,6 +150,7 @@ export class HomeView extends View{
 
     public onMount(): void {
         this.animateProgress();
+        this.chatWinLose();
         
     }
    
@@ -250,6 +204,50 @@ export class HomeView extends View{
         requestAnimationFrame(update);
     }
 
-   
+   chatWinLose(){
+    const canvas = document.getElementById('donutChart');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 100;
+    const innerRadius = 80;
+
+    const data = [
+      { label: 'Win', value: 5, color: '#f39c12' },
+      { label: 'Lose', value: 3, color: '#1a1a1a' }
+    ];
+
+    const total = data.reduce((sum, item) => sum + item.value, 0);
+
+    let startAngle = -0.5 * Math.PI; // start at the top
+
+    data.forEach(item => {
+      const sliceAngle = (item.value / total) * (2 * Math.PI);
+
+      // Draw outer arc
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+      ctx.closePath();
+      ctx.fillStyle = item.color;
+      ctx.fill();
+
+      startAngle += sliceAngle;
+    });
+
+    // Draw inner circle to create the donut effect
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+    ctx.fillStyle = '#2e2e2e';
+    ctx.fill();
+
+    // Optional: Add centered text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Win: 5', centerX, centerY - 12);
+    ctx.fillText('Lose: 3', centerX, centerY + 12);
+   }
 
 };

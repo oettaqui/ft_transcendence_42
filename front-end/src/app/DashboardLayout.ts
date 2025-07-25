@@ -44,7 +44,7 @@ export class DashboardLayout {
                         <div class="flex items-center gap-6">
                             <div class="bg-[var(--secondary)] !px-4 !py-2 rounded-2xl flex items-center gap-2">
                                 <img class="w-10 h-10 rounded-full object-cover" src="../../public/assets/qoins.png"  /> 
-                                <div class="text-[16px] font-medium">1200</div>
+                                <div class="text-[16px] font-medium">500</div>
                             </div>
                             <div class="relative flex items-end gap-8">
                                 <i class="ti ti-bell-filled text-[32px] font-light text-[var(--text)]"></i>

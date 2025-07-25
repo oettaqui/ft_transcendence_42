@@ -504,3 +504,8 @@ header a:hover {
 .tab-btn:not(.active):hover {
   @apply bg-[var(--light-hover)];
 }
+
+
+#donutChart{
+    margin: auto;
+}
