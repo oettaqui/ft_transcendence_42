@@ -48,14 +48,49 @@ export class HomeView extends View{
                                     </div>
                             </div>
                         </div>
-                        <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)] flex justify-between items-center">
+                        <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)] flex justify-center items-center gap-16 ">
                             
-                            <div class="flex-1">
-                                <div class="text-center">Statistic</div>
+                            <div class="border border-[var(--accent)] rounded-3xl flex justify-between items-center w-[50%] !pr-8 !ml-6">
                                 <canvas id="donutChart" width="300" height="300"></canvas>
+                                <div class="flex flex-col gap-6">
+                                    <div class="flex flex-col">
+                                        <div>Your Balance</div> 
+                                        <div id="balanceValue" class="text-[var(--accent)] text-2xl"></div> 
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div>Your Level</div> 
+                                        <div id="levelValue" class="text-[var(--accent)] text-2xl"></div> 
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="flex-1">
-                                d
+                            <div class="flex flex-col gap-10 !mr-8">
+                                <div class="flex justify-center items-center gap-8 ">
+                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px]  flex flex-col justify-center items-center gap-2
+                                        transition-transform duration-300 hover:scale-[1.03]">
+                                        <div class=" opacity-[0.7]">Matches Played</div>
+                                        <div id="matchesPlayed" class=" text-[var(--accent)] text-2xl"></div>
+                                    </div>
+                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px] flex flex-col justify-center items-center gap-2
+                                        transition-transform duration-300 hover:scale-[1.03]">
+                                        <div class=" opacity-[0.7]">Friends Count</div>
+                                        <div id="friendsCount" class=" text-[var(--accent)] text-2xl"></div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-center items-center gap-8">
+                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px] flex flex-col justify-center items-center gap-2
+                                        transition-transform duration-300 hover:scale-[1.03]">
+                                        <div class="opacity-[0.7] ">Global Rank</div>
+                                        <div id="globalRank" class="text-[var(--accent)] text-2xl"></div>
+                                    </div>
+                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px] flex flex-col justify-center items-center gap-2
+                                        transition-transform duration-300 hover:scale-[1.03]">
+                                        <div class="opacity-[0.7] ">Win Rate</div>
+                                        <div id="winRate" class="text-[var(--accent)] text-2xl"></div>
+                                    </div>
+                                    
+                                    
+                                </div>
                             </div>
                                 
                         </div>
@@ -82,11 +117,12 @@ export class HomeView extends View{
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button class="bg-green-500 text-white w-[30px] h-[30px] rounded-full hover:bg-green-600 transition">
-                                        <i class="ti ti-check"></i>
+                                    <button class= text-[var(--success)] w-[30px] h-[30px] rounded-full hover:bg-green-600 transition">
+                                        
+                                        <i class="ti ti-circle-check text-3xl"></i>
                                     </button>
-                                    <button class="bg-red-500 text-white w-[30px] h-[30px] rounded-full hover:bg-red-600 transition">
-                                        <i class="ti ti-x"></i>
+                                    <button class= text-[var(--danger)] w-[30px] h-[30px] hover:bg-red-600 transition">
+                                        <i class="ti ti-x text-3xl"></i>
                                     </button>
                                 </div>
                             </div>
@@ -151,6 +187,12 @@ export class HomeView extends View{
     public onMount(): void {
         this.animateProgress();
         this.chatWinLose();
+        this.animateNumber('balanceValue', 500, 1000); // Balance to 500
+        this.animateNumber('levelValue', 8.97, 1000, 2); // Level to 8.97 with 2 decimals
+        this.animateNumber('matchesPlayed', 8, 1000); // Matches palyed
+        this.animateNumber('friendsCount', 5, 1000); // Friends count
+        this.animateNumber('globalRank', 30, 1000); // Global rank
+        this.animateNumber('winRate', 62.5, 1000, 1); // Win Rate wins / matches_played * 100
         
     }
    
@@ -204,50 +246,94 @@ export class HomeView extends View{
         requestAnimationFrame(update);
     }
 
-   chatWinLose(){
-    const canvas = document.getElementById('donutChart');
+
+chatWinLose() {
+    const canvas = document.getElementById('donutChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 100;
     const innerRadius = 80;
 
     const data = [
-      { label: 'Win', value: 5, color: '#f39c12' },
-      { label: 'Lose', value: 3, color: '#1a1a1a' }
+        { label: 'Win', value: 5, color: '#f39c12' },
+        { label: 'Lose', value: 3, color: '#f39d1267' }
     ];
-
     const total = data.reduce((sum, item) => sum + item.value, 0);
 
-    let startAngle = -0.5 * Math.PI; // start at the top
+    let currentProgress = 0;
+    const animationSpeed = 0.01;
 
-    data.forEach(item => {
-      const sliceAngle = (item.value / total) * (2 * Math.PI);
+    const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw outer arc
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
-      ctx.closePath();
-      ctx.fillStyle = item.color;
-      ctx.fill();
+        let startAngle = -0.5 * Math.PI;
+        let animatedValue = total * currentProgress;
+        let remainingValue = animatedValue;
 
-      startAngle += sliceAngle;
-    });
+        for (const item of data) {
+            const itemValue = Math.min(item.value, remainingValue);
+            const sliceAngle = (itemValue / total) * 2 * Math.PI;
 
-    // Draw inner circle to create the donut effect
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#2e2e2e';
-    ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+            ctx.closePath();
+            ctx.fillStyle = item.color;
+            ctx.fill();
 
-    // Optional: Add centered text
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 20px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Win: 5', centerX, centerY - 12);
-    ctx.fillText('Lose: 3', centerX, centerY + 12);
-   }
+            startAngle += sliceAngle;
+            remainingValue -= itemValue;
+            if (remainingValue <= 0) break;
+        }
+
+        // Inner circle (donut hole)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#2e2e2e';
+        ctx.fill();
+
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '20px Orbitron';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Win: 5', centerX, centerY - 12);
+        ctx.fillText('Lose: 3', centerX, centerY + 12);
+
+        if (currentProgress < 1) {
+            currentProgress += animationSpeed;
+            requestAnimationFrame(draw);
+        }
+    };
+
+    draw();
+}
+
+
+animateNumber(elementId: string, targetValue: number, duration: number = 1000, decimals: number = 0) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    const start = performance.now();
+    const initialValue = 0;
+
+    const animate = (timestamp: number) => {
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const currentValue = initialValue + (targetValue - initialValue) * progress;
+
+        el.textContent = currentValue.toFixed(decimals);
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    };
+
+    requestAnimationFrame(animate);
+}
+
 
 };
