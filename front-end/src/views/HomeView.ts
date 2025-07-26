@@ -47,9 +47,9 @@ export class HomeView extends View{
                                         <span class="!px-4 !py-2 rounded-xl bg-[var(--freax)] font-bold text-[12px]"> Freax </span>
                                     </div>
                             </div>
-                        </div>
+                        </div>   
                         <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)] flex justify-center items-center gap-16 ">
-                            
+
                             <div class="border border-[var(--accent)] rounded-3xl flex justify-between items-center w-[50%] !pr-8 !ml-6">
                                 <canvas id="donutChart" width="300" height="300"></canvas>
                                 <div class="flex flex-col gap-6">

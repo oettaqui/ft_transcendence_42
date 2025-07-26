@@ -41,10 +41,13 @@ export class DashboardLayout {
                                 <i class="ti ti-search text-[22px]"></i>
                             </div>
                         </div>
-                        <div class="flex items-center gap-6">
-                            <div class="bg-[var(--secondary)] !px-4 !py-2 rounded-2xl flex items-center gap-2">
-                                <img class="w-10 h-10 rounded-full object-cover" src="../../public/assets/qoins.png"  /> 
-                                <div class="text-[16px] font-medium">500</div>
+                        <div class="flex justify-center items-center gap-12">
+                            <div class="flex items-center justify-end !mt-2 gap-2">
+                                <img class="w-8 h-8 rounded-full object-cover !mb-1 " src="../../public/assets/qoins.png" />
+                                <div class="flec flex-col justify-center itmes-center">
+                                    <div class="text-[8px] opacity-60">Balance</div> 
+                                    <div class="text-[18px] font-bold">500</div>
+                                </div>
                             </div>
                             <div class="relative flex items-end gap-8">
                                 <i class="ti ti-bell-filled text-[32px] font-light text-[var(--text)]"></i>
