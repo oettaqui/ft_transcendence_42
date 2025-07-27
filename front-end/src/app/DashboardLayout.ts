@@ -54,7 +54,7 @@ export class DashboardLayout {
                                 <div class="absolute top-[8px] left-[18px] bg-red-700 rounded-full text-[14px] w-[14px] h-[12px] text-center z-[10] "></div>
                                 <!-- Profil -->
                                 <div >
-                                    <div class="profil w-[45px] h-[45px] rounded-full bg-[var(--text-secondary)] flex justify-center items-center">
+                                    <div class="profil w-[42px] h-[42px] rounded-full bg-[var(--text-secondary)] flex justify-center items-center">
                                         <img class="w-[40px] h-[40px] rounded-full" src="../../public/assets/oettaqui.jpeg" />
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@ export class DashboardLayout {
                                 </li>
 
                                 <li class="nav-item-animated opacity-0 chat 1">
-                                    <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
+                                    <a href="/dashboard/chat" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">

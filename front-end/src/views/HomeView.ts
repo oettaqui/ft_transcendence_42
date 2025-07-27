@@ -100,10 +100,10 @@ export class HomeView extends View{
 
 
                             <header class="sticky top-0 z-10 flex justify-around !py-4 ">
-                                <button id="tab-online" class="tab-btn active">Online</button>
-                                <button id="tab-all" class="tab-btn">All</button>
-                                <button id="tab-requests" class="tab-btn">Requests</button>
-                                <button id="tab-suggestions" class="tab-btn">Suggestions</button>
+                                <button id="tab-all" class="tab-btn active" data-category="all" >All</button>
+                                <button id="tab-online" class="tab-btn " data-category="online" >Online</button>
+                                <button id="tab-requests" class="tab-btn " data-category="requests" >Requests</button>
+                                <button id="tab-suggestions" class="tab-btn " data-category="suggestions">Suggestions</button>
                             </header>
 
                            
@@ -193,6 +193,8 @@ export class HomeView extends View{
         this.animateNumber('friendsCount', 5, 1000); // Friends count
         this.animateNumber('globalRank', 30, 1000); // Global rank
         this.animateNumber('winRate', 62.5, 1000, 1); // Win Rate wins / matches_played * 100
+
+        this.setupTabFiltering()
         
     }
    
@@ -333,6 +335,23 @@ animateNumber(elementId: string, targetValue: number, duration: number = 1000, d
     };
 
     requestAnimationFrame(animate);
+}
+
+private setupTabFiltering(): void {
+    const buttons = document.querySelectorAll('.tab-btn');
+    const items = document.querySelectorAll('[data-category]');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            // const selected = button.textContent?.toLowerCase();
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            
+        });
+    });
+
 }
 
 

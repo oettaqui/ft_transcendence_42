@@ -9,6 +9,7 @@ import { RouteConfig } from "./types/RouteConfig";
 import { Router } from "./app/Router";
 import { HomeView } from "./views/HomeView";
 import { GameView } from "./views/GameView";
+import { ChatView } from "./views/ChatView";
 
 
 
@@ -17,6 +18,7 @@ export const routes: RouteConfig[] = [
   { path: '/login', view: LoginView},
   { path: '/register', view: RegisterView},
   { path: '/dashboard', view: HomeView},
+  { path: '/dashboard/chat', view: ChatView},
   { path: '/dashboard/game', view: GameView}
   // { path: '/dashboard/tournament', view: TournamentView}
   // { path: '/dashboard/settings', view: SettingsView}
