@@ -1,0 +1,46 @@
+
+services:
+  # Authentication Service
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: transcendence-auth
+    ports:
+      - "3001:3001"
+    volumes:
+      - auth_data:/app/data
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - JWT_SECRET=${JWT_SECRET:-pingpong-secret-key-change-in-production}
+      - DB_PATH=/app/data/auth.db
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_APP_PASSWORD=${EMAIL_APP_PASSWORD}
+      - FRONTEND_URL=${FRONTEND_URL}
+    networks:
+      - transcendence-network
+    # Remove restart policy for debugging
+    # restart: unless-stopped
+
+  # Frontend Service
+  frontend:
+    image: nginx:alpine
+    container_name: transcendence-frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - auth-service
+    networks:
+      - transcendence-network
+
+volumes:
+  auth_data:
+    driver: local
+
+networks:
+  transcendence-network:
+    driver: bridge
