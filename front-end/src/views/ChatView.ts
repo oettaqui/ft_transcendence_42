@@ -95,16 +95,110 @@ export class ChatView extends View{
                                 </div>
                             </div>
                             <div class="chat backdrop-blur-3xl rounded-4xl border border-white/5 h-[95%] w-[95%]">
-                                <div>
-                                    <div class="h-[50px] w-[95%] !mt-2 !m-auto border border-white/25 rounded-4xl">
-                                        <div class="flex  items-center gap-3">
-                                            <img class="w-[40px] h-[40px] rounded-full object-cover !ml-2 !mt-1" src="../../public/assets/yakhay.jpeg"/>
+                                <div class="flex flex-col h-full">
+                                <!-- header -->
+                                    <div class="!py-2 w-[95%] !mt-2 bg-[var(--secondary)] !m-auto border border-white/25 rounded-4xl">
+                                        <div class="flex items-center gap-3 relative !ml-2">
+                                            <img class="w-[43px] h-[43px] rounded-full object-cover !ml-2 !mt-1" src="../../public/assets/yakhay.jpeg"/>
                                             <div class="flex flex-col  itmes-center gap-1 !mt-1">
                                                 <div class="font-medium text-sm">Yassin Khay</div>
                                                 <div class="font-medium text-[10px] opacity-50">Last seen at 14:50 PM</div>
                                             </div>
+                                            <div class="absolute right-5 rotate-90 text-2xl cursor-pointer">...</div>
                                         </div>
                                     </div>
+                                    <!-- chat-messages -->
+                                    <div class="chat-messages flex  overflow-y-auto  !p-4 h-[calc(95vh-120px)] !mt-4">
+                                        <!-- Demo Messages -->
+                                        <div class="flex flex-col gap-3">
+                                            <!-- Received Message -->
+                                            <div class="flex items-start gap-2">
+                                                <img class="w-8 h-8 rounded-full object-cover flex-shrink-0" src="../../public/assets/yakhay.jpeg" alt="Profile"/>
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">Hey! How are you doing today?</p>
+                                                    <span class="text-white/50 text-xs">2:30 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Sent Message -->
+                                            <div class="flex items-start gap-2 justify-end">
+                                                <div class="bg-[var(--accent)] backdrop-blur-sm rounded-2xl rounded-tr-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">I'm doing great! Just working on some new projects. What about you?</p>
+                                                    <span class="text-white/70 text-xs">2:32 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Received Message -->
+                                            <div class="flex items-start gap-2">
+                                                <img class="w-8 h-8 rounded-full object-cover flex-shrink-0" src="../../public/assets/yakhay.jpeg" alt="Profile"/>
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">That sounds exciting! I've been learning some new programming languages lately.</p>
+                                                    <span class="text-white/50 text-xs">2:35 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Sent Message -->
+                                            <div class="flex items-start gap-2 justify-end">
+                                                <div class="bg-[var(--accent)] backdrop-blur-sm rounded-2xl rounded-tr-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">Nice! Which ones are you focusing on?</p>
+                                                    <span class="text-white/70 text-xs">2:36 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Received Message -->
+                                            <div class="flex items-start gap-2">
+                                                <img class="w-8 h-8 rounded-full object-cover flex-shrink-0" src="../../public/assets/yakhay.jpeg" alt="Profile"/>
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">Hey! How are you doing today?</p>
+                                                    <span class="text-white/50 text-xs">2:30 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Sent Message -->
+                                            <div class="flex items-start gap-2 justify-end">
+                                                <div class="bg-[var(--accent)] backdrop-blur-sm rounded-2xl rounded-tr-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">I'm doing great! Just working on some new projects. What about you?</p>
+                                                    <span class="text-white/70 text-xs">2:32 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Received Message -->
+                                            <div class="flex items-start gap-2">
+                                                <img class="w-8 h-8 rounded-full object-cover flex-shrink-0" src="../../public/assets/yakhay.jpeg" alt="Profile"/>
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">That sounds exciting! I've been learning some new programming languages lately.</p>
+                                                    <span class="text-white/50 text-xs">2:35 PM</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Sent Message -->
+                                            <div class="flex items-start gap-2 justify-end">
+                                                <div class="bg-[var(--accent)] backdrop-blur-sm rounded-2xl rounded-tr-sm !px-4 !py-2 max-w-[70%]">
+                                                    <p class="text-white text-sm">Nice! Which ones are you focusing on?</p>
+                                                    <span class="text-white/70 text-xs">2:36 PM</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- input -->
+
+                                    <div class="!p-4">
+                                        <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full !px-4 !py-2 border border-white/20">
+                                            <input 
+                                                type="text" 
+                                                placeholder="Type a message..." 
+                                                class="flex-1 bg-transparent text-white placeholder-white/50 outline-none text-sm !py-2"
+                                              
+                                                id="messageInput"
+                                            />
+                                            <button class="text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer transition-colors">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             </div>
