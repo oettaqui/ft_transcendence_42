@@ -513,3 +513,44 @@ header a:hover {
 }
 
 /* chart styling */
+
+
+
+
+
+.winner-gradient {
+    background: linear-gradient(135deg, #10b981, #059669, #047857);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+}
+
+.loser-gradient {
+    background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+}
+
+.vs-glow {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.player-image {
+    transition: all 0.3s ease;
+}
+
+.winner-side .player-image {
+    border-color: #10b981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.loser-side .player-image {
+    border-color: #ef4444;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}

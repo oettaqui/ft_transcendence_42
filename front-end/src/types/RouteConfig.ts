@@ -6,4 +6,3 @@ export type RouteConfig = {
     view: new () => View;
 };
 
-// view: typeof View;

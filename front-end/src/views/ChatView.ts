@@ -69,7 +69,7 @@ export class ChatView extends View{
                                     </div>
                                     <!-- itme 2 -->
                                     <div class="w-[90%] relative">
-                                    <div class="absolute text-[11px] min-w-[20px] h-[20px] px-[6px] bg-[var(--accent)] text-black rounded-full right-3 top-5 flex justify-center items-center">
+                                    <div class="absolute text-[11px] min-w-[20px] h-[20px] px-[6px] bg-[var(--accent)] rounded-full right-3 top-5 flex justify-center items-center">
                                             <span class="leading-none whitespace-nowrap text-[var(--text)]">1</span>
                                         </div>
                                         <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
@@ -202,7 +202,249 @@ export class ChatView extends View{
                                 </div>
 
                             </div>
-                            <div class=" rounded-4xl border border-white/15 h-[95%] w-[60%]"></div>
+                            <div class="backdrop-blur-3xl rounded-4xl border border-white/10 h-[95%] w-[60%]  flex flex-col gap-6">
+                                <div class="stiky flex flex-col gap-15">
+                                    <header class="relative w-full">
+                                        <img class="w-full h-[150px] object-cover " src="../../public/assets/Freax_BG.jpg" alt="Background"/>
+                                        
+                                        <div class="absolute left-1/2 top-22 transform -translate-x-1/2 cursor-pointer">
+                                            <img class="w-[100px] h-[100px] rounded-full object-cover" 
+                                                src="../../public/assets/yakhay.jpeg" 
+                                                alt="Profile"/>
+                                        </div>
+                                    </header>
+                                    <div class="rounded-4xl border border-white/30 w-[70%] h-[50px] !m-auto  flex justify-around items-center">
+                                        <i class="ti ti-user-cancel text-3xl font-light text-[var(--text-secondary)] cursor-pointer hover:text-[var(--danger)]"></i>
+                                        <div class="w-[2px] h-7 bg-[var(--text-secondary)]"></div>
+                                        <i class="ti ti-device-gamepad-2 text-3xl font-light text-[var(--text-secondary)] cursor-pointer hover:text-[var(--accent)]"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1 flex flex-col items-center gap-3 min-h-0">
+                                    <div class="text-center text-white text-lg font-semibold">Matches history</div>
+                                        <div class="list-history-cards flex flex-col items-center overflow-y-auto gap-4 !pr-2 ">
+                                        <!-- item-1 -->
+                                        <div class="card-hover !px-2 bg-gradient-to-br from-[var(--secondary)] to-[var(--primary)] backdrop-blur-lg rounded-2xl border border-white/10 !p-4 w-80 h-24">
+                                            <div class="flex items-center justify-between h-full">
+                                                
+                                                <div class="winner-side flex items-center space-x-3">
+                                                    <img src="../../public/assets/oettaqui.jpeg" 
+                                                        alt="Player 1" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                    
+                                                </div>
+                                                
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="winner-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        3
+                                                    </div>
+                                                    
+                                                    <div class="vs-glow text-white text-lg font-bold tracking-wider !px-2">
+                                                        VS
+                                                    </div>
+                                                    
+                                                    <div class="loser-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        1
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    
+                                                    <img src="../../public/assets/yakhay.jpeg" 
+                                                        alt="Player 2" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <!-- item-2 -->
+
+                                         <div class="card-hover !px-2 bg-gradient-to-br from-[var(--secondary)] to-[var(--primary)] backdrop-blur-lg rounded-2xl border border-white/10 !p-4 w-80 h-24">
+                                            <div class="flex items-center justify-between h-full">
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    <img src="../../public/assets/oettaqui.jpeg" 
+                                                        alt="Player 1" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                    
+                                                </div>
+                                                
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="loser-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        2
+                                                    </div>
+                                                    
+                                                    <div class="vs-glow text-white text-lg font-bold tracking-wider !px-2">
+                                                        VS
+                                                    </div>
+                                                    
+                                                    <div class="winner-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        3
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="winner-side flex items-center space-x-3">
+                                                    
+                                                    <img src="../../public/assets/yakhay.jpeg" 
+                                                        alt="Player 2" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                         <!-- item-3 -->
+
+                                         <div class="card-hover !px-2 bg-gradient-to-br from-[var(--secondary)] to-[var(--primary)] backdrop-blur-lg rounded-2xl border border-white/10 !p-4 w-80 h-24">
+                                            <div class="flex items-center justify-between h-full">
+                                                
+                                                <div class="winner-side flex items-center space-x-3">
+                                                    <img src="../../public/assets/oettaqui.jpeg" 
+                                                        alt="Player 1" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                    
+                                                </div>
+                                                
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="winner-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        3
+                                                    </div>
+                                                    
+                                                    <div class="vs-glow text-white text-lg font-bold tracking-wider !px-2">
+                                                        VS
+                                                    </div>
+                                                    
+                                                    <div class="loser-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        1
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    
+                                                    <img src="../../public/assets/yakhay.jpeg" 
+                                                        alt="Player 2" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                         <!-- item-4 -->
+
+                                         <div class="card-hover !px-2 bg-gradient-to-br from-[var(--secondary)] to-[var(--primary)] backdrop-blur-lg rounded-2xl border border-white/10 !p-4 w-80 h-24">
+                                            <div class="flex items-center justify-between h-full">
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    <img src="../../public/assets/oettaqui.jpeg" 
+                                                        alt="Player 1" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                    
+                                                </div>
+                                                
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="loser-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        3
+                                                    </div>
+                                                    
+                                                    <div class="vs-glow text-white text-lg font-bold tracking-wider !px-2">
+                                                        VS
+                                                    </div>
+                                                    
+                                                    <div class="winner-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        4
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="winner-side flex items-center space-x-3">
+                                                    
+                                                    <img src="../../public/assets/yakhay.jpeg" 
+                                                        alt="Player 2" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                         <!-- item-5 -->
+
+                                         <div class="card-hover !px-2 bg-gradient-to-br from-[var(--secondary)] to-[var(--primary)] backdrop-blur-lg rounded-2xl border border-white/10 !p-4 w-80 h-24">
+                                            <div class="flex items-center justify-between h-full">
+                                                
+                                                <!-- Winner Side (Left Player) -->
+                                                <div class="winner-side flex items-center space-x-3">
+                                                    <img src="../../public/assets/oettaqui.jpeg" 
+                                                        alt="Player 1" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                    
+                                                </div>
+                                                
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="winner-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        3
+                                                    </div>
+                                                    
+                                                    <div class="vs-glow text-white text-lg font-bold tracking-wider !px-2">
+                                                        VS
+                                                    </div>
+                                                    
+                                                    <div class="loser-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        1
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    
+                                                    <img src="../../public/assets/yakhay.jpeg" 
+                                                        alt="Player 2" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <!-- item-6 -->
+
+                                         <div class="card-hover !px-2 bg-gradient-to-br from-[var(--secondary)] to-[var(--primary)] backdrop-blur-lg rounded-2xl border border-white/10 !p-4 w-80 h-24">
+                                            <div class="flex items-center justify-between h-full">
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    <img src="../../public/assets/oettaqui.jpeg" 
+                                                        alt="Player 1" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                    
+                                                </div>
+                                                
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="loser-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        2
+                                                    </div>
+                                                    
+                                                    <div class="vs-glow text-white text-lg font-bold tracking-wider !px-2">
+                                                        VS
+                                                    </div>
+                                                    
+                                                    <div class="winner-gradient text-white text-xl font-bold w-8 h-8 rounded-lg flex items-center justify-center">
+                                                        5
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="loser-side flex items-center space-x-3">
+                                                    
+                                                    <img src="../../public/assets/yakhay.jpeg" 
+                                                        alt="Player 2" 
+                                                        class="player-image w-12 h-12 rounded-full object-cover border-3">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <!-- end itmes-->
+
+
+                                    </div>
+                                </div>
+                                 
+         
+                            </div>
+
+
+
+                            
                         </div>
                     </div>
                     `;
@@ -213,7 +455,6 @@ export class ChatView extends View{
 
     public onMount(): void {
        
-
         this.setupTabFiltering()
         
     }
