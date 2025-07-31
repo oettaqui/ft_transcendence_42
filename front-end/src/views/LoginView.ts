@@ -1,4 +1,3 @@
-
 import {View} from "../app/View"
 
 export class LoginView extends View{
@@ -11,7 +10,7 @@ export class LoginView extends View{
         const element = document.createElement('div');
 
         element.innerHTML = `
-           <header class="h-20 py-7 px-0 fixed flex items-center w-[100%] z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md">
+           <header class="h-20 fixed flex items-center w-[100%] z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md">
                 <div class="container">
                     <nav class="flex justify-between items-center">
                         <a href="/" class="text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</a>
@@ -20,7 +19,7 @@ export class LoginView extends View{
                 </div>
             </header>
 
-            <section class="min-h-[90vh] flex items-center  bg-grid-pattern">
+            <section class="min-h-[90vh] flex items-center bg-grid-pattern !pt-28">
                 <div class="container">
                     <div class="flex items-center gap-[4rem]">
 
@@ -44,25 +43,31 @@ export class LoginView extends View{
                         <div class="flex-1">
                             <div class="flex flex-col justify-center items-center gap-8"> 
                                 <h2  class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h2>
-                                <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Sing In to you account</p>
-                                <form class="auth-form flex flex-col gap-7" id="loginForm">
-                                    <div class="flex flex-col gap-1"> <span class="text-[13px] font-medium">Email Address:* </span> <input type="email" required  class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent  focus:border-[var(--accent)] transition-colors" /></div>
-                                    <div class="flex flex-col gap-1"> <span class="text-[13px] font-medium">Password:* </span> <input type="password" required  class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent  focus:border-[var(--accent)] transition-colors" /></div>
+                                <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Sign In to your account</p>
+                                <form class="auth-form flex flex-col gap-7 w-[450px]" id="loginForm">
+                                    <div class="flex flex-col gap-1"> 
+                                        <span class="text-[13px] font-medium">Email Address:*</span> 
+                                        <input type="email" name="email" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                    </div>
+                                    <div class="flex flex-col gap-1"> 
+                                        <span class="text-[13px] font-medium">Password:*</span> 
+                                        <input type="password" name="password" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                    </div>
                                     
                                     <a href="" class="enhanced-btn secondary-btn">
-                                        <span class="flex items-center justify-center !mt-1"> Sing In </span>
+                                        <span class="flex items-center justify-center !mt-1"> Sign In </span>
                                     </a>
-                                    <p class="auth-switch ">Don't have an account? <a href="/register" class="">Register here</a></p>
+                                    <p class="auth-switch">Don't have an account? <a href="/register" class="">Register here</a></p>
                                 </form>
-                                <div class="flex justify-between items-center gap-6">
-                                    <span class="block  w-[130px] h-0.5 bg-[var(--text-secondary)] rounded-2xl"></span>
-                                    <span class="block text-[var(--text-secondary)] text-sm">OR</span>
-                                    <span class="block w-[130px] h-0.5 bg-[var(--text-secondary)] rounded-2xl"></span>
+                                <div class="flex justify-between items-center gap-6 w-[450px]">
+                                    <span class="block flex-1 h-0.5 bg-[var(--text-secondary)] rounded-2xl"></span>
+                                    <span class="block text-[var(--text-secondary)] text-sm px-4">OR</span>
+                                    <span class="block flex-1 h-0.5 bg-[var(--text-secondary)] rounded-2xl"></span>
                                 </div>
 
-                                <div class="flex items-center justify-center gap-4 w-full">
+                                <div class="flex items-center justify-center gap-4 w-[450px]">
                                     <!-- Google OAuth Button -->
-                                    <a href="/auth/google" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)]  hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
+                                    <a href="/auth/google" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
                                         <svg class="w-6 h-6" viewBox="0 0 24 24">
                                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -73,25 +78,15 @@ export class LoginView extends View{
                                     
                                     <!-- 42 Intra OAuth Button -->
                                     <a href="/auth/42" 
-                                        class=" w-[70px] h-[50px]
-                                            flex items-center justify-center gap-3 
-                                            border border-[var(--text-secondary)] 
-                                            hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 
-                                            rounded-lg transition-all hover:scale-105 bg-[url('../../public/assets/Intra-icon.png')] 
-                                            bg-no-repeat bg-center bg-[length:70px_70px]">
+                                        class="w-[70px] h-[50px] flex items-center justify-center gap-3 border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105 bg-[url('../../public/assets/Intra-icon.png')] bg-no-repeat bg-center bg-[length:70px_70px]">
                                     </a>
-                                    
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
-
         `;
-
         
         console.log('login submitted');
         
@@ -99,28 +94,4 @@ export class LoginView extends View{
         this.addParticleEffects(element);
         return element;
     }
-
-    
 }
-
-
-// protected onMount(): void {
-//         // Set up form handling
-//         const form = this.querySelector<HTMLFormElement>('#loginForm');
-//         if (form) {
-//             this.addEventListener(form, 'submit', this.handleLogin.bind(this));
-//         }
-
-//         // Add visual effects
-//         this.add3DTiltEffect('.pong-field1');
-//         this.addParticleEffects(this.element!);
-//     }
-
-//     private handleLogin(e: Event): void {
-//         e.preventDefault();
-//         const formData = this.getFormData('#loginForm');
-//         if (formData && this.validateForm('#loginForm')) {
-//             console.log('Login submitted', formData);
-//             // Handle login logic here
-//         }
-//     }

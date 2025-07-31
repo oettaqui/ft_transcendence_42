@@ -554,3 +554,54 @@ header a:hover {
     border-color: #ef4444;
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
+
+.dropdown-enter {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+}
+
+.dropdown-enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: all 0.2s ease-out;
+}
+
+.dropdown-exit {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.dropdown-exit-active {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: all 0.15s ease-in;
+}
+
+
+/* settings section */
+
+
+.settings-section .active {
+    color: white;
+    font-weight: 600;
+}
+.settings-section .unactive {
+    color: #9ca3af;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.settings-section .unactive:hover {
+    opacity: 70%;
+}
+.settings-section .upload-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.settings-section .profile-image-container:hover .upload-overlay {
+    opacity: 1;
+}
+.settings-section .glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}

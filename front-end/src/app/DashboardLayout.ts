@@ -1,4 +1,3 @@
-
 import { Router } from "./Router";
 import { View } from "./View";
 
@@ -7,6 +6,7 @@ export class DashboardLayout {
     private router: Router;
     private element: HTMLElement | null = null;
     private elementContainer: HTMLElement | null = null;
+    private isDropdownOpen: boolean = false;
     // private userState: UserState;
     protected eventListeners: Array<{
         element: HTMLElement;
@@ -49,16 +49,53 @@ export class DashboardLayout {
                                     <div class="text-[18px] font-bold">500</div>
                                 </div>
                             </div>
-                            <div class="relative flex items-end gap-8">
-                                <i class="ti ti-bell-filled text-[32px] font-light text-[var(--text)]"></i>
-                                <div class="absolute top-[8px] left-[18px] bg-red-700 rounded-full text-[14px] w-[14px] h-[12px] text-center z-[10] "></div>
-                                <!-- Profil -->
-                                <div >
-                                    <div class="profil w-[42px] h-[42px] rounded-full bg-[var(--text-secondary)] flex justify-center items-center">
-                                        <img class="w-[40px] h-[40px] rounded-full" src="../../public/assets/oettaqui.jpeg" />
+                            
+
+                            <div class="relative flex items-end gap-8 justify-end">
+                                <!-- Notification Bell -->
+                                <div class="relative">
+                                    <i class="ti ti-bell-filled text-[32px] font-light text-gray-300 hover:text-white transition-colors cursor-pointer"></i>
+                                    <div class="absolute -top-1 -right-1 bg-red-600 rounded-full text-[10px] w-[18px] h-[18px] flex items-center justify-center text-white font-medium">3</div>
+                                </div>
+                                
+                                <!-- Profile Dropdown -->
+                                <div class="relative" id="profileDropdown">
+                                    <div class="profil w-[42px] h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all duration-200" id="profileTrigger">
+                                        <img class="w-[40px] h-[40px] rounded-full object-cover" src="../../public/assets/oettaqui.jpeg" alt="Profile" />
+                                    </div>
+                                    
+                                    <!-- Dropdown Menu -->
+                                    <div id="dropdownMenu" class="absolute right-0 top-full !mt-2 w-64 bg-[var(--secondary)] border border-gray-700  shadow-2xl opacity-0 invisible transform translate-y-2 transition-all duration-200 ease-out z-50">
+                                        
+                                        
+                                        <!-- Menu Items -->
+                                        <div class="py-2">
+                                            <!-- Profile Option -->
+                                            <a href="#" class="flex items-center !px-4 !py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
+                                                <i class="ti ti-user w-5 h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
+                                                <span>Profile</span>
+                                            </a>
+                                            
+                                            <!-- Settings Option -->
+                                            <a href="#" class="flex items-center !px-4 !py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
+                                                <i class="ti ti-settings w-5 h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
+                                                <span>Settings</span>
+                                            </a>
+                                            
+                                            <!-- Divider -->
+                                            <div class="border-t border-gray-700 my-1"></div>
+                                            
+                                            <!-- Logout Option -->
+                                           <button id="logoutBtn" class="flex items-center !px-4 !py-3 text-sm text-gray-300 hover:bg-red-600 hover:text-white transition-colors group w-full text-left">
+                                                <i class="ti ti-logout w-5 h-5 !mr-3 text-gray-400 group-hover:text-white"></i>
+                                                <span>Logout</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </nav>
                 </header>
@@ -130,7 +167,7 @@ export class DashboardLayout {
                                 </li>
 
                                 <li class="nav-item-animated opacity-0 settings">
-                                    <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
+                                    <a href="/dashboard/settings" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">
@@ -156,6 +193,9 @@ export class DashboardLayout {
                 
             </div>
         `;
+
+
+        
        
 
         return  this.elementContainer;
@@ -178,10 +218,105 @@ export class DashboardLayout {
             this.view.onMount();
         }
         
-        // this.setupEventListeners();
+        this.setupEventListeners();
         this.setupNavigationLinks();
         this.onMount();
   }
+
+
+
+
+  private setupDropdownEventListeners(): void {
+        if (!this.element) return;
+
+        const profileTrigger = this.element.querySelector('#profileTrigger') as HTMLElement;
+        const dropdownMenu = this.element.querySelector('#dropdownMenu') as HTMLElement;
+        const profileDropdown = this.element.querySelector('#profileDropdown') as HTMLElement;
+        const logoutBtn = this.element.querySelector('#logoutBtn') as HTMLButtonElement;
+
+        if (profileTrigger && dropdownMenu) {
+            // Toggle dropdown on profile click
+            const profileClickHandler = (e: Event) => {
+                e.stopPropagation();
+                this.toggleDropdown();
+            };
+            this.addEventListener(profileTrigger, 'click', profileClickHandler);
+
+            // Close dropdown when clicking outside
+            const documentClickHandler = (e: Event) => {
+                if (!profileDropdown.contains(e.target as Node)) {
+                    this.closeDropdown();
+                }
+            };
+            this.addEventListener(document, 'click', documentClickHandler);
+
+            // Close dropdown on escape key
+            const keydownHandler = (e: KeyboardEvent) => {
+                if (e.key === 'Escape') {
+                    this.closeDropdown();
+                }
+            };
+            this.addEventListener(document, 'keydown', keydownHandler);
+
+            // Prevent dropdown from closing when clicking inside it
+            const dropdownClickHandler = (e: Event) => {
+                e.stopPropagation();
+            };
+            this.addEventListener(dropdownMenu, 'click', dropdownClickHandler);
+        }
+
+        if (logoutBtn) {
+            const logoutHandler = (e: Event) => {
+                e.preventDefault();
+                this.handleLogout();
+            };
+            console.log("Attaching logout event listener");
+            this.addEventListener(logoutBtn, 'click', logoutHandler);
+        }
+    }
+
+    private toggleDropdown(): void {
+        if (!this.element) return;
+        
+        const dropdownMenu = this.element.querySelector('#dropdownMenu') as HTMLElement;
+        if (!dropdownMenu) return;
+
+        this.isDropdownOpen = !this.isDropdownOpen;
+        
+        if (this.isDropdownOpen) {
+            dropdownMenu.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+            dropdownMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+        } else {
+            dropdownMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+            dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+        }
+    }
+
+    private closeDropdown(): void {
+        if (!this.element || !this.isDropdownOpen) return;
+        
+        const dropdownMenu = this.element.querySelector('#dropdownMenu') as HTMLElement;
+        if (!dropdownMenu) return;
+
+        this.isDropdownOpen = false;
+        dropdownMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+        dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+    }
+
+    private handleLogout(): void {
+        this.closeDropdown();
+        
+        console.log('Logging out...');
+        
+       
+        this.router.navigateTo('/');
+    }
+
+    private setupEventListeners(): void {
+        this.setupDropdownEventListeners();
+
+
+    }
 
   updateSidebarActiveStates(path: string): void {
     if (!this.element) return;
@@ -239,6 +374,7 @@ export class DashboardLayout {
     onMount(): void{
         const path = window.location.pathname;
         this.updateSidebarActiveStates(path);
+
     }
 
     unMount(): void {
@@ -268,9 +404,4 @@ export class DashboardLayout {
     }
 
 
-
-
-
-    // protected add3DTiltEffect(container: HTMLElement): void {}
-    // protected addParticleEffects(container: HTMLElement): void {}
 };
