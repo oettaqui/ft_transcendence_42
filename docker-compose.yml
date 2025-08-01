@@ -9,6 +9,8 @@ services:
       - "3001:3001"
     volumes:
       - auth_data:/app/data
+      - ./backend/user-service:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - PORT=3001

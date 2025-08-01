@@ -18,41 +18,10 @@ export class GameView extends View{
         element.classList.add('items-cente');
         element.innerHTML = `
                     <aside class="flex flex-col justify-between w-[70%] h-[95%] gap-10 !m-auto ">
-                        <div class="w-full h-[70%] relative">
+                        <div class="w-full h-[70%] bg-[var(--secondary)]">
                             <!-- bg coalition -->
-                            <div class=" bg-[url(/public/assets/Commodore_BG.jpg)] bg-cover w-full h-full rounded-3xl !p-4 !pl-10 flex flex-col justify-center gap-10" >
-                                <div class="z-[10] flex justify-start items-center gap-8">
-                                    <div class="relative flex justify-center items-center w-[110px] h-[110px]">
-                                        <div class="absolute w-[102px] h-[102px] bg-[var(--accent)] rounded-full"> </div>
-                                        <img class="w-[100px] h-[100px] bg-contain bg-no-repeat bg-center  rounded-full z-[11] flex justify-center items-center" src="/public/assets/oettaqui.jpeg" />
-                                    </div>
-                                    <div class="flex flex-col justify-center items-start">
-                                        <h2 class="text-[28px] font-bold"> Oussama Ettaqui </h2>
-                                        <p class="font-light text-[14px]">oettaqui</p>
-                                    </div>
-                                </div>
-                                <div class="level flex justify-start items-center gap-4">
-                                    <!-- Progress -->
-                                    <div class="text-3xl font-bold">08</div>
-                                    <div class="flex flex-col items-start justify-center !mb-8">
-                                        <div class="percentage text-[14px]" id="percentageText">97%</div>
-                                        <div class="progress-bar h-[10px] w-[400px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
-                                            <div class="progress-fill h-full rounded-3xl" id="progressFill"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute top-[50px] right-[100px] w-[100px] h-[35px] rounded-3xl bg-[#333333] flex justify-center items-center">
-                                <!-- location -->
-                                <div class="flex justify-center items-center gap-2">
-                                    <div class="w-[10px] h-[10px] bg-[var(--success)] rounded-full"></div>
-                                    <div class="text-[12px] font-light">c4r4p4</div>
-                                </div>
-                                    <div class="absolute top-[140px]">
-                                        <span class="!px-4 !py-2 rounded-xl bg-[var(--freax)] font-bold text-[12px]"> Freax </span>
-                                        
-                                    </div>
-                            </div>
+                            
+                            
                         </div>
                         <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)]">
                                 

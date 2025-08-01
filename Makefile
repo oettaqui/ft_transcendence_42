@@ -11,7 +11,7 @@ all: up
 up:
 	@echo "$(GREEN)Starting the containers...$(RESET)"
 	
-	docker compose -f ./docker-compose.yml  up --build -d
+	docker compose -f ./docker-compose.yml  up --build
 	@echo "$(LIGHT_GREEN)Containers started successfully!$(RESET)"
 
 down:

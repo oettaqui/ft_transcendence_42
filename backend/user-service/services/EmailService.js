@@ -33,7 +33,10 @@ class EmailService {
   }
 
   async sendEmailVerification(email, username, token) {
-    const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:8080'}/?token=${token}`;
+    const verificationUrl = `${process.env.FRONTEND_URL || 'http://frontend:8080'}/dashboard?token=${token}`;
+    console.log("**************************************");
+    console.log(verificationUrl);
+    console.log("**************************************");
     
     const mailOptions = {
       from: `"Transcendence Pong" <${process.env.EMAIL_USER}>`,
