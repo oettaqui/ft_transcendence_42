@@ -39,7 +39,8 @@ export class GameView extends View{
     }
 
     onMount(): void {
-        this.animateProgress();
+        
+        
     }
 
     
@@ -49,52 +50,6 @@ export class GameView extends View{
     //     // return el;
     // }
 
-    animateProgress(): void {
-        const percentageElement = document.getElementById('percentageText');
-        const progressFillElement = document.getElementById('progressFill');
-        
-        if (!percentageElement || !progressFillElement) {
-            console.error('Progress elements not found');
-            return;
-        }
-        
-
-        const targetPercentage = parseInt(percentageElement.textContent || '0');
-        
-  
-        percentageElement.textContent = '0%';
-        progressFillElement.style.width = '0%';
-        
-        
-        setTimeout(() => {
-            progressFillElement.style.width = targetPercentage + '%';
-            
-           
-            this.animateCounter(0, targetPercentage, 2000, (value: number) => {
-                percentageElement.textContent = Math.round(value) + '%';
-            });
-        }, 100);
-    }
-
-    animateCounter(start: number, end: number, duration: number, callback: (value: number) => void): void {
-        const startTime = performance.now();
-        
-        const update = () => {
-            const currentTime = performance.now();
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
-            const currentValue = start + (end - start) * easeOutProgress;
-            
-            callback(currentValue);
-            
-            if (progress < 1) {
-                requestAnimationFrame(update);
-            }
-        };
-        
-        requestAnimationFrame(update);
-    }
+    
 
 };

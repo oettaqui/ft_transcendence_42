@@ -51,12 +51,14 @@ export class DashboardLayout {
                             </div>
                             
 
-                            <div class="relative flex items-end gap-8 justify-end">
+                            <div class="relative flex items-end gap-8 justify-end ">
                                 <!-- Notification Bell -->
-                                <div class="relative">
-                                    <i class="ti ti-bell-filled text-[32px] font-light text-gray-300 hover:text-white transition-colors cursor-pointer"></i>
-                                    <div class="absolute -top-1 -right-1 bg-red-600 rounded-full text-[10px] w-[18px] h-[18px] flex items-center justify-center text-white font-medium">3</div>
-                                </div>
+                                <!-- 
+                                -->
+                                <div class="relative flex justify-center items-center">
+                                    <i class="ti ti-bell-filled text-[34px] font-light text-gray-300 hover:text-white transition-colors cursor-pointer "></i>
+                                    <div class="absolute -top-1 -right-1 bg-red-600 rounded-full text-[10px] w-[19px] h-[19px] flex items-center justify-center text-white font-medium">3</div>
+                                </div> 
                                 
                                 <!-- Profile Dropdown -->
                                 <div class="relative" id="profileDropdown">
