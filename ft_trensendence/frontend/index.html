@@ -679,6 +679,9 @@
                         data-shape="rectangular"
                         data-logo_alignment="left">
                     </div>
+                    <button type="button" onclick="handleIntraSignIn()" class="btn" style="margin-top: 10px; background: #00babc;">
+                        Sign in with Intra 42
+                    </button>
                 </div>
             </form>
             <div id="login-message"></div>
@@ -1240,6 +1243,7 @@
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
+                    
                 }
                 return response.json();
             })
@@ -1267,6 +1271,165 @@
                     `<div class="error">Google sign-in failed: ${error.message}</div>`;
             });
         }
+
+        // *****************************
+        // Intra authentication functions
+async function handleIntraSignIn() {
+    try {
+        // Show loading state
+        document.getElementById('login-message').innerHTML = 
+            '<div class="loading">Redirecting to Intra 42...</div>';
+        
+        // Get authorization URL from backend
+        const response = await fetch(`${API_BASE}/auth/intra/url`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // Store state for verification (optional)
+            localStorage.setItem('intra-oauth-state', data.data.state);
+            
+            // Open Intra OAuth in a popup
+            const popup = window.open(
+                data.data.authUrl, 
+                'intraOAuth', 
+                'width=500,height=600,scrollbars=yes,resizable=yes'
+            );
+            
+            // Listen for the OAuth callback
+            const checkClosed = setInterval(() => {
+                if (popup.closed) {
+                    clearInterval(checkClosed);
+                    document.getElementById('login-message').innerHTML = 
+                        '<div class="error">Intra sign-in was cancelled</div>';
+                }
+            }, 1000);
+            
+            // Listen for messages from the popup
+            window.addEventListener('message', handleIntraCallback);
+            
+        } else {
+            throw new Error(data.error || 'Failed to get Intra authorization URL');
+        }
+    } catch (error) {
+        console.error('Intra sign-in error:', error);
+        document.getElementById('login-message').innerHTML = 
+            `<div class="error">Intra sign-in failed: ${error.message}</div>`;
+    }
+}
+
+// Handle Intra OAuth callback
+async function handleIntraCallback(event) {
+    // Make sure the message is from the OAuth popup
+    if (event.origin !== window.location.origin) return;
+    
+    const { code, state, error } = event.data;
+    
+    if (error) {
+        document.getElementById('login-message').innerHTML = 
+            `<div class="error">Intra authentication failed: ${error}</div>`;
+        return;
+    }
+    
+    if (!code) {
+        document.getElementById('login-message').innerHTML = 
+            '<div class="error">No authorization code received from Intra</div>';
+        return;
+    }
+    
+    try {
+        // Show loading state
+        document.getElementById('login-message').innerHTML = 
+            '<div class="loading">Completing Intra sign-in...</div>';
+        
+        // Send code to backend
+        const response = await fetch(`${API_BASE}/auth/intra/callback`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code, state })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Store token and user data
+            localStorage.setItem('token', data.data.token);
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+            
+            // Clear any error messages
+            document.getElementById('login-message').innerHTML = 
+                '<div class="success">Intra sign-in successful!</div>';
+            
+            // Load user dashboard
+            setTimeout(() => {
+                getCurrentUser();
+            }, 1000);
+        } else {
+            throw new Error(data.error || 'Intra authentication failed');
+        }
+    } catch (error) {
+        console.error('Intra callback error:', error);
+        document.getElementById('login-message').innerHTML = 
+            `<div class="error">Intra sign-in failed: ${error.message}</div>`;
+    } finally {
+        // Clean up
+        window.removeEventListener('message', handleIntraCallback);
+        localStorage.removeItem('intra-oauth-state');
+    }
+}
+// ******************************************
+
+        // document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        //     e.preventDefault();
+            
+        //     const email = document.getElementById('login-email').value;
+        //     const password = document.getElementById('login-password').value;
+        //     const twoFactorCode = document.getElementById('login-2fa-code').value;
+        //     const messageDiv = document.getElementById('login-message');
+            
+        //     // Show loading state
+        //     messageDiv.innerHTML = '<div class="loading">Signing in...</div>';
+            
+        //     try {
+        //         const response = await apiCall('/auth/login', {
+        //             method: 'POST',
+        //             body: JSON.stringify({ 
+        //                 email, 
+        //                 password, 
+        //                 ...(twoFactorCode && { twoFactorCode })
+        //             })
+        //         });
+                
+        //         if (response.success) {
+        //             // Successful login
+        //             localStorage.setItem('token', response.data.token);
+        //             messageDiv.innerHTML = '<div class="success">Login successful!</div>';
+        //             setTimeout(() => {
+        //                 getCurrentUser();
+        //             }, 1000);
+        //         } else if (response.requiresTwoFactor) {
+        //             // 2FA required
+        //             requires2FA = true;
+        //             pendingLoginData = { email, password };
+        //             document.getElementById('2fa-input-group').classList.remove('hidden');
+        //             document.getElementById('login-btn').textContent = 'Verify Code';
+        //             messageDiv.innerHTML = '<div class="warning">Please check your email for the verification code</div>';
+        //             document.getElementById('login-2fa-code').focus();
+        //         }
+        //     } catch (error) {
+        //         messageDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                
+        //         // Reset 2FA state if error
+        //         if (requires2FA) {
+        //             requires2FA = false;
+        //             pendingLoginData = null;
+        //             document.getElementById('2fa-input-group').classList.add('hidden');
+        //             document.getElementById('login-btn').textContent = 'Login';
+        //             document.getElementById('login-2fa-code').value = '';
+        //         }
+        //     }
+        // });
     
         // Add this to ensure Google client loads properly
         window.addEventListener('load', () => {

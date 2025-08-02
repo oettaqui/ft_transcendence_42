@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Testing Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .method-select {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .headers-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .header-row input {
+            flex: 1;
+        }
+
+        .remove-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+        }
+
+        .add-header-btn {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .add-header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response-section {
+            margin-top: 30px;
+            background: #1a202c;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .response-header {
+            background: #2d3748;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-success { background: #48bb78; color: white; }
+        .status-error { background: #e53e3e; color: white; }
+        .status-warning { background: #ed8936; color: white; }
+
+        .response-content {
+            padding: 20px;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4a5568;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .url-row {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .url-input {
+            flex: 1;
+        }
+
+        .method-wrapper {
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 API Testing Tool</h1>
+            <p>Test your backend APIs with ease - no frontend required!</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-group">
+                <div class="url-row">
+                    <div class="method-wrapper">
+                        <label for="method">Method</label>
+                        <select id="method" class="method-select">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="PATCH">PATCH</option>
+                        </select>
+                    </div>
+                    <div class="url-input">
+                        <label for="url">API Endpoint URL</label>
+                        <input type="url" id="url" placeholder="https://api.example.com/users" value="https://jsonplaceholder.typicode.com/posts/1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="headers-section">
+                <label>Headers</label>
+                <div id="headers-container">
+                    <div class="header-row">
+                        <input type="text" placeholder="Header name (e.g., Content-Type)" value="Content-Type">
+                        <input type="text" placeholder="Header value (e.g., application/json)" value="application/json">
+                        <button type="button" class="remove-btn">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="add-header-btn" onclick="addHeader()">+ Add Header</button>
+            </div>
+
+            <div class="form-group">
+                <label for="body">Request Body (JSON)</label>
+                <textarea id="body" rows="8" placeholder='{"key": "value"}'></textarea>
+            </div>
+
+            <button class="send-btn" onclick="sendRequest()">Send Request</button>
+
+            <div id="response-section" class="response-section" style="display: none;">
+                <div class="response-header">
+                    <span>Response</span>
+                    <span id="status-badge" class="status-badge"></span>
+                </div>
+                <div id="response-content" class="response-content"></div>
+            </div>
+
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Sending request...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let headerCount = 1;
+
+        function addHeader() {
+            const container = document.getElementById('headers-container');
+            const headerRow = document.createElement('div');
+            headerRow.className = 'header-row';
+            headerRow.innerHTML = `
+                <input type="text" placeholder="Header name">
+                <input type="text" placeholder="Header value">
+                <button type="button" class="remove-btn" onclick="removeHeader(this)">Remove</button>
+            `;
+            container.appendChild(headerRow);
+            headerCount++;
+        }
+
+        function removeHeader(button) {
+            if (document.querySelectorAll('.header-row').length > 1) {
+                button.parentElement.remove();
+            } else {
+                alert('At least one header row must remain');
+            }
+        }
+
+        function getHeaders() {
+            const headers = {};
+            const headerRows = document.querySelectorAll('.header-row');
+            
+            headerRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const key = inputs[0].value.trim();
+                const value = inputs[1].value.trim();
+                
+                if (key && value) {
+                    headers[key] = value;
+                }
+            });
+            
+            return headers;
+        }
+
+        function getStatusClass(status) {
+            if (status >= 200 && status < 300) return 'status-success';
+            if (status >= 400) return 'status-error';
+            return 'status-warning';
+        }
+
+        async function sendRequest() {
+            const url = document.getElementById('url').value.trim();
+            const method = document.getElementById('method').value;
+            const body = document.getElementById('body').value.trim();
+            const headers = getHeaders();
+
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('response-section').style.display = 'none';
+
+            try {
+                const options = {
+                    method: method,
+                    headers: headers
+                };
+
+                // Add body for methods that support it
+                if (['POST', 'PUT', 'PATCH'].includes(method) && body) {
+                    try {
+                        JSON.parse(body); // Validate JSON
+                        options.body = body;
+                    } catch (e) {
+                        throw new Error('Invalid JSON in request body');
+                    }
+                }
+
+                const startTime = Date.now();
+                const response = await fetch(url, options);
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+
+                let responseText;
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    const jsonResponse = await response.json();
+                    responseText = JSON.stringify(jsonResponse, null, 2);
+                } else {
+                    responseText = await response.text();
+                }
+
+                // Show response
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('response-section').style.display = 'block';
+                
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.textContent = `${response.status} ${response.statusText} (${duration}ms)`;
+                statusBadge.className = `status-badge ${getStatusClass(response.status)}`;
+
+                const responseHeaders = {};
+                response.headers.forEach((value, key) => {
+                    responseHeaders[key] = value;
+                });
+
+                const fullResponse = {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: responseHeaders,
+                    body: contentType && contentType.includes('application/json') ? JSON.parse(responseText) : responseText
+                };
+
+                document.getElementById('response-content').textContent = JSON.stringify(fullResponse, null, 2);
+
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('response-section').style.display = 'block';
+                
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.textContent = 'Error';
+                statusBadge.className = 'status-badge status-error';
+                
+                document.getElementById('response-content').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Handle method change to show/hide body
+        document.getElementById('method').addEventListener('change', function() {
+            const bodyGroup = document.getElementById('body').parentElement;
+            if (['GET', 'DELETE'].includes(this.value)) {
+                bodyGroup.style.opacity = '0.5';
+                document.getElementById('body').disabled = true;
+            } else {
+                bodyGroup.style.opacity = '1';
+                document.getElementById('body').disabled = false;
+            }
+        });
+
+        // Add remove button functionality to existing header
+        document.querySelector('.remove-btn').addEventListener('click', function() {
+            removeHeader(this);
+        });
+
+        // Enter key to send request
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                sendRequest();
+            }
+        });
+    </script>
+</body>
+</html>

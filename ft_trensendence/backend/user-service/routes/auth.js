@@ -15,12 +15,18 @@ async function authRoutes(fastify, options) {
   // Google OAuth verification (no validation needed for token)
   fastify.post('/google/verify', AuthController.googleVerify);
 
+  // Intra OAuth routes
+  fastify.get('/intra/url', AuthController.intraAuthUrl);
+  fastify.post('/intra/callback', AuthController.intraCallback);
+
   // Email verification routes
   fastify.get('/verify-email/:token', AuthController.verifyEmail);
   
   fastify.post('/resend-verification', { 
     preHandler: authenticate 
   }, AuthController.resendVerificationEmail);
+
+  fastify.post('/resend-verification-public', AuthController.resendVerificationEmailPublic);
 
   // 2FA routes
   fastify.get('/2fa/status', { 
@@ -73,7 +79,6 @@ async function authRoutes(fastify, options) {
       user: request.user.toJSON()
     };
   });
-  fastify.post('/resend-verification-public', AuthController.resendVerificationEmailPublic);
 }
 
 module.exports = authRoutes;

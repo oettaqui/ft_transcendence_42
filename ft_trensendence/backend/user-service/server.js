@@ -1,4 +1,4 @@
-// auth-service/server.js - Authentication and User Management Service
+// user-service/server.js - Authentication and User Management Service
 const fastify = require('fastify')({ logger: true });
 const { initDatabase, closeDatabase } = require('./config/database');
 
@@ -29,7 +29,7 @@ fastify.register(require('./routes/users'), { prefix: '/api/users' });
 fastify.get('/health', async (request, reply) => {
   return { 
     status: 'OK', 
-    service: 'auth-service',
+    service: 'user-service',
     timestamp: new Date().toISOString() 
   };
 });
@@ -41,6 +41,8 @@ fastify.get('/info', async (request, reply) => {
     version: '1.0.0',
     features: [
       'User Registration & Login',
+      'Google OAuth Authentication',
+      'Intra 42 OAuth Authentication',
       'Email Verification',
       'Two-Factor Authentication (2FA)',
       'JWT Token Management',
@@ -51,6 +53,9 @@ fastify.get('/info', async (request, reply) => {
     endpoints: [
       'POST /api/auth/register',
       'POST /api/auth/login',
+      'POST /api/auth/google/verify',
+      'GET /api/auth/intra/url',
+      'POST /api/auth/intra/callback',
       'GET /api/auth/verify-email/:token',
       'POST /api/auth/resend-verification',
       'GET /api/auth/2fa/status',

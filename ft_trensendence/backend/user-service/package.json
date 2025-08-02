@@ -1,5 +1,5 @@
 {
-  "name": "transcendence-auth-service",
+  "name": "transcendence-user-service",
   "version": "1.0.0",
   "description": "Authentication and User Management Service for Transcendence Pong Game",
   "main": "server.js",
@@ -22,6 +22,7 @@
   "dependencies": {
     "@fastify/cors": "^8.4.0",
     "@fastify/jwt": "^7.2.4",
+    "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
     "fastify": "^4.24.3",
     "google-auth-library": "^9.6.3",
