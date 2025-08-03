@@ -82,7 +82,7 @@ export class Router {
           if (this.currentLayout)
             this.currentLayout.mount(this.root);
         }
-        else{
+        else {
           console.log(' Mounting new view...');
           this.currentView.mount(this.root);
         }

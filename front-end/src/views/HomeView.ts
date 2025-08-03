@@ -259,10 +259,10 @@ export class HomeView extends View{
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button class="accept-btn text-[var(--success)] w-[30px] h-[30px] rounded-full hover:bg-green-600 transition" data-id="${friend.id}">
+                    <button class="accept-btn text-[var(--success)] w-[30px] h-[30px] rounded-full transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
                         <i class="ti ti-circle-check text-3xl"></i>
                     </button>
-                    <button class="reject-btn text-[var(--danger)] w-[30px] h-[30px] hover:bg-red-600 transition" data-id="${friend.id}">
+                    <button class="reject-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
                         <i class="ti ti-x text-3xl"></i>
                     </button>
                 </div>
