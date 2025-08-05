@@ -94,7 +94,20 @@ class User {
       );
     });
   }
-
+  
+  // Update Intra ID for existing user
+    static async updateIntraId(userId, intraId) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        'UPDATE users SET intra_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        [intraId, userId],
+        function(err) {
+          if (err) return reject(err);
+          resolve(this.changes);
+        }
+      );
+    });
+  }
   // Mark email as verified
   async verifyEmail() {
     return new Promise((resolve, reject) => {

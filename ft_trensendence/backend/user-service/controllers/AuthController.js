@@ -10,7 +10,7 @@ const googleClient = new OAuth2Client('394069384301-1b8bqmnv35qkfgk9icofqc5gthof
 // Intra OAuth configuration
 const INTRA_CONFIG = {
   clientId: process.env.INTRA_CLIENT_ID || 'u-s4t2ud-1fd9ab391aacad4bdf8b9e1b81bae0f5d4c31d0b591d66249aa50a9ac852d727',
-  clientSecret: process.env.INTRA_CLIENT_SECRET || 's-s4t2ud-524a7fcff33487a21d7ef310e9925ff15afa43e01e5ad9a27d1ce78421eee1a5e',
+  clientSecret: process.env.INTRA_CLIENT_SECRET || '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',
   redirectUri: process.env.INTRA_REDIRECT_URI || 'http://localhost:8080/oauth-callback.html',
   authUrl: 'https://api.intra.42.fr/oauth/authorize',
   tokenUrl: 'https://api.intra.42.fr/oauth/token',
@@ -724,10 +724,13 @@ static async intraCallback(request, reply) {
     }
 
     const intraUser = userResponse.data;
+    console.log("/*/*/*/*/**/*/*/*/*");
+    console.log(intraUser.cursus_users);
+    console.log("/*/*/*/*/**/*/*/*/*");
     console.log("Received Intra user data:", {
       id: intraUser.id,
       login: intraUser.login,
-      email: intraUser.email ? '***REDACTED***' : 'MISSING'
+      email: intraUser.email
     });
 
     // 8. Find or create user in database
