@@ -8,8 +8,11 @@ class User {
     this.username = data.username;
     this.email = data.email;
     this.password = data.password;
+    this.firstName = data.first_name || data.firstName;
+    this.lastName = data.last_name || data.lastName;
     this.avatar = data.avatar;
     this.googleId = data.google_id || data.googleId;
+    this.intraId = data.intra_id || data.intraId; // Add Intra ID support
     this.isOnline = data.is_online || data.isOnline || false;
     this.lastLogin = data.last_login || data.lastLogin;
     this.createdAt = data.created_at || data.createdAt;
@@ -30,16 +33,16 @@ class User {
   }
 
   // Create a new user
-  static async create({ username, email, password, googleId = null, avatar = null }) {
+  static async create({ username, email, password, firstName, lastName, googleId = null, intraId = null, avatar = null }) {
     return new Promise((resolve, reject) => {
-      // Google users have verified emails by default
-      const emailVerified = googleId ? true : false;
+      // OAuth users (Google/Intra) have verified emails by default
+      const emailVerified = googleId || intraId ? true : false;
       
       db.run(
         `INSERT INTO users 
-         (username, email, password, google_id, avatar, is_online, email_verified) 
-         VALUES (?, ?, ?, ?, ?, TRUE, ?)`,
-        [username, email, password, googleId, avatar, emailVerified],
+         (username, email, password, first_name, last_name, google_id, intra_id, avatar, is_online, email_verified) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?)`,
+        [username, email, password, firstName, lastName, googleId, intraId, avatar, emailVerified],
         function(err) {
           if (err) return reject(err);
           
@@ -91,7 +94,20 @@ class User {
       );
     });
   }
-
+  
+  // Update Intra ID for existing user
+    static async updateIntraId(userId, intraId) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        'UPDATE users SET intra_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        [intraId, userId],
+        function(err) {
+          if (err) return reject(err);
+          resolve(this.changes);
+        }
+      );
+    });
+  }
   // Mark email as verified
   async verifyEmail() {
     return new Promise((resolve, reject) => {
@@ -291,6 +307,19 @@ class User {
       db.get('SELECT * FROM users WHERE google_id = ?', [googleId], (err, row) => {
         if (err) {
           console.error('Database error in findByGoogleId:', err);
+          return reject(err);
+        }
+        resolve(row ? new User(row) : null);
+      });
+    });
+  }
+
+  // Find user by Intra ID
+  static async findByIntraId(intraId) {
+    return new Promise((resolve, reject) => {
+      db.get('SELECT * FROM users WHERE intra_id = ?', [intraId], (err, row) => {
+        if (err) {
+          console.error('Database error in findByIntraId:', err);
           return reject(err);
         }
         resolve(row ? new User(row) : null);

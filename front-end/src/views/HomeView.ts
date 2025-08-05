@@ -1,10 +1,16 @@
 import { View } from "../app/View";
 
+import { FriendsData } from "../types/FriendData";
+import { Friend } from "../types/FriendData";
 
 export class HomeView extends View{
-    
+    private currentTab: string = 'all';
+    private friendsData: FriendsData;
+
     constructor(){
-        super()
+        super();
+        // Initialize with static data - replace with API calls later
+        this.friendsData = this.getStaticFriendsData();
     }
     render (): HTMLElement{
         
@@ -95,108 +101,354 @@ export class HomeView extends View{
                                 
                         </div>
                     </aside>
+
                     <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto overflow-x-hidden rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
-                        <div class="flex flex-col h-full ">
-
-
-                            <header class="sticky top-0 z-10 flex justify-around !py-4 ">
-                                <button id="tab-all" class="tab-btn active" data-category="all" >All</button>
-                                <button id="tab-online" class="tab-btn " data-category="online" >Online</button>
-                                <button id="tab-requests" class="tab-btn " data-category="requests" >Requests</button>
-                                <button id="tab-suggestions" class="tab-btn " data-category="suggestions">Suggestions</button>
+                        <div class="flex flex-col h-full">
+                            <header class="sticky top-0 z-10 flex justify-around !py-4">
+                                <button id="tab-all" class="tab-btn active" data-category="all">All</button>
+                                <button id="tab-online" class="tab-btn" data-category="online">Online</button>
+                                <button id="tab-requests" class="tab-btn" data-category="requests">Requests</button>
+                                <button id="tab-pending" class="tab-btn" data-category="pending">Pending</button>
                             </header>
 
-                           
-                             <!-- request -->
-                            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
-                                <div class="flex items-center gap-3">
-                                    <img src="/public/assets/bchokri.jpeg" class="w-10 h-10 rounded-full object-cover" />
-                                    <div class="flex flex-col">
-                                    <span class="text-sm font-medium">Badr Chokri</span>
-                                    <span class="text-xs text-[var(--text-secondary)]">Sent you a request</span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button class= text-[var(--success)] w-[30px] h-[30px] rounded-full hover:bg-green-600 transition">
-                                        
-                                        <i class="ti ti-circle-check text-3xl"></i>
-                                    </button>
-                                    <button class= text-[var(--danger)] w-[30px] h-[30px] hover:bg-red-600 transition">
-                                        <i class="ti ti-x text-3xl"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- online -->
-                            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition">
-                                <div class="flex items-center gap-3">
-                                    <img src="/public/assets/oettaqui.jpeg" class="w-10 h-10 rounded-full object-cover" />
-                                    <div class="flex flex-col">
-                                    <span class="text-sm font-medium">Oussama Ettaqui</span>
-                                    <span class="flex items-center justify-start gap-3">
-                                        <span class="block w-[8px] h-[8px] rounded-full bg-[var(--success)]"></span>
-                                        <span class="block text-xs text-[var(--text-secondary)] !pt-1">Online</span></span>
-                                    </div>
-                                </div>
-                                <button class=" !mr-4 flex items-center">
-                                    <i class="ti ti-message text-2xl"></i>
-                                </button>
-                            </div>
-                            <!-- all -->
-                            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !p-3">
-                                <div class="flex items-center gap-3">
-                                    <img src="/public/assets/oettaqui.jpeg" class="w-10 h-10 rounded-full object-cover">
-                                    <div>
-                                    <div class="font-medium text-sm">Oussama Ettaqui</div>
-                                    <div class="text-xs text-[var(--text-secondary)]">Last seen 2h ago</div>
-                                    </div>
-                                </div>
-                                <button class=" !mr-4 flex items-center">
-                                    <i class="ti ti-message text-2xl"></i>
-                                </button>
+                            <!-- Loading state -->
+                            <div id="friends-loading" class="hidden flex justify-center items-center !py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
                             </div>
 
-                            <!-- suggestion -->
+                            <!-- Friends List Container -->
+                            <div id="friends-list" class="flex-1"></div>
 
-                            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !p-3 !mt-3">
-                                <div class="flex items-center gap-3">
-                                    <img src="/public/assets/yakhay.jpeg" class="w-10 h-10 rounded-full object-cover">
-                                    <div>
-                                    <div class="font-medium text-sm">New Friend</div>
-                                    <div class="text-xs text-[var(--text-secondary)]">Suggested</div>
-                                    </div>
-                                </div>
-                                <button class="bg-[var(--accent)] text-black rounded-md !px-2 !py-1 text-[12px]">Add</button>
-                            </div>
-
-                            <!-- No data found -->
-                            <div class="flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
+                            <!-- No Data State -->
+                            <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
                                 <i class="ti ti-user-off text-4xl text-[var(--text-secondary)]"></i>
                                 <div class="text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
                             </div>
-
-
-                            
                         </div>
                     </aside>
+                    
                     `;
 
         return element;
 
     }
 
+
+
     public onMount(): void {
         this.animateProgress();
         this.chatWinLose();
-        this.animateNumber('balanceValue', 500, 1000); // Balance to 500
-        this.animateNumber('levelValue', 8.97, 1000, 2); // Level to 8.97 with 2 decimals
-        this.animateNumber('matchesPlayed', 8, 1000); // Matches palyed
-        this.animateNumber('friendsCount', 5, 1000); // Friends count
-        this.animateNumber('globalRank', 30, 1000); // Global rank
-        this.animateNumber('winRate', 62.5, 1000, 1); // Win Rate wins / matches_played * 100
+        this.animateNumber('balanceValue', 500, 1000);
+        this.animateNumber('levelValue', 8.97, 1000, 2);
+        this.animateNumber('matchesPlayed', 8, 1000);
+        this.animateNumber('friendsCount', 5, 1000);
+        this.animateNumber('globalRank', 30, 1000);
+        this.animateNumber('winRate', 62.5, 1000, 1);
 
-        this.setupTabFiltering()
-        
+        // Initialize friends panel
+        this.setupTabFiltering();
+        this.loadFriendsData('all');
     }
+
+    // ===== FRIENDS PANEL FUNCTIONALITY =====
+
+    private setupTabFiltering(): void {
+        const buttons = document.querySelectorAll('.tab-btn');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const target = e.target as HTMLButtonElement;
+                const category = target.dataset.category;
+                
+                if (category) {
+                    this.switchTab(category);
+                }
+            });
+        });
+    }
+
+    private switchTab(category: string): void {
+        // Update active tab styling
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-category="${category}"]`)?.classList.add('active');
+
+        // Load data for the selected tab
+        this.currentTab = category;
+        this.loadFriendsData(category);
+    }
+
+    private async loadFriendsData(category: string): Promise<void> {
+        this.showFriendsLoading();
+
+        try {
+            let data: Friend[] = [];
+            
+            // TODO: Replace with actual API calls
+            switch(category) {
+                case 'all':
+                    // data = await this.fetchAllFriends();
+                    data = this.friendsData.all;
+                    break;
+                case 'online':
+                    // data = await this.fetchOnlineFriends();
+                    data = this.friendsData.online;
+                    break;
+                case 'requests':
+                    // data = await this.fetchFriendRequests();
+                    data = this.friendsData.requests;
+                    break;
+                case 'pending':
+                    // data = await this.fetchFriendPending();
+                    data = this.friendsData.pending;
+                    break;
+            }
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            this.renderFriends(data, category);
+        } catch (error) {
+            console.error('Error loading friends data:', error);
+            this.showFriendsNoData();
+        }
+    }
+
+    private renderFriends(friends: Friend[], category: string): void {
+        const container = document.getElementById('friends-list');
+        if (!container) return;
+        
+        if (!friends || friends.length === 0) {
+            this.showFriendsNoData();
+            return;
+        }
+
+        this.hideFriendsLoading();
+        this.hideFriendsNoData();
+
+        container.innerHTML = friends.map(friend => {
+            return this.renderFriendItem(friend, category);
+        }).join('');
+
+        // Bind action events after rendering
+        this.bindFriendActionEvents(category);
+    }
+
+    private renderFriendItem(friend: Friend, category: string): string {
+        switch(category) {
+            case 'requests':
+                return this.renderRequestItem(friend);
+            case 'online':
+                return this.renderOnlineItem(friend);
+            case 'pending':
+                return this.renderPendingItem(friend);
+            default:
+                return this.renderAllItem(friend);
+        }
+    }
+
+    private renderRequestItem(friend: Friend): string {
+        return `
+            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
+                <div class="flex items-center gap-3">
+                    <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover" />
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium">${friend.name}</span>
+                        <span class="text-xs text-[var(--text-secondary)]">Sent you a request</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="accept-btn text-[var(--success)] w-[30px] h-[30px] rounded-full transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
+                        <i class="ti ti-circle-check text-3xl"></i>
+                    </button>
+                    <button class="reject-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
+                        <i class="ti ti-x text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    private renderOnlineItem(friend: Friend): string {
+        return `
+            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition">
+                <div class="flex items-center gap-3">
+                    <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover" />
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium">${friend.name}</span>
+                        <span class="flex items-center justify-start gap-3">
+                            <span class="block w-[8px] h-[8px] rounded-full bg-[var(--success)]"></span>
+                            <span class="block text-xs text-[var(--text-secondary)] !pt-1">Online</span>
+                        </span>
+                    </div>
+                </div>
+                <button class="message-btn !mr-4 flex items-center" data-id="${friend.id}">
+                    <i class="ti ti-message text-2xl"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    private renderPendingItem(friend: Friend): string {
+        return `
+            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
+                <div class="flex items-center gap-3">
+                    <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <div class="font-medium text-sm">${friend.name}</div>
+                        <div class="text-xs text-[var(--text-secondary)]">Request sent</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-[var(--text-secondary)] opacity-70">Pending</span>
+                    <button class="cancel-btn text-[var(--danger)] w-[30px] h-[30px] hover:bg-red-600 hover:bg-opacity-20 rounded-full transition" data-id="${friend.id}">
+                        <i class="ti ti-x text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    private renderAllItem(friend: Friend): string {
+        return `
+            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !p-3 !mt-3">
+                <div class="flex items-center gap-3">
+                    <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <div class="font-medium text-sm">${friend.name}</div>
+                        <div class="text-xs text-[var(--text-secondary)]">${friend.lastSeen}</div>
+                    </div>
+                </div>
+                <button class="message-btn !mr-4 flex items-center" data-id="${friend.id}">
+                    <i class="ti ti-message text-2xl"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    private bindFriendActionEvents(category: string): void {
+        // Accept friend request
+        document.querySelectorAll('.accept-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                const friendId = target.dataset.id;
+                console.log('Accept friend request:', friendId);
+                
+                // TODO: Call API to accept friend request
+                // await this.acceptFriendRequest(Number(friendId));
+                
+                // Refresh the current tab after action
+                this.loadFriendsData(this.currentTab);
+            });
+        });
+
+        // Reject friend request
+        document.querySelectorAll('.reject-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                const friendId = target.dataset.id;
+                console.log('Reject friend request:', friendId);
+                
+                // TODO: Call API to reject friend request
+                // await this.rejectFriendRequest(Number(friendId));
+                
+                // Refresh the current tab after action
+                this.loadFriendsData(this.currentTab);
+            });
+        });
+
+        // Add friend
+        document.querySelectorAll('.add-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                const friendId = target.dataset.id;
+                console.log('Add friend:', friendId);
+                
+                // TODO: Call API to add friend
+                // await this.addFriend(Number(friendId));
+                
+                // Refresh the current tab after action
+                this.loadFriendsData(this.currentTab);
+            });
+        });
+
+        // Message friend
+        document.querySelectorAll('.message-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                const friendId = target.dataset.id;
+                console.log('Message friend:', friendId);
+                
+                // TODO: Navigate to chat or open chat modal
+                // this.openChat(Number(friendId));
+            });
+        });
+    }
+
+    // Loading and No Data states
+    private showFriendsLoading(): void {
+        document.getElementById('friends-loading')?.classList.remove('hidden');
+        document.getElementById('friends-list')!.innerHTML = '';
+        document.getElementById('friends-no-data')?.classList.add('hidden');
+    }
+
+    private hideFriendsLoading(): void {
+        document.getElementById('friends-loading')?.classList.add('hidden');
+    }
+
+    private showFriendsNoData(): void {
+        this.hideFriendsLoading();
+        document.getElementById('friends-list')!.innerHTML = '';
+        document.getElementById('friends-no-data')?.classList.remove('hidden');
+    }
+
+    private hideFriendsNoData(): void {
+        document.getElementById('friends-no-data')?.classList.add('hidden');
+    }
+
+
+    private getStaticFriendsData(): FriendsData {
+        return {
+            all: [
+                {
+                    id: 1,
+                    name: "Oussama Ettaqui",
+                    avatar: "/public/assets/oettaqui.jpeg",
+                    lastSeen: "Last seen 2h ago"
+                },
+                {
+                    id: 2,
+                    name: "Ahmed Hassan",
+                    avatar: "/public/assets/bchokri.jpeg",
+                    lastSeen: "Last seen 1d ago"
+                }
+            ],
+            online: [
+                {
+                    id: 1,
+                    name: "Oussama Ettaqui",
+                    avatar: "/public/assets/oettaqui.jpeg",
+                    status: "online"
+                }
+            ],
+            requests: [
+                {
+                    id: 5,
+                    name: "Badr Chokri",
+                    avatar: "/public/assets/bchokri.jpeg"
+                }
+            ],
+            pending: [
+                {
+                    id: 7,
+                    name: "New Friend",
+                    avatar: "/public/assets/yakhay.jpeg"
+                }
+            ]
+        };
+    }
+
    
     
     
@@ -337,22 +589,61 @@ animateNumber(elementId: string, targetValue: number, duration: number = 1000, d
     requestAnimationFrame(animate);
 }
 
-private setupTabFiltering(): void {
-    const buttons = document.querySelectorAll('.tab-btn');
-    const items = document.querySelectorAll('[data-category]');
 
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            // const selected = button.textContent?.toLowerCase();
 
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            
-        });
-    });
-
-}
 
 
 };
+
+
+
+
+// TODO: Implement these API methods when backend is ready
+    /*
+    private async fetchAllFriends(): Promise<Friend[]> {
+        const response = await fetch('/api/friends/all');
+        return response.json();
+    }
+
+    private async fetchOnlineFriends(): Promise<Friend[]> {
+        const response = await fetch('/api/friends/online');
+        return response.json();
+    }
+
+    private async fetchFriendRequests(): Promise<Friend[]> {
+        const response = await fetch('/api/friends/requests');
+        return response.json();
+    }
+
+    private async fetchFriendSuggestions(): Promise<Friend[]> {
+        const response = await fetch('/api/friends/suggestions');
+        return response.json();
+    }
+
+    private async acceptFriendRequest(friendId: number): Promise<void> {
+        await fetch(`/api/friends/requests/${friendId}/accept`, {
+            method: 'POST'
+        });
+    }
+
+    private async rejectFriendRequest(friendId: number): Promise<void> {
+        await fetch(`/api/friends/requests/${friendId}/reject`, {
+            method: 'POST'
+        });
+    }
+
+    private async addFriend(friendId: number): Promise<void> {
+        await fetch('/api/friends/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ friendId })
+        });
+    }
+
+    private openChat(friendId: number): void {
+        // Navigate to chat page or trigger chat component
+        console.log('Opening chat with friend:', friendId);
+    }
+*/

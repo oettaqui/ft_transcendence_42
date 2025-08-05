@@ -31,7 +31,7 @@ async function authenticate(request, reply) {
 // Validation middleware
 class ValidationMiddleware {
   static async validateRegistration(request, reply) {
-    const { email, password, username} = request.body;
+    const { email, password, username, firstName, lastName } = request.body;
     
     if (!email || !password || !username) {
       return reply.code(400).send({

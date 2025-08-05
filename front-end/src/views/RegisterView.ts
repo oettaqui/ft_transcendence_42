@@ -1,12 +1,30 @@
 import {View} from "../app/View"
 
+interface RegisterFormData {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+interface ApiResponse {
+    data: {
+        token: string;
+        user?: any;
+    };
+    message?: string;
+}
+
 export class RegisterView extends View {
+    private API_BASE = 'http://localhost:3001/api';
+
     constructor() {
         super();
     }
 
     render(): HTMLElement {
-       
         const element = document.createElement('div');
 
         element.innerHTML = `
@@ -44,6 +62,10 @@ export class RegisterView extends View {
                             <div class="flex flex-col justify-center items-center gap-8"> 
                                 <h2  class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h2>
                                 <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Ready to Play? Sign Up!</p>
+                                
+                                <!-- Message container for success/error messages -->
+                                <div id="register-message" class="w-[480px] text-center"></div>
+                                
                                 <form class="auth-form flex flex-col items-center justify-center gap-6 " id="registerForm">
                                     <!-- First Name and Last Name on the same line -->
                                     <div class="flex justify-center gap-2 w-[400px]">
@@ -81,9 +103,9 @@ export class RegisterView extends View {
                                         </div>
                                     </div>
                                     
-                                    <a href="" class="enhanced-btn secondary-btn w-[480px] ">
+                                    <button type="submit" class="enhanced-btn secondary-btn w-[480px] ">
                                         <span class="flex items-center justify-center !mt-1 "> Sign Up </span>
-                                    </a>
+                                    </button>
                                     <p class="auth-switch">Already have an account? <a href="/login">Login here</a></p>
                                 </form>
                             </div>
@@ -94,9 +116,118 @@ export class RegisterView extends View {
         `;
 
         console.log('register submitted');
-        
         this.add3DTiltEffect(element);
         this.addParticleEffects(element);
         return element;
+    }
+
+    protected onMount(): void {
+        this.setupFormHandler();
+    }
+
+    private setupFormHandler(): void {
+        const form = document.getElementById('registerForm') as HTMLFormElement;
+        if (form) {
+            form.addEventListener('submit', this.handleRegisterSubmit.bind(this));
+        }
+    }
+
+    private async handleRegisterSubmit(e: Event): Promise<void> {
+        e.preventDefault();
+
+        const formData = this.getFormData();
+        const messageDiv = document.getElementById('register-message') as HTMLDivElement;
+        if (formData.password !== formData.confirmPassword) {
+            this.showMessage('Passwords do not match', 'error');
+            return;
+        }
+
+        try {
+            const response = await this.apiCall('/auth/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    password: formData.password
+                })
+            });
+
+            if (response) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('pending-verification-email', formData.email);
+                
+                this.showMessage('Registration successful! Please check your email to verify your account.', 'success');
+                setTimeout(() => {
+                    this.showEmailVerification(formData.email);
+                }, 2000);
+            }
+        } catch (error: any) {
+            this.showMessage(`Error: ${error.message}`, 'error');
+        }
+    }
+
+    private getFormData(): RegisterFormData {
+        const form = document.getElementById('registerForm') as HTMLFormElement;
+        const formData = new FormData(form);
+        
+        return {
+            firstName: formData.get('firstName') as string,
+            lastName: formData.get('lastName') as string,
+            username: formData.get('username') as string,
+            email: formData.get('email') as string,
+            password: formData.get('password') as string,
+            confirmPassword: formData.get('confirmPassword') as string
+        };
+    }
+
+    private showMessage(message: string, type: 'success' | 'error'): void {
+        const messageDiv = document.getElementById('register-message') as HTMLDivElement;
+        const className = type === 'success' 
+            ? 'text-green-500 bg-green-50 border-green-200' 
+            : 'text-red-500 bg-red-50 border-red-200';
+        messageDiv.innerHTML = `<div class="${className} p-3 rounded-lg border">${message}</div>`;
+    }
+
+    private showEmailVerification(email: string): void {
+        window.location.href = `/email-verification?email=${encodeURIComponent(email)}`;
+    }
+
+    private async apiCall(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {
+        const token = localStorage.getItem('token');
+        const config: RequestInit = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            },
+            ...options
+        };
+
+        try {
+            const response = await fetch(`${this.API_BASE}${endpoint}`, config);
+
+            if (response.status === 401) {
+                alert('Session expired. Please log in again.');
+                this.logout();
+                throw new Error('Session expired');
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Something went wrong');
+            }
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    private logout(): void {
+        localStorage.removeItem('token');
+        localStorage.removeItem('pending-verification-email');
+        window.location.href = '/login';
     }
 }

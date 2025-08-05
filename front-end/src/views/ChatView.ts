@@ -205,7 +205,7 @@ export class ChatView extends View{
                             <div class="backdrop-blur-3xl rounded-4xl border border-white/10 h-[95%] w-[60%]  flex flex-col gap-6">
                                 <div class="stiky flex flex-col gap-15">
                                     <header class="relative w-full">
-                                        <img class="w-full h-[150px] object-cover " src="../../public/assets/Freax_BG.jpg" alt="Background"/>
+                                        <img class="w-full h-[150px] object-cover rounded-t-4xl" src="../../public/assets/Freax_BG.jpg" alt="Background"/>
                                         
                                         <div class="absolute left-1/2 top-22 transform -translate-x-1/2 cursor-pointer">
                                             <img class="w-[100px] h-[100px] rounded-full object-cover" 
