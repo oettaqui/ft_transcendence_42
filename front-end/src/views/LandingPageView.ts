@@ -2,6 +2,8 @@
 import {View} from "../app/View"
 
 export class LandingPageView extends View{
+
+    private currentLoadingToastId: string | null = null;
     constructor() {
         super();
     }

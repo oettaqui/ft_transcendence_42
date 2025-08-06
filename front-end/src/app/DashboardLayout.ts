@@ -77,6 +77,11 @@ export class DashboardLayout {
                                                 <i class="ti ti-user w-5 h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
                                                 <span>Profile</span>
                                             </a>
+                                            <!-- Analytics  Option -->
+                                            <a href="#" class="flex items-center !px-4 !py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
+                                                <i class="ti ti-chart-histogram  w-5 h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
+                                                <span>Analytics</span>
+                                            </a>
                                             
                                             <!-- Settings Option -->
                                             <a href="#" class="flex items-center !px-4 !py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">

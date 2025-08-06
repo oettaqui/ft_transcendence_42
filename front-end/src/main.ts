@@ -1,54 +1,18 @@
-
-
-
-import { LandingPageView } from "./views/LandingPageView";
-import { LoginView } from "./views/LoginView";
-import { RegisterView } from "./views/RegisterView";
-import { EmailVerificationView } from "./views/EmailVerificationView";
-import { RouteConfig } from "./types/RouteConfig";
-
-import { Router } from "./app/Router";
-import { HomeView } from "./views/HomeView";
-import { GameView } from "./views/GameView";
-import { ChatView } from "./views/ChatView";
-import { SettingsView } from "./views/SettingsView";
-
-
-
-export const routes: RouteConfig[] = [
-  { path: '/', view: LandingPageView},
-  { path: '/login', view: LoginView},
-  { path: '/register', view: RegisterView},
-  { path: '/email-verification', view: EmailVerificationView},
-  { path: '/dashboard', view: HomeView},
-  { path: '/dashboard/chat', view: ChatView},
-  { path: '/dashboard/game', view: GameView},
-  { path: '/dashboard/settings', view: SettingsView}
-  // { path: '/dashboard/tournament', view: TournamentView}
-  // { path: '/dashboard/profil', view: ProfileView}
-];
-
-const router = new Router(routes);
-
-
+// main.ts
+import { router } from "./router-instance.ts";
 
 function setupNavigation(): void {
-
   router.handleRoute();
 
   window.addEventListener('popstate', () => {
-      router.handleRoute();
+    router.handleRoute();
   });
 
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLAnchorElement;
     const link = target.closest('a');
 
-    if (
-      link &&
-      link.href &&
-      link.href.startsWith(window.location.origin)
-    ) {
+    if (link && link.href && link.href.startsWith(window.location.origin)) {
       e.preventDefault();
       const path = new URL(link.href).pathname;
       router.navigateTo(path);
@@ -56,7 +20,4 @@ function setupNavigation(): void {
   });
 }
 
-
 window.addEventListener('DOMContentLoaded', setupNavigation);
-
-

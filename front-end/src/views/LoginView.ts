@@ -1,4 +1,6 @@
 import {View} from "../app/View"
+import { toast } from "./ToastNotification"
+import { router } from "../router-instance.ts";
 
 interface LoginFormData {
     email: string;
@@ -20,6 +22,7 @@ export class LoginView extends View {
     private API_BASE = 'http://localhost:3001/api';
     private requires2FA = false;
     private pendingLoginData: { email: string; password: string } | null = null;
+    private currentLoadingToastId: string | null = null;
 
     constructor() {
         super();
@@ -63,9 +66,6 @@ export class LoginView extends View {
                             <div class="flex flex-col justify-center items-center gap-8"> 
                                 <h2 class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h2>
                                 <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Sign In to your account</p>
-                                
-                                <!-- Message container for success/error messages -->
-                                <div id="login-message" class="w-[450px] text-center"></div>
                                 
                                 <form class="auth-form flex flex-col gap-7 w-[450px]" id="loginForm">
                                     <div class="flex flex-col gap-1"> 
@@ -154,9 +154,14 @@ export class LoginView extends View {
         e.preventDefault();
 
         const formData = this.getFormData();
-        const messageDiv = document.getElementById('login-message') as HTMLDivElement;
         const loginBtn = document.getElementById('login-btn') as HTMLButtonElement;
-        this.showMessage('Signing in...', 'loading');
+        
+        // Show loading toast and store its ID for potential updates
+        this.currentLoadingToastId = toast.show('Signing in... ', { 
+            type: 'loading', 
+            duration: 0, // Don't auto-dismiss loading toasts
+            dismissible: false 
+        });
 
         try {
             const requestBody: any = {
@@ -174,13 +179,30 @@ export class LoginView extends View {
 
             if (response.success) {
                 localStorage.setItem('token', response.data!.token);
-                this.showMessage('Login successful!', 'success');
+                
+                // Update loading toast to success
+                if (this.currentLoadingToastId) {
+                    setTimeout(() => {
+                        toast.show('Login successful!', { 
+                        type: 'success', 
+                            duration: 4000 
+                        });
+                    }, 500);
+                    toast.dismiss(this.currentLoadingToastId);
+                    this.currentLoadingToastId = null;
+                }
                 
                 setTimeout(() => {
-                    window.location.href = '/dashboard';
-                }, 1000);
+                    router.navigateTo('/dashboard');
+                }, 500);
 
             } else if (response.requiresTwoFactor) {
+                // Dismiss loading toast and show 2FA message
+                if (this.currentLoadingToastId) {
+                    toast.dismiss(this.currentLoadingToastId);
+                    this.currentLoadingToastId = null;
+                }
+
                 this.requires2FA = true;
                 this.pendingLoginData = { email: formData.email, password: formData.password };
                 
@@ -190,12 +212,26 @@ export class LoginView extends View {
                 twoFAGroup.classList.remove('hidden');
                 loginBtn.innerHTML = '<span class="flex items-center justify-center !mt-1">Verify Code</span>';
                 
-                this.showMessage('Please check your email for the verification code', 'warning');
+                // Show 2FA required toast
+                toast.show('Please check your email for the verification code', { 
+                    type: 'warning', 
+                    duration: 6000 
+                });
+                
                 twoFAInput.focus();
             }
 
         } catch (error: any) {
-            this.showMessage(`Error: ${error.message}`, 'error');
+            // Dismiss loading toast and show error
+            if (this.currentLoadingToastId) {
+                toast.dismiss(this.currentLoadingToastId);
+                this.currentLoadingToastId = null;
+            }
+
+            toast.show(`Login failed: ${error.message}`, { 
+                type: 'error', 
+                duration: 4000 
+            });
             
             if (this.requires2FA) {
                 this.reset2FAState();
@@ -212,28 +248,6 @@ export class LoginView extends View {
             password: formData.get('password') as string,
             twoFactorCode: formData.get('twoFactorCode') as string || undefined
         };
-    }
-
-    private showMessage(message: string, type: 'success' | 'error' | 'warning' | 'loading'): void {
-        const messageDiv = document.getElementById('login-message') as HTMLDivElement;
-        let className = '';
-        
-        switch (type) {
-            case 'success':
-                className = 'text-green-500 bg-green-50 border-green-200';
-                break;
-            case 'error':
-                className = 'text-red-500 bg-red-50 border-red-200';
-                break;
-            case 'warning':
-                className = 'text-yellow-600 bg-yellow-50 border-yellow-200';
-                break;
-            case 'loading':
-                className = 'text-blue-500 bg-blue-50 border-blue-200';
-                break;
-        }
-        
-        messageDiv.innerHTML = `<div class="${className} p-3 rounded-lg border">${message}</div>`;
     }
 
     private reset2FAState(): void {
@@ -263,9 +277,8 @@ export class LoginView extends View {
             const response = await fetch(`${this.API_BASE}${endpoint}`, config);
 
             if (response.status === 401) {
-                alert('Session expired. Please log in again.');
                 this.logout();
-                throw new Error('Session expired');
+                throw new Error('Invalid data');
             }
 
             const data = await response.json();
@@ -282,6 +295,6 @@ export class LoginView extends View {
 
     private logout(): void {
         localStorage.removeItem('token');
-        window.location.href = '/login';
+        router.navigateTo("/login");
     }
 }

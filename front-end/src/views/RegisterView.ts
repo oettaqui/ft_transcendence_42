@@ -1,4 +1,6 @@
 import {View} from "../app/View"
+import { toast } from "./ToastNotification"
+import { router } from "../router-instance.ts";
 
 interface RegisterFormData {
     firstName: string;
@@ -19,6 +21,7 @@ interface ApiResponse {
 
 export class RegisterView extends View {
     private API_BASE = 'http://localhost:3001/api';
+    private currentLoadingToastId: string | null = null;
 
     constructor() {
         super();
@@ -62,9 +65,6 @@ export class RegisterView extends View {
                             <div class="flex flex-col justify-center items-center gap-8"> 
                                 <h2  class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h2>
                                 <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Ready to Play? Sign Up!</p>
-                                
-                                <!-- Message container for success/error messages -->
-                                <div id="register-message" class="w-[480px] text-center"></div>
                                 
                                 <form class="auth-form flex flex-col items-center justify-center gap-6 " id="registerForm">
                                     <!-- First Name and Last Name on the same line -->
@@ -136,11 +136,22 @@ export class RegisterView extends View {
         e.preventDefault();
 
         const formData = this.getFormData();
-        const messageDiv = document.getElementById('register-message') as HTMLDivElement;
+        
+        // Client-side validation
         if (formData.password !== formData.confirmPassword) {
-            this.showMessage('Passwords do not match', 'error');
+            toast.show('Passwords do not match', { 
+                type: 'error', 
+                duration: 4000 
+            });
             return;
         }
+
+        // Show loading toast and store its ID for potential updates
+        this.currentLoadingToastId = toast.show('Creating your account...', { 
+            type: 'loading', 
+            duration: 0, // Don't auto-dismiss loading toasts
+            dismissible: false 
+        });
 
         try {
             const response = await this.apiCall('/auth/register', {
@@ -158,13 +169,35 @@ export class RegisterView extends View {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('pending-verification-email', formData.email);
                 
-                this.showMessage('Registration successful! Please check your email to verify your account.', 'success');
+                // Update loading toast to success
+                if (this.currentLoadingToastId) {
+                    toast.dismiss(this.currentLoadingToastId);
+                    this.currentLoadingToastId = null;
+                    
+                    setTimeout(() => {
+                        toast.show('Registration successful! Please check your email to verify your account.', { 
+                            type: 'success', 
+                            duration: 6000 
+                        });
+                    }, 500);
+                }
+                
                 setTimeout(() => {
                     this.showEmailVerification(formData.email);
                 }, 2000);
             }
         } catch (error: any) {
-            this.showMessage(`Error: ${error.message}`, 'error');
+            // Dismiss loading toast and show error
+            if (this.currentLoadingToastId) {
+                toast.dismiss(this.currentLoadingToastId);
+                this.currentLoadingToastId = null;
+            }
+
+            toast.show(`Registration failed: ${error.message}`, { 
+                type: 'error', 
+                duration: 4000 
+            });
+            router.navigateTo("/register");
         }
     }
 
@@ -182,16 +215,8 @@ export class RegisterView extends View {
         };
     }
 
-    private showMessage(message: string, type: 'success' | 'error'): void {
-        const messageDiv = document.getElementById('register-message') as HTMLDivElement;
-        const className = type === 'success' 
-            ? 'text-green-500 bg-green-50 border-green-200' 
-            : 'text-red-500 bg-red-50 border-red-200';
-        messageDiv.innerHTML = `<div class="${className} p-3 rounded-lg border">${message}</div>`;
-    }
-
     private showEmailVerification(email: string): void {
-        window.location.href = `/email-verification?email=${encodeURIComponent(email)}`;
+        router.navigateTo(`/email-verification?email=${encodeURIComponent(email)}`);
     }
 
     private async apiCall(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {
@@ -208,7 +233,6 @@ export class RegisterView extends View {
             const response = await fetch(`${this.API_BASE}${endpoint}`, config);
 
             if (response.status === 401) {
-                alert('Session expired. Please log in again.');
                 this.logout();
                 throw new Error('Session expired');
             }
@@ -218,7 +242,6 @@ export class RegisterView extends View {
             if (!response.ok) {
                 throw new Error(data.error || 'Something went wrong');
             }
-
             return data;
         } catch (error) {
             throw error;
@@ -228,6 +251,6 @@ export class RegisterView extends View {
     private logout(): void {
         localStorage.removeItem('token');
         localStorage.removeItem('pending-verification-email');
-        window.location.href = '/login';
+        router.navigateTo("/login");
     }
 }
