@@ -1,6 +1,6 @@
 import {View} from "../app/View"
 import { toast } from "./ToastNotification"
-import { router } from "../router-instance.ts";
+import { router } from "../app/router-instance.ts";
 
 interface LoginFormData {
     email: string;

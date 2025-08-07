@@ -175,7 +175,7 @@ export class ToastNotification {
         element.id = `toast-${toast.id}`;
         element.className = `
             toast-item relative bg-opacity-95 backdrop-blur-sm 
-            rounded-lg shadow-lg border p-4 flex items-start gap-3 min-h-[60px]
+            rounded-lg shadow-lg border !p-4 flex items-start gap-3 min-h-[60px]
             transform translate-x-full opacity-0
             ${this.getTypeClasses(toast.type)}
         `.trim();
@@ -192,7 +192,7 @@ export class ToastNotification {
         const progressBar = toast.duration > 0 ? '<div class="toast-progress-bar" style="width: 100%"></div>' : '';
 
         element.innerHTML = `
-            <div class="flex-shrink-0 mt-0.5">
+            <div class="flex-shrink-0 !mt-0.5">
                 ${icon}
             </div>
             <div class="flex-1 text-sm font-medium leading-relaxed">
@@ -215,16 +215,16 @@ export class ToastNotification {
         
         switch (type) {
             case 'success':
-                return `${baseClasses} bg-green-600 border-green-500`;
+                return `${baseClasses} bg-green-400 border-green-500`;
             case 'error':
-                return `${baseClasses} bg-red-600 border-red-500`;
+                return `${baseClasses} bg-red-400 border-red-500`;
             case 'warning':
-                return `${baseClasses} bg-yellow-600 border-yellow-500`;
+                return `${baseClasses} bg-yellow-400 border-yellow-500`;
             case 'loading':
-                return `${baseClasses} bg-blue-600 border-blue-500`;
+                return `${baseClasses} bg-blue-400 border-blue-500`;
             case 'info':
             default:
-                return `${baseClasses} bg-gray-600 border-gray-500`;
+                return `${baseClasses} bg-gray-400 border-gray-500`;
         }
     }
 
@@ -329,7 +329,7 @@ export class ToastNotification {
         // Update element
         element.className = `
             relative pointer-events-auto bg-opacity-95 backdrop-blur-sm 
-            rounded-lg shadow-lg border p-4 flex items-start gap-3 min-h-[60px]
+            rounded-lg shadow-lg border !p-4 flex items-start gap-3 min-h-[60px]
             ${this.getTypeClasses(toast.type)}
         `.trim();
 

@@ -1,6 +1,6 @@
 import {View} from "../app/View"
 import { toast } from "./ToastNotification"
-import { router } from "../router-instance.ts";
+import { router } from "../app/router-instance.ts";
 
 interface RegisterFormData {
     firstName: string;
@@ -68,12 +68,12 @@ export class RegisterView extends View {
                                 
                                 <form class="auth-form flex flex-col items-center justify-center gap-6 " id="registerForm">
                                     <!-- First Name and Last Name on the same line -->
-                                    <div class="flex justify-center gap-2 w-[400px]">
-                                        <div class="flex flex-col gap-1 flex-1"> 
+                                    <div class="flex justify-center gap-2 ">
+                                        <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">First Name:*</span> 
                                             <input type="text" name="firstName" required class="bg-[var(--secondary)] text-[var(--text)] !py-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                         </div>
-                                        <div class="flex flex-col gap-1 flex-1"> 
+                                        <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">Last Name:*</span> 
                                             <input type="text" name="lastName" required class="bg-[var(--secondary)] text-[var(--text)] !py-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                         </div>
@@ -93,13 +93,13 @@ export class RegisterView extends View {
                                     
                                     <!-- Password and Confirm Password on the same line -->
                                     <div class="flex justify-center gap-2">
-                                        <div class="flex flex-col gap-1 flex-1"> 
+                                        <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">Password:*</span> 
-                                            <input type="password" name="password" required class="bg-[var(--secondary)] text-[var(--text)] !py-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                            <input type="password" name="password" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                         </div>
-                                        <div class="flex flex-col gap-1 flex-1"> 
+                                        <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">Confirm Password:*</span> 
-                                            <input type="password" name="confirmPassword" required class="bg-[var(--secondary)] text-[var(--text)] !py-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                            <input type="password" name="confirmPassword" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                         </div>
                                     </div>
                                     

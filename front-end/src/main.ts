@@ -1,5 +1,5 @@
 // main.ts
-import { router } from "./router-instance.ts";
+import { router } from "./app/router-instance.ts";
 
 function setupNavigation(): void {
   router.handleRoute();
