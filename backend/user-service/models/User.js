@@ -36,9 +36,9 @@ class User {
       
       db.run(
         `INSERT INTO users 
-         (username, email, password, first_name, last_name, google_id, intra_id, avatar, is_online, email_verified) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?)`,
-        [username, email, password, firstName, lastName, googleId, intraId, avatar, emailVerified],
+         (username, email, password, first_name, last_name, google_id, avatar, is_online, email_verified) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, TRUE, ?)`,
+        [username, email, password, firstName, lastName, googleId, avatar, emailVerified],
         function(err) {
           if (err) return reject(err);
           
