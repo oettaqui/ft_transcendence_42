@@ -1,29 +1,15 @@
 const User = require('../models/User');
 const UserStats = require('../models/UserStats');
 const { OAuth2Client } = require('google-auth-library');
-const axios = require('axios');
-// Add this import at the top of AuthController.js (after other requires)
 const EmailService = require('../services/EmailService');
 
 const googleClient = new OAuth2Client('394069384301-1b8bqmnv35qkfgk9icofqc5gthofupvk.apps.googleusercontent.com');
 
-// Intra OAuth configuration
-const INTRA_CONFIG = {
-  clientId: process.env.INTRA_CLIENT_ID || 'u-s4t2ud-1fd9ab391aacad4bdf8b9e1b81bae0f5d4c31d0b591d66249aa50a9ac852d727',
-  clientSecret: process.env.INTRA_CLIENT_SECRET || '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',
-  redirectUri: process.env.INTRA_REDIRECT_URI || 'http://localhost:8080/oauth-callback.html',
-  authUrl: 'https://api.intra.42.fr/oauth/authorize',
-  tokenUrl: 'https://api.intra.42.fr/oauth/token',
-  userInfoUrl: 'https://api.intra.42.fr/v2/me'
-};
-
 class AuthController {
-  // Register new user
   static async register(request, reply) {
     const { email, password, username, firstName, lastName } = request.body;
     
     console.log("============ register process begin ==========");
-    // Validation
     if (!email || !password || !username) {
       return reply.code(400).send({ 
         success: false, 
@@ -46,7 +32,6 @@ class AuthController {
     }
     
     try {
-      // Check if user already exists
       const existingUser = await User.findByEmail(email);
       if (existingUser) {
         return reply.code(400).send({ 
@@ -55,10 +40,8 @@ class AuthController {
         });
       }
       
-      // Hash password
       const hashedPassword = await User.hashPassword(password);
       
-      // Create user
       const userId = await User.create({
         username, 
         email, 
@@ -67,17 +50,14 @@ class AuthController {
         lastName
       });
       
-      // Send email verification
       try {
         const verificationToken = await User.createEmailVerificationToken(userId);
         await EmailService.sendEmailVerification(email, username, verificationToken);
         console.log(`📧 Verification email sent to ${email}`);
       } catch (emailError) {
         console.error('Failed to send verification email:', emailError);
-        // Don't fail registration if email fails
       }
-      
-      // Generate JWT token
+
       const token = request.server.jwt.sign(
         { userId, email, username }, 
         { expiresIn: '7d' }
@@ -112,7 +92,6 @@ class AuthController {
     }
   }
 
-  // Login user (with 2FA support)
   static async login(request, reply) {
     const { email, password, twoFactorCode } = request.body;
     
@@ -125,7 +104,6 @@ class AuthController {
     }
     
     try {
-      // Get user by email
       const user = await User.findByEmail(email);
       if (!user) {
         return reply.code(401).send({ 
@@ -134,7 +112,6 @@ class AuthController {
         });
       }
       
-      // Verify password
       const isValidPassword = await user.verifyPassword(password);
       if (!isValidPassword) {
         return reply.code(401).send({ 
@@ -143,11 +120,9 @@ class AuthController {
         });
       }
       
-      // Check if 2FA is enabled
       if (user.twoFactorEnabled && user.twoFactorMethod === 'email') {
         
         if (!twoFactorCode) {
-          // First step: Send 2FA code
           const code = await User.create2FACode(user.id, 'login');
           await EmailService.send2FACode(user.email, user.username, code);
           
@@ -161,7 +136,6 @@ class AuthController {
             }
           };
         } else {
-          // Second step: Verify 2FA code
           const isValidCode = await User.verify2FACode(user.id, twoFactorCode, 'login');
           if (!isValidCode) {
             return reply.code(401).send({
@@ -172,10 +146,8 @@ class AuthController {
         }
       }
       
-      // Update online status
       await user.updateOnlineStatus(true);
       
-      // Generate JWT token
       const token = request.server.jwt.sign(
         { userId: user.id, email: user.email, username: user.username }, 
         { expiresIn: '7d' }
@@ -196,7 +168,6 @@ class AuthController {
     }
   }
 
-  // Verify email
   static async verifyEmail(request, reply) {
     const { token } = request.params;
     
@@ -212,7 +183,6 @@ class AuthController {
         });
       }
       
-      // Mark email as verified
       await user.verifyEmail();
       
       console.log(`✅ Email verified for user: ${user.username}`);
@@ -234,7 +204,6 @@ class AuthController {
     }
   }
 
-  // Enable 2FA
   static async enable2FA(request, reply) {
     const user = request.user;
     const { method = 'email' } = request.body;
@@ -256,13 +225,10 @@ class AuthController {
     }
     
     try {
-      // Generate backup codes
       const backupCodes = User.generateBackupCodes();
       
-      // Enable 2FA
       await user.enable2FA(method, backupCodes);
       
-      // Send confirmation email
       await EmailService.send2FAEnabledNotification(user.email, user.username, backupCodes);
       
       console.log(`✅ 2FA enabled for user: ${user.username}`);
@@ -285,7 +251,6 @@ class AuthController {
     }
   }
 
-  // Disable 2FA
   static async disable2FA(request, reply) {
     const user = request.user;
     const { password, backupCode } = request.body;
@@ -302,7 +267,6 @@ class AuthController {
     try {
       let verified = false;
       
-      // Verify with password or backup code
       if (password) {
         verified = await user.verifyPassword(password);
       } else if (backupCode) {
@@ -316,10 +280,8 @@ class AuthController {
         });
       }
       
-      // Disable 2FA
       await user.disable2FA();
       
-      // Send notification email
       await EmailService.send2FADisabledNotification(user.email, user.username);
       
       console.log(`✅ 2FA disabled for user: ${user.username}`);
@@ -340,7 +302,6 @@ class AuthController {
     }
   }
 
-  // Get 2FA status
   static async get2FAStatus(request, reply) {
     const user = request.user;
     
@@ -352,7 +313,6 @@ class AuthController {
     };
   }
 
-  // Generate new backup codes
   static async generateNewBackupCodes(request, reply) {
     const user = request.user;
     const { password } = request.body;
@@ -367,7 +327,6 @@ class AuthController {
     }
     
     try {
-      // Verify password
       const isValidPassword = await user.verifyPassword(password);
       if (!isValidPassword) {
         return reply.code(401).send({
@@ -376,7 +335,6 @@ class AuthController {
         });
       }
       
-      // Generate new backup codes
       const newBackupCodes = User.generateBackupCodes();
       await user.enable2FA(user.twoFactorMethod, newBackupCodes);
       
@@ -398,7 +356,6 @@ class AuthController {
     }
   }
 
-  // Google OAuth login (existing method - no changes needed)
   static async googleVerify(request, reply) {
     const { token } = request.body;
     
@@ -411,7 +368,6 @@ class AuthController {
     }
     console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (1.1)");
     try {
-      // Verify the Google ID token
       console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (1.2)");
       const ticket = await googleClient.verifyIdToken({
         idToken: token,
@@ -429,20 +385,15 @@ class AuthController {
         });
       }
 
-      // Check if user exists in database by Google ID first
       let user = await User.findByGoogleId(googleId);
       
       if (!user) {
         console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (3)");
-        // Then check by email
         user = await User.findByEmail(email);
         
         if (user && !user.googleId) {
-          // Link existing account with Google - need to implement this method
-          // For now, we'll create a new user or handle this case
           console.log('Linking existing account with Google auth');
         } else if (!user) {
-          // Create new user with Google auth
           const username = email.split('@')[0];
           const firstName = name?.split(' ')[0] || username;
           const lastName = name?.split(' ')[1] || '';
@@ -461,10 +412,8 @@ class AuthController {
         }
       }
       
-      // Update online status
       await user.updateOnlineStatus(true);
       
-      // Generate JWT token
       const jwtToken = request.server.jwt.sign(
         { 
           userId: user.id, 
@@ -495,217 +444,7 @@ class AuthController {
     }
   }
 
-  // Intra OAuth - Generate authorization URL
-  static async intraAuthUrl(request, reply) {
-    console.log("============ intraAuthUrl process begin ==========");
-    console.log("===========Print values of the INTRA_CONFIG ================");
-    console.log(INTRA_CONFIG.redirectUri);
-    console.log(INTRA_CONFIG.clientId);
-    console.log(INTRA_CONFIG.redirectUri);
-    console.log("========================= End Print values =================");
-    
-    const state = Math.random().toString(36).substring(2, 15);
-    const authUrl = `${INTRA_CONFIG.authUrl}?client_id=${INTRA_CONFIG.clientId}&redirect_uri=${encodeURIComponent(INTRA_CONFIG.redirectUri)}&response_type=code&scope=public&state=${state}`;
-    
-    console.log("============ intraAuthUrl process end ============");
-    return {
-      success: true,
-      data: {
-        authUrl,
-        state
-      }
-    };
-  }
 
-
-static async intraCallback(request, reply) {
-  const { code } = request.body;
-
-  // 1. Verify critical configuration before proceeding
-  if (!INTRA_CONFIG.clientId || !INTRA_CONFIG.clientSecret || !INTRA_CONFIG.redirectUri) {
-    console.error("Missing OAuth configuration:", {
-      hasClientId: !!INTRA_CONFIG.clientId,
-      hasClientSecret: !!INTRA_CONFIG.clientSecret,
-      hasRedirectUri: !!INTRA_CONFIG.redirectUri
-    });
-    return reply.code(500).send({
-      success: false,
-      error: 'Server configuration error'
-    });
-  }
-
-  // 2. Validate authorization code
-  if (!code || typeof code !== 'string') {
-    return reply.code(400).send({
-      success: false,
-      error: 'Invalid authorization code'
-    });
-  }
-
-  try {
-    // 3. Prepare token request with EXACT parameters
-    const params = new URLSearchParams();
-    params.append('grant_type', 'authorization_code');
-    params.append('client_id', INTRA_CONFIG.clientId.trim());
-    params.append('client_secret', INTRA_CONFIG.clientSecret.trim());
-    params.append('code', code.trim());
-    params.append('redirect_uri', INTRA_CONFIG.redirectUri.trim());
-
-    // 4. Debug output (redact sensitive info)
-    console.log("Token request prepared:", {
-      grant_type: 'authorization_code',
-      client_id: INTRA_CONFIG.clientId.substring(0, 6) + '...',
-      code_length: code.length,
-      redirect_uri: INTRA_CONFIG.redirectUri
-    });
-
-    // 5. Make the token request with proper headers
-    const tokenResponse = await axios.post(
-      'https://api.intra.42.fr/oauth/token',
-      params.toString(),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
-        },
-        timeout: 10000
-      }
-    );
-
-    // 6. Handle successful token response
-    if (!tokenResponse.data?.access_token) {
-      console.error("Token response missing access_token:", tokenResponse.data);
-      return reply.code(401).send({
-        success: false,
-        error: 'Authentication failed - no access token received'
-      });
-    }
-
-    // 7. Get user info from Intra API
-    const userResponse = await axios.get('https://api.intra.42.fr/v2/me', {
-      headers: {
-        'Authorization': `Bearer ${tokenResponse.data.access_token}`
-      },
-      timeout: 10000
-    });
-
-    if (!userResponse.data?.id) {
-      console.error("Invalid user data received:", userResponse.data);
-      return reply.code(401).send({
-        success: false,
-        error: 'Authentication failed - invalid user data'
-      });
-    }
-
-    const intraUser = userResponse.data;
-    console.log("/*/*/*/*/**/*/*/*/*");
-    console.log(intraUser);
-    console.log("/*/*/*/*/**/*/*/*/*");
-    console.log("Received Intra user data:", {
-      id: intraUser.id,
-      login: intraUser.login,
-      email: intraUser.email
-    });
-
-    // 8. Find or create user in database
-    let user = await User.findByIntraId(intraUser.id);
-    
-    if (!user) {
-      // Check if user exists by email
-      if (intraUser.email) {
-        user = await User.findByEmail(intraUser.email);
-      }
-      
-      if (user) {
-        // Link existing account with Intra
-        console.log(`Linking existing user ${user.id} with Intra account`);
-        await User.updateIntraId(user.id, intraUser.id);
-      } else {
-        // Create new user
-        console.log(`Creating new user for Intra ID ${intraUser.id}`);
-        const username = intraUser.login || intraUser.email.split('@')[0];
-        const userId = await User.create({
-          username,
-          email: intraUser.email,
-          password: null, // No password for OAuth users
-          firstName: intraUser.first_name,
-          lastName: intraUser.last_name,
-          intraId: intraUser.id,
-          avatar: intraUser.image?.link || null,
-          emailVerified: true // 42 accounts are already verified
-        });
-        user = await User.findById(userId);
-      }
-    }
-
-    // 9. Update user status
-    await user.updateOnlineStatus(true);
-
-    // 10. Generate JWT token
-    const jwtToken = request.server.jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        username: user.username
-      },
-      { expiresIn: '7d' }
-    );
-
-    console.log(`✅ Successful authentication for user ${user.id}`);
-
-    return {
-      success: true,
-      data: {
-        token: jwtToken,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          avatar: user.avatar,
-          isOnline: true,
-          emailVerified: user.emailVerified,
-          intraId: user.intraId
-        }
-      }
-    };
-
-  } catch (error) {
-    // 11. Enhanced error handling
-    if (error.response) {
-      console.error("42 API Error Response:", {
-        status: error.response.status,
-        headers: error.response.headers,
-        data: error.response.data
-      });
-
-      if (error.response.status === 401) {
-        return reply.code(401).send({
-          success: false,
-          error: 'Authentication failed',
-          details: {
-            reason: 'Invalid client credentials',
-            solution: 'Verify your client_id and client_secret match exactly what\'s in your 42 OAuth app settings'
-          }
-        });
-      }
-    }
-
-    console.error("Complete error context:", {
-      message: error.message,
-      stack: error.stack,
-      config: error.config
-    });
-
-    return reply.code(500).send({
-      success: false,
-      error: 'Authentication processing failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
-}
-  // Get current user info (existing method - updated to include 2FA status)
   static async getCurrentUser(request, reply) {
     console.log("============ getCurrentUser process begin ==========");
     try {
@@ -727,7 +466,6 @@ static async intraCallback(request, reply) {
     }
   }
 
-  // Update user profile (existing method - no changes)
   static async updateProfile(request, reply) {
     const { firstName, lastName, avatar } = request.body;
     console.log("============ updateProfile process begin ==========");
@@ -752,7 +490,6 @@ static async intraCallback(request, reply) {
     }
   }
 
-  // Change password (existing method - no changes)
   static async changePassword(request, reply) {
     const { currentPassword, newPassword } = request.body;
     console.log("============ changePassword process begin ==========");
@@ -772,7 +509,6 @@ static async intraCallback(request, reply) {
     }
     
     try {
-      // Verify current password
       const isValidPassword = await request.user.verifyPassword(currentPassword);
       if (!isValidPassword) {
         return reply.code(401).send({ 
@@ -781,10 +517,8 @@ static async intraCallback(request, reply) {
         });
       }
       
-      // Hash new password
       const hashedNewPassword = await User.hashPassword(newPassword);
       
-      // Update password in database
       const changes = await request.user.updatePassword(hashedNewPassword);
       
       if (changes === 0) {
@@ -801,12 +535,10 @@ static async intraCallback(request, reply) {
     }
   }
 
-  // Logout user (existing method - no changes)
   static async logout(request, reply) {
     console.log("============ logout process begin ==========");
 
     try {
-      // Update online status to false
       await request.user.updateOnlineStatus(false);
       
       console.log(`User ${request.user.username} logged out`);
@@ -820,7 +552,6 @@ static async intraCallback(request, reply) {
     }
   }
 
-  // Get user stats (existing method - no changes)
   static async getStats(request, reply) {
     console.log("============ getStats process begin ==========");
     try {
@@ -835,7 +566,6 @@ static async intraCallback(request, reply) {
     }
   }
 
-    // Resend email verification
     static async resendVerificationEmail(request, reply) {
       const user = request.user;
       
@@ -849,10 +579,8 @@ static async intraCallback(request, reply) {
       }
       
       try {
-        // Generate new verification token
         const token = await user.resendEmailVerification();
         
-        // Send verification email
         const EmailService = require('../services/EmailService');
         await EmailService.sendEmailVerification(user.email, user.username, token);
         
@@ -873,7 +601,6 @@ static async intraCallback(request, reply) {
         });
       }
     }
-    // Add this method to your AuthController.js class
 static async resendVerificationEmailPublic(request, reply) {
   const { email } = request.body;
   
@@ -887,10 +614,8 @@ static async resendVerificationEmailPublic(request, reply) {
   }
   
   try {
-    // Find user by email
     const user = await User.findByEmail(email);
     if (!user) {
-      // Don't reveal if email exists for security
       return {
         success: true,
         message: 'If this email exists and is not verified, a verification email has been sent.'
@@ -904,10 +629,8 @@ static async resendVerificationEmailPublic(request, reply) {
       });
     }
     
-    // Generate new verification token
     const token = await User.createEmailVerificationToken(user.id);
     
-    // Send verification email
     const EmailService = require('../services/EmailService');
     await EmailService.sendEmailVerification(user.email, user.username, token);
     

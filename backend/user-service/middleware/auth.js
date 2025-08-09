@@ -1,12 +1,9 @@
 const User = require('../models/User');
 
-// Authentication middleware for protecting routes
 async function authenticate(request, reply) {
   try {
-    // Verify JWT token
     await request.jwtVerify();
     
-    // Get user from database to ensure they still exist and get fresh data
     console.log("===========AUTH==========");
     const user = await User.findById(request.user.userId);
     if (!user) {
@@ -16,7 +13,6 @@ async function authenticate(request, reply) {
       });
     }
     
-    // Attach user to request object
     request.user = user;
     console.log("User authenticated:", user.username);
     console.log("==========================");
@@ -28,7 +24,6 @@ async function authenticate(request, reply) {
   }
 }
 
-// Validation middleware
 class ValidationMiddleware {
   static async validateRegistration(request, reply) {
     const { email, password, username, firstName, lastName } = request.body;
@@ -40,7 +35,6 @@ class ValidationMiddleware {
       });
     }
     
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return reply.code(400).send({
@@ -49,7 +43,6 @@ class ValidationMiddleware {
       });
     }
     
-    // Password validation
     if (password.length < 8) {
       return reply.code(400).send({
         success: false,
@@ -57,7 +50,6 @@ class ValidationMiddleware {
       });
     }
     
-    // Username validation
     if (username.length < 3 || username.length > 20) {
       return reply.code(400).send({
         success: false,

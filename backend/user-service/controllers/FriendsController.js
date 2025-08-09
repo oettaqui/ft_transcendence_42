@@ -2,7 +2,6 @@ const User = require('../models/User');
 const Friendship = require('../models/Friendship');
 
 class FriendsController {
-  // Search users to add as friends
   static async searchUsers(request, reply) {
     console.log("============ searchUsers procces begin ==========");
     const { q: query, limit = 10 } = request.query;
@@ -17,7 +16,6 @@ class FriendsController {
     try {
       const users = await User.search(query, request.user.id, parseInt(limit));
       
-      // Format users and remove sensitive data
       const formattedUsers = users.map(user => ({
         id: user.id,
         username: user.username,
@@ -38,7 +36,6 @@ class FriendsController {
     }
   }
 
-  // Send friend request
   static async sendFriendRequest(request, reply) {
     console.log("============ sendFriendRequest procces begin ==========");
     const { friendId } = request.body;
@@ -58,7 +55,6 @@ class FriendsController {
     }
     
     try {
-      // Check if friend exists
       const friendUser = await User.findById(friendId);
       if (!friendUser) {
         return reply.code(404).send({ 
@@ -86,7 +82,6 @@ class FriendsController {
     }
   }
 
-  // Accept friend request
   static async acceptFriendRequest(request, reply) {
     console.log("============ acceptFriendRequest procces begin ==========");
 
@@ -128,7 +123,6 @@ class FriendsController {
     }
   }
 
-  // Decline friend request
   static async declineFriendRequest(request, reply) {
     console.log("============ declineFriendRequest procces begin ==========");
     const { friendId } = request.body;
@@ -162,7 +156,6 @@ class FriendsController {
     }
   }
 
-  // Cancel sent friend request
   static async cancelFriendRequest(request, reply) {
     console.log("============ cancelFriendRequest procces begin ==========");
     const { friendId } = request.params;
@@ -197,7 +190,6 @@ class FriendsController {
     }
   }
 
-  // Remove friend (unfriend)
   static async removeFriend(request, reply) {
     console.log("============ removeFriend procces begin ==========");
     const { friendId } = request.params;
@@ -232,7 +224,6 @@ class FriendsController {
     }
   }
 
-  // Get friends list
   static async getFriends(request, reply) {
     console.log("============ getFriends procces begin ==========");
     try {
@@ -264,7 +255,6 @@ class FriendsController {
     }
   }
 
-  // Get pending friend requests (received)
   static async getPendingRequests(request, reply) {
     console.log("============ getPendingRequests procces begin ==========");
     try {
@@ -292,7 +282,6 @@ class FriendsController {
     }
   }
 
-  // Get sent friend requests
   static async getSentRequests(request, reply) {
     console.log("============ getSentRequests procces begin ==========");
     try {
@@ -320,7 +309,6 @@ class FriendsController {
     }
   }
 
-  // Get friendship status with specific user
   static async getFriendshipStatus(request, reply) {
     console.log("============ getFriendshipStatus procces begin ==========");
     const { friendId } = request.params;
@@ -338,7 +326,6 @@ class FriendsController {
     }
   }
 
-  // Update online status
   static async updateOnlineStatus(request, reply) {
     console.log("============ updateOnlineStatus procces begin ==========");
     const { isOnline } = request.body;

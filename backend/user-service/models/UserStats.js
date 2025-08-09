@@ -10,7 +10,6 @@ class UserStats {
     this.bestScore = data.best_score || data.bestScore || 0;
   }
 
-  // Get user stats by user ID
   static async findByUserId(userId) {
     return new Promise((resolve, reject) => {
       db.get(
@@ -24,7 +23,6 @@ class UserStats {
     });
   }
 
-  // Update user stats
   async update(stats) {
     return new Promise((resolve, reject) => {
       const updates = [];
@@ -73,13 +71,11 @@ class UserStats {
     });
   }
 
-  // Get win rate
   getWinRate() {
     if (this.gamesPlayed === 0) return 0;
     return ((this.gamesWon / this.gamesPlayed) * 100).toFixed(1);
   }
 
-  // Convert to JSON
   toJSON() {
     return {
       userId: this.userId,

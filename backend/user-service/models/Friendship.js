@@ -11,10 +11,8 @@ class Friendship {
     this.updatedAt = data.updated_at || data.updatedAt;
   }
 
-  // Send friend request
   static async sendRequest(fromUserId, toUserId) {
     return new Promise((resolve, reject) => {
-      // Check if friendship already exists
       db.get(
         `SELECT * FROM friendships 
          WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)`,
@@ -25,7 +23,6 @@ class Friendship {
             return reject(new Error('Friendship or request already exists'));
           }
           
-          // Check if request already exists
           db.get(
             `SELECT * FROM friend_requests 
              WHERE (from_user_id = ? AND to_user_id = ?) OR (from_user_id = ? AND to_user_id = ?)`,
@@ -36,7 +33,6 @@ class Friendship {
                 return reject(new Error('Friend request already exists'));
               }
               
-              // Create new request
               db.run(
                 `INSERT INTO friend_requests 
                  (from_user_id, to_user_id, status, created_at) 
@@ -54,11 +50,9 @@ class Friendship {
     });
   }
 
-  // Accept friend request
   static async acceptRequest(userId, friendId) {
     return new Promise((resolve, reject) => {
       db.serialize(() => {
-        // Update the friend request status
         db.run(
           `UPDATE friend_requests 
            SET status = 'accepted', updated_at = CURRENT_TIMESTAMP 
@@ -70,7 +64,6 @@ class Friendship {
               return reject(new Error('No pending friend request found'));
             }
             
-            // Create friendship record
             db.run(
               `INSERT INTO friendships 
                (user1_id, user2_id, status, action_user_id) 
@@ -87,7 +80,6 @@ class Friendship {
     });
   }
 
-  // Decline friend request
   static async declineRequest(userId, friendId) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -103,7 +95,6 @@ class Friendship {
     });
   }
 
-  // Cancel friend request
   static async cancelRequest(userId, friendId) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -119,7 +110,6 @@ class Friendship {
     });
   }
 
-  // Remove friendship
   static async remove(userId, friendId) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -134,7 +124,6 @@ class Friendship {
     });
   }
 
-  // Get user's friends
   static async getUserFriends(userId) {
     return new Promise((resolve, reject) => {
       db.all(
@@ -153,7 +142,6 @@ class Friendship {
     });
   }
 
-  // Get pending friend requests (received)
   static async getPendingRequests(userId) {
     return new Promise((resolve, reject) => {
       db.all(
@@ -172,7 +160,6 @@ class Friendship {
     });
   }
 
-  // Get sent friend requests
   static async getSentRequests(userId) {
     return new Promise((resolve, reject) => {
       db.all(
@@ -191,10 +178,8 @@ class Friendship {
     });
   }
 
-  // Get friendship status between two users
   static async getStatus(userId, friendId) {
     return new Promise((resolve, reject) => {
-      // Check if they are friends
       db.get(
         `SELECT status FROM friendships 
          WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)`,
@@ -203,7 +188,6 @@ class Friendship {
           if (err) return reject(err);
           if (row) return resolve({ status: 'friends', ...row });
           
-          // Check for pending requests
           db.get(
             `SELECT status, from_user_id FROM friend_requests 
              WHERE (from_user_id = ? AND to_user_id = ?) OR (from_user_id = ? AND to_user_id = ?)
@@ -216,7 +200,6 @@ class Friendship {
                 return resolve({ status: 'request', requestType, ...row });
               }
               
-              // No relationship
               resolve({ status: 'none' });
             }
           );
@@ -225,7 +208,6 @@ class Friendship {
     });
   }
 
-  // Get online friends count
   static async getOnlineFriendsCount(userId) {
     return new Promise((resolve, reject) => {
       db.get(

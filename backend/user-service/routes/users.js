@@ -3,7 +3,6 @@ const UserStats = require('../models/UserStats');
 const { authenticate } = require('../middleware/auth');
 
 async function usersRoutes(fastify, options) {
-  // Get user by ID (for other services)
   fastify.get('/:id', async (request, reply) => {
     const { id } = request.params;
     
@@ -29,7 +28,6 @@ async function usersRoutes(fastify, options) {
     }
   });
   
-  // Get multiple users by IDs (for other services)
   fastify.post('/batch', async (request, reply) => {
     const { userIds } = request.body;
     
@@ -62,7 +60,6 @@ async function usersRoutes(fastify, options) {
     }
   });
   
-  // Get user stats by user ID (for other services)
   fastify.get('/:id/stats', async (request, reply) => {
     const { id } = request.params;
     
@@ -81,7 +78,6 @@ async function usersRoutes(fastify, options) {
     }
   });
   
-  // Update user stats (for game service)
   fastify.put('/:id/stats', async (request, reply) => {
     const { id } = request.params;
     const statsUpdate = request.body;
@@ -106,7 +102,6 @@ async function usersRoutes(fastify, options) {
     }
   });
   
-  // Update user online status (for real-time features)
   fastify.put('/:id/status', async (request, reply) => {
     const { id } = request.params;
     const { isOnline } = request.body;

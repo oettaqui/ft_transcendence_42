@@ -18,7 +18,6 @@ export class DashboardLayout {
         
         this.view = view ;
         this.element = null;
-        // this.userState = userState;
         this.router = router;
     }
 

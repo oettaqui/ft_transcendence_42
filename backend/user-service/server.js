@@ -1,12 +1,9 @@
-// user-service/server.js - Authentication and User Management Service
 const fastify = require('fastify')({ logger: true });
 const { initDatabase, closeDatabase } = require('./config/database');
 
-// JWT Secret - In production, use environment variable
 const JWT_SECRET = process.env.JWT_SECRET || 'pingpong-secret-key-change-in-production';
 const PORT = process.env.PORT || 3001;
 
-// CORS configuration
 fastify.register(require('@fastify/cors'), {
   origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -15,7 +12,6 @@ fastify.register(require('@fastify/cors'), {
   exposedHeaders: ['Cross-Origin-Opener-Policy']
 });
 
-// Register JWT plugin
 fastify.register(require('@fastify/jwt'), {
   secret: JWT_SECRET
 });
@@ -25,7 +21,6 @@ fastify.register(require('./routes/auth'), { prefix: '/api/auth' });
 fastify.register(require('./routes/friends'), { prefix: '/api/friends' });
 fastify.register(require('./routes/users'), { prefix: '/api/users' });
 
-// Health check endpoint
 fastify.get('/health', async (request, reply) => {
   return { 
     status: 'OK', 
@@ -35,7 +30,6 @@ fastify.get('/health', async (request, reply) => {
 });
 
 
-// Service info endpoint
 fastify.get('/info', async (request, reply) => {
   return {
     service: 'Authentication Service',
@@ -43,7 +37,6 @@ fastify.get('/info', async (request, reply) => {
     features: [
       'User Registration & Login',
       'Google OAuth Authentication',
-      'Intra 42 OAuth Authentication',
       'Email Verification',
       'Two-Factor Authentication (2FA)',
       'JWT Token Management',
@@ -55,8 +48,6 @@ fastify.get('/info', async (request, reply) => {
       'POST /api/auth/register',
       'POST /api/auth/login',
       'POST /api/auth/google/verify',
-      'GET /api/auth/intra/url',
-      'POST /api/auth/intra/callback',
       'GET /api/auth/verify-email/:token',
       'POST /api/auth/resend-verification',
       'GET /api/auth/2fa/status',
@@ -72,13 +63,10 @@ fastify.get('/info', async (request, reply) => {
   };
 });
 
-// Initialize database on startup
 fastify.ready().then(async () => {
   try {
     await initDatabase();
     console.log('🗄️  Database initialized with email verification and 2FA support');
-    
-    // Test email service if EmailService exists
     try {
       const EmailService = require('./services/EmailService');
       const emailReady = await EmailService.testConnection();
@@ -99,7 +87,6 @@ fastify.ready().then(async () => {
   console.error('Error during Fastify initialization:', err);
 });
 
-// Graceful shutdown
 process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down Auth Service...');
   try {
@@ -113,7 +100,6 @@ process.on('SIGINT', async () => {
   }
 });
 
-// Start the server
 const start = async () => {
   try {
     await fastify.listen({ port: PORT, host: '0.0.0.0' });

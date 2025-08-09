@@ -12,18 +12,16 @@ class User {
     this.lastName = data.last_name || data.lastName;
     this.avatar = data.avatar;
     this.googleId = data.google_id || data.googleId;
-    this.intraId = data.intra_id || data.intraId; // Add Intra ID support
+    this.intraId = data.intra_id || data.intraId; 
     this.isOnline = data.is_online || data.isOnline || false;
     this.lastLogin = data.last_login || data.lastLogin;
     this.createdAt = data.created_at || data.createdAt;
     this.updatedAt = data.updated_at || data.updatedAt;
     
-    // Email verification fields
     this.emailVerified = data.email_verified || data.emailVerified || false;
     this.emailVerificationToken = data.email_verification_token || data.emailVerificationToken;
     this.emailVerificationExpires = data.email_verification_expires || data.emailVerificationExpires;
     
-    // 2FA fields
     this.twoFactorEnabled = data.two_factor_enabled || data.twoFactorEnabled || false;
     this.twoFactorMethod = data.two_factor_method || data.twoFactorMethod;
     this.twoFactorSecret = data.two_factor_secret || data.twoFactorSecret;
@@ -32,10 +30,8 @@ class User {
     this.twoFactorCodeExpires = data.two_factor_code_expires || data.twoFactorCodeExpires;
   }
 
-  // Create a new user
   static async create({ username, email, password, firstName, lastName, googleId = null, intraId = null, avatar = null }) {
     return new Promise((resolve, reject) => {
-      // OAuth users (Google/Intra) have verified emails by default
       const emailVerified = googleId || intraId ? true : false;
       
       db.run(
@@ -46,7 +42,6 @@ class User {
         function(err) {
           if (err) return reject(err);
           
-          // Initialize user stats
           db.run(
             'INSERT INTO user_stats (user_id) VALUES (?)',
             [this.lastID],
@@ -60,11 +55,10 @@ class User {
     });
   }
 
-  // Generate email verification token
   static async createEmailVerificationToken(userId) {
     return new Promise((resolve, reject) => {
       const token = crypto.randomBytes(32).toString('hex');
-      const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+      const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); 
       
       db.run(
         `UPDATE users 
@@ -79,7 +73,6 @@ class User {
     });
   }
 
-  // Verify email verification token
   static async verifyEmailToken(token) {
     return new Promise((resolve, reject) => {
       db.get(
@@ -95,7 +88,6 @@ class User {
     });
   }
   
-  // Update Intra ID for existing user
     static async updateIntraId(userId, intraId) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -108,7 +100,6 @@ class User {
       );
     });
   }
-  // Mark email as verified
   async verifyEmail() {
     return new Promise((resolve, reject) => {
       db.run(
@@ -130,7 +121,6 @@ class User {
     });
   }
 
-  // Resend email verification
   async resendEmailVerification() {
     if (this.emailVerified) {
       throw new Error('Email is already verified');
@@ -141,7 +131,6 @@ class User {
     return token;
   }
 
-  // Generate 2FA code for email
   static async create2FACode(userId, purpose = 'login') {
     return new Promise((resolve, reject) => {
       const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
@@ -160,7 +149,6 @@ class User {
     });
   }
 
-  // Verify 2FA code
   static async verify2FACode(userId, code, purpose = 'login') {
     return new Promise((resolve, reject) => {
       db.get(
@@ -172,7 +160,6 @@ class User {
           if (err) return reject(err);
           
           if (row) {
-            // Clear the used code
             db.run(
               `UPDATE users 
                SET two_factor_code = NULL, two_factor_code_expires = NULL
@@ -191,7 +178,6 @@ class User {
     });
   }
 
-  // Enable 2FA
   async enable2FA(method = 'email', backupCodes = []) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -213,7 +199,6 @@ class User {
     });
   }
 
-  // Disable 2FA
   async disable2FA() {
     return new Promise((resolve, reject) => {
       db.run(
@@ -237,7 +222,6 @@ class User {
     });
   }
 
-  // Generate backup codes
   static generateBackupCodes(count = 10) {
     const codes = [];
     for (let i = 0; i < count; i++) {
@@ -246,7 +230,6 @@ class User {
     return codes;
   }
 
-  // Verify backup code
   async verifyBackupCode(code) {
     if (!this.backupCodes) return false;
     
@@ -255,7 +238,6 @@ class User {
     
     if (codeIndex === -1) return false;
     
-    // Remove used backup code
     codes.splice(codeIndex, 1);
     
     return new Promise((resolve, reject) => {
@@ -271,7 +253,6 @@ class User {
     });
   }
 
-  // Get 2FA status
   get2FAStatus() {
     return {
       twoFactorEnabled: this.twoFactorEnabled,
@@ -281,7 +262,6 @@ class User {
     };
   }
 
-  // Find user by email
   static async findByEmail(email) {
     return new Promise((resolve, reject) => {
       db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
@@ -291,7 +271,6 @@ class User {
     });
   }
 
-  // Find user by ID
   static async findById(id) {
     return new Promise((resolve, reject) => {
       db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
@@ -301,7 +280,6 @@ class User {
     });
   }
 
-  // Find user by Google ID
   static async findByGoogleId(googleId) {
     return new Promise((resolve, reject) => {
       db.get('SELECT * FROM users WHERE google_id = ?', [googleId], (err, row) => {
@@ -314,7 +292,6 @@ class User {
     });
   }
 
-  // Find user by Intra ID
   static async findByIntraId(intraId) {
     return new Promise((resolve, reject) => {
       db.get('SELECT * FROM users WHERE intra_id = ?', [intraId], (err, row) => {
@@ -327,7 +304,6 @@ class User {
     });
   }
 
-  // Search users by query
   static async search(query, currentUserId, limit = 10) {
     return new Promise((resolve, reject) => {
       db.all(
@@ -345,7 +321,7 @@ class User {
     });
   }
 
-  // Update user profile
+
   async updateProfile({ firstName, lastName, avatar }) {
     return new Promise((resolve, reject) => {
       const updates = [];
@@ -385,7 +361,6 @@ class User {
     });
   }
 
-  // Update online status
   async updateOnlineStatus(isOnline) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -400,7 +375,6 @@ class User {
     });
   }
 
-  // Update password
   async updatePassword(newPassword) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -414,17 +388,14 @@ class User {
     });
   }
 
-  // Verify password
   async verifyPassword(password) {
     return await bcrypt.compare(password, this.password);
   }
 
-  // Hash password
   static async hashPassword(password) {
     return await bcrypt.hash(password, 12);
   }
 
-  // Get user data without password
   toJSON() {
     const { password, emailVerificationToken, twoFactorSecret, twoFactorCode, backupCodes, ...userWithoutSensitiveData } = this;
     return {
