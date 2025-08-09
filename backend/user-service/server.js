@@ -34,6 +34,7 @@ fastify.get('/health', async (request, reply) => {
   };
 });
 
+
 // Service info endpoint
 fastify.get('/info', async (request, reply) => {
   return {

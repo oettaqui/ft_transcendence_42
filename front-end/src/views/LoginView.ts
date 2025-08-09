@@ -1,5 +1,5 @@
-import {View} from "../app/View"
-import { toast } from "./ToastNotification"
+import { View } from "../app/View";
+import { toast } from "./ToastNotification";
 import { router } from "../app/router-instance.ts";
 
 interface LoginFormData {
@@ -36,7 +36,6 @@ export class LoginView extends View {
                 <div class="container">
                     <nav class="flex justify-between items-center">
                         <a href="/" class="text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</a>
-                    
                     </nav>
                 </div>
             </header>
@@ -76,8 +75,7 @@ export class LoginView extends View {
                                         <span class="text-[13px] font-medium">Password:*</span> 
                                         <input type="password" name="password" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                     </div>
-                                    
-                                    <!-- 2FA Input (initially hidden) -->
+                
                                     <div class="flex flex-col gap-1 hidden" id="2fa-input-group"> 
                                         <span class="text-[13px] font-medium">Verification Code:*</span> 
                                         <input type="text" name="twoFactorCode" id="login-2fa-code" class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" placeholder="Enter 6-digit code" />
@@ -95,35 +93,33 @@ export class LoginView extends View {
                                 </div>
 
                                 <div class="flex items-center justify-center gap-4 w-[450px]">
-                                    <!-- Google OAuth Button -->
-                                    <a href="/auth/google" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
+                                    <button id="custom-google-button" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
                                         <svg class="w-6 h-6" viewBox="0 0 24 24">
                                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                                         </svg>
-                                    </a>
+                                    </button>
                                     
-                                    <!-- GitHub OAuth Button -->
-                                    <a href="#" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
-                                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 .296c-6.63 0-12 5.373-12 12 0 5.303 
-                                                3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 
-                                                0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61 
-                                                -.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.729.083-.729 
-                                                1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.807 1.305 
-                                                3.495.998.108-.776.418-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 
-                                                0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 
-                                                0 0 1.005-.322 3.3 1.23a11.52 11.52 0 013.005-.405 
-                                                c1.02.005 2.045.138 3.005.405 2.28-1.552 3.285-1.23 
-                                                3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 
-                                                1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 
-                                                5.92.435.372.81 1.102.81 2.222 0 1.606-.015 
-                                                2.896-.015 3.286 0 .315.21.694.825.576C20.565 
-                                                22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12z"/>
-                                    </svg>
-                                    </a>
+                                    <button class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
+                                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 .296c-6.63 0-12 5.373-12 12 0 5.303 
+                                                    3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 
+                                                    0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61 
+                                                    -.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.729.083-.729 
+                                                    1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.807 1.305 
+                                                    3.495.998.108-.776.418-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 
+                                                    0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 
+                                                    0 0 1.005-.322 3.3 1.23a11.52 11.52 0 013.005-.405 
+                                                    c1.02.005 2.045.138 3.005.405 2.28-1.552 3.285-1.23 
+                                                    3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 
+                                                    1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 
+                                                    5.92.435.372.81 1.102.81 2.222 0 1.606-.015 
+                                                    2.896-.015 3.286 0 .315.21.694.825.576C20.565 
+                                                    22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12z"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -132,8 +128,6 @@ export class LoginView extends View {
             </section>
         `;
         
-        console.log('login submitted');
-        
         this.add3DTiltEffect(element);
         this.addParticleEffects(element);
         return element;
@@ -141,6 +135,7 @@ export class LoginView extends View {
 
     protected onMount(): void {
         this.setupFormHandler();
+        this.setupGoogleAuth();
     }
 
     private setupFormHandler(): void {
@@ -150,16 +145,159 @@ export class LoginView extends View {
         }
     }
 
+    private setupGoogleAuth(): void {
+        const googleButton = document.getElementById('custom-google-button');
+        if (!googleButton) return;
+
+        googleButton.addEventListener('click', () => {
+            this.handleGoogleAuth();
+        });
+    }
+
+    private async handleGoogleAuth(): Promise<void> {
+        try {
+            this.currentLoadingToastId = toast.show('Loading Google authentication...', {
+                type: 'loading',
+                duration: 0,
+                dismissible: false
+            });
+
+            await this.loadGoogleScript();
+            
+            if (!window.google || !google.accounts || !google.accounts.id) {
+                throw new Error('Google API not loaded properly');
+            }
+
+            const googleButtonContainer = document.createElement('div');
+            googleButtonContainer.style.position = 'fixed';
+            googleButtonContainer.style.left = '-1000px';
+            googleButtonContainer.style.top = '-1000px';
+            googleButtonContainer.id = 'hidden-google-button';
+            document.body.appendChild(googleButtonContainer);
+
+            google.accounts.id.initialize({
+                client_id: '394069384301-1b8bqmnv35qkfgk9icofqc5gthofupvk.apps.googleusercontent.com',
+                callback: async (response: google.accounts.id.CredentialResponse) => {
+                    document.body.removeChild(googleButtonContainer);
+                    
+                    if (!response.credential) {
+                        toast.dismiss(this.currentLoadingToastId!);
+                        toast.show('Google authentication failed', {
+                            type: 'error',
+                            duration: 4000
+                        });
+                        return;
+                    }
+
+                    try {
+                        const result = await this.apiCall('/auth/google/verify', {
+                            method: 'POST',
+                            body: JSON.stringify({ token: response.credential })
+                        });
+
+                        if (result.success) {
+                            localStorage.setItem('token', result.data!.token);
+                            toast.dismiss(this.currentLoadingToastId!);
+                            toast.show('Google authentication successful!', {
+                                type: 'success',
+                                duration: 3000
+                            });
+                            setTimeout(() => router.navigateTo('/dashboard'), 500);
+                        } else {
+                            toast.dismiss(this.currentLoadingToastId!);
+                            toast.show(`Authentication failed: ${result || 'Unknown error'}`, {
+                                type: 'error',
+                                duration: 4000
+                            });
+                        }
+                    } catch (error: any) {
+                        toast.dismiss(this.currentLoadingToastId!);
+                        toast.show(`Authentication failed: ${error.message}`, {
+                            type: 'error',
+                            duration: 4000
+                        });
+                    }
+                },
+                auto_select: false
+            });
+
+            google.accounts.id.renderButton(
+                googleButtonContainer,
+                { 
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left'
+                }
+            );
+
+            const googleButton = googleButtonContainer.querySelector('div[role=button]') as HTMLElement;
+            if (googleButton) {
+                googleButton.click();
+            } else {
+                throw new Error('Failed to initialize Google button');
+            }
+            
+        } catch (error: any) {
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show(`Google authentication failed: ${error.message}`, {
+                type: 'error',
+                duration: 4000
+            });
+        }
+    }
+
+    private loadGoogleScript(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (window.google && google.accounts && google.accounts.id) {
+                resolve();
+                return;
+            }
+
+            const existingScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+            if (existingScript) {
+                existingScript.addEventListener('load', () => resolve());
+                existingScript.addEventListener('error', () => reject(new Error('Failed to load Google API')));
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            
+            script.onload = () => {
+                const checkInterval = setInterval(() => {
+                    if (window.google && google.accounts && google.accounts.id) {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100);
+                
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    if (!window.google || !google.accounts || !google.accounts.id) {
+                        reject(new Error('Google API not available after loading'));
+                    }
+                }, 5000);
+            };
+            
+            script.onerror = () => reject(new Error('Failed to load Google API'));
+            document.head.appendChild(script);
+        });
+    }
+
     private async handleLoginSubmit(e: Event): Promise<void> {
         e.preventDefault();
 
         const formData = this.getFormData();
         const loginBtn = document.getElementById('login-btn') as HTMLButtonElement;
         
-        // Show loading toast and store its ID for potential updates
         this.currentLoadingToastId = toast.show('Signing in... ', { 
             type: 'loading', 
-            duration: 0, // Don't auto-dismiss loading toasts
+            duration: 0,
             dismissible: false 
         });
 
@@ -180,7 +318,6 @@ export class LoginView extends View {
             if (response.success) {
                 localStorage.setItem('token', response.data!.token);
                 
-                // Update loading toast to success
                 if (this.currentLoadingToastId) {
                     setTimeout(() => {
                         toast.show('Login successful!', { 
@@ -197,7 +334,6 @@ export class LoginView extends View {
                 }, 500);
 
             } else if (response.requiresTwoFactor) {
-                // Dismiss loading toast and show 2FA message
                 if (this.currentLoadingToastId) {
                     toast.dismiss(this.currentLoadingToastId);
                     this.currentLoadingToastId = null;
@@ -212,7 +348,6 @@ export class LoginView extends View {
                 twoFAGroup.classList.remove('hidden');
                 loginBtn.innerHTML = '<span class="flex items-center justify-center !mt-1">Verify Code</span>';
                 
-                // Show 2FA required toast
                 toast.show('Please check your email for the verification code', { 
                     type: 'warning', 
                     duration: 6000 
@@ -222,7 +357,6 @@ export class LoginView extends View {
             }
 
         } catch (error: any) {
-            // Dismiss loading toast and show error
             if (this.currentLoadingToastId) {
                 toast.dismiss(this.currentLoadingToastId);
                 this.currentLoadingToastId = null;

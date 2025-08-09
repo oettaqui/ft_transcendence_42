@@ -409,8 +409,10 @@ class AuthController {
         error: 'Google token is required' 
       });
     }
+    console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (1.1)");
     try {
       // Verify the Google ID token
+      console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (1.2)");
       const ticket = await googleClient.verifyIdToken({
         idToken: token,
         audience: '394069384301-1b8bqmnv35qkfgk9icofqc5gthofupvk.apps.googleusercontent.com'
@@ -420,6 +422,7 @@ class AuthController {
       const { email, name, picture, sub: googleId } = payload;
       
       if (!email) {
+        console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (2)");
         return reply.code(400).send({ 
           success: false, 
           error: 'Email not provided by Google' 
@@ -430,6 +433,7 @@ class AuthController {
       let user = await User.findByGoogleId(googleId);
       
       if (!user) {
+        console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (3)");
         // Then check by email
         user = await User.findByEmail(email);
         
@@ -469,7 +473,10 @@ class AuthController {
         }, 
         { expiresIn: '7d' }
       );
-      
+      console.log("------- google account data -------");
+      console.log(`User name : ${user.username}`);
+      console.log(`User Email : ${user.email}`);
+      console.log("-----------------------------------");
       return {
         success: true,
         data: {
@@ -478,6 +485,7 @@ class AuthController {
         }
       };
     } catch (error) {
+      console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeer (4)");
       console.error('Google verification error:', error);
       return reply.code(401).send({ 
         success: false, 
@@ -509,140 +517,6 @@ class AuthController {
     };
   }
 
-  // Intra OAuth - Handle callback and login
-  // static async intraCallback(request, reply) {
-  //   const { code, state } = request.body;
-    
-  //   console.log("============ intraCallback process begin ==========");
-  //   console.log("++++++++++++++");
-  //   console.log(INTRA_CONFIG.redirectUri);
-  //   console.log(INTRA_CONFIG.clientId);
-  //   console.log(INTRA_CONFIG.redirectUri);
-  //   console.log("++++++++++++++");
-    
-  //   if (!code) {
-  //     return reply.code(400).send({
-  //       success: false,
-  //       error: 'Authorization code is required'
-  //     });
-  //   }
-
-  //   try {
-  //     // Exchange code for access token
-  //     const tokenResponse = await axios.post(INTRA_CONFIG.tokenUrl, {
-  //       grant_type: 'authorization_code',
-  //       client_id: INTRA_CONFIG.clientId,
-  //       client_secret: INTRA_CONFIG.clientSecret,
-  //       code: code,
-  //       redirect_uri: INTRA_CONFIG.redirectUri
-  //     });
-
-  //     const { access_token } = tokenResponse.data;
-
-  //     if (!access_token) {
-  //       return reply.code(400).send({
-  //         success: false,
-  //         error: 'Failed to obtain access token from Intra'
-  //       });
-  //     }
-
-  //     // Get user info from Intra API
-  //     const userResponse = await axios.get(INTRA_CONFIG.userInfoUrl, {
-  //       headers: {
-  //         Authorization: `Bearer ${access_token}`
-  //       }
-  //     });
-
-  //     const intraUser = userResponse.data;
-      
-  //     if (!intraUser || !intraUser.id) {
-  //       return reply.code(400).send({
-  //         success: false,
-  //         error: 'Failed to get user information from Intra'
-  //       });
-  //     }
-
-  //     const {
-  //       id: intraId,
-  //       login: intraLogin,
-  //       email,
-  //       first_name: firstName,
-  //       last_name: lastName,
-  //       image_url: avatar
-  //     } = intraUser;
-
-  //     // Check if user exists by Intra ID
-  //     let user = await User.findByIntraId(intraId);
-
-  //     if (!user) {
-  //       // Check if user exists by email
-  //       user = await User.findByEmail(email);
-        
-  //       if (user && !user.intraId) {
-  //         // Link existing account with Intra
-  //         console.log('Linking existing account with Intra auth');
-  //         // TODO: Implement account linking logic
-  //       } else if (!user) {
-  //         // Create new user with Intra auth
-  //         const username = intraLogin || email.split('@')[0];
-          
-  //         const userId = await User.create({
-  //           username,
-  //           email,
-  //           password: null,
-  //           firstName,
-  //           lastName,
-  //           intraId,
-  //           avatar
-  //         });
-          
-  //         user = await User.findById(userId);
-  //       }
-  //     }
-
-  //     // Update online status
-  //     await user.updateOnlineStatus(true);
-
-  //     // Generate JWT token
-  //     const jwtToken = request.server.jwt.sign(
-  //       {
-  //         userId: user.id,
-  //         email: user.email,
-  //         username: user.username
-  //       },
-  //       { expiresIn: '7d' }
-  //     );
-
-  //     console.log(`✅ User ${user.username} logged in via Intra successfully`);
-
-  //     return {
-  //       success: true,
-  //       data: {
-  //         token: jwtToken,
-  //         user: user.toJSON()
-  //       }
-  //     };
-
-  //   } catch (error) {
-  //     console.error('Intra OAuth error:', error);
-      
-  //     if (error.response) {
-  //       console.error('Intra API Error:', error.response.data);
-  //       return reply.code(400).send({
-  //         success: false,
-  //         error: 'Intra authentication failed',
-  //         details: error.response.data.error_description || error.response.data.error
-  //       });
-  //     }
-      
-  //     console.log("============ intraCallback process end ============");
-  //     return reply.code(500).send({
-  //       success: false,
-  //       error: 'Intra authentication failed',
-  //       details: error.message
-  //     });
-  //   }
-  // }
 
 static async intraCallback(request, reply) {
   const { code } = request.body;

@@ -67,31 +67,27 @@ export class RegisterView extends View {
                                 <p class="uppercase !mb-[10px] text-2xl max-w-[300px] text-center text-[var(--text-secondary)]"> Ready to Play? Sign Up!</p>
                                 
                                 <form class="auth-form flex flex-col items-center justify-center gap-6 " id="registerForm">
-                                    <!-- First Name and Last Name on the same line -->
                                     <div class="flex justify-center gap-2 ">
                                         <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">First Name:*</span> 
-                                            <input type="text" name="firstName" required class="bg-[var(--secondary)] text-[var(--text)] !py-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                            <input type="text" name="firstName" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                         </div>
                                         <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">Last Name:*</span> 
-                                            <input type="text" name="lastName" required class="bg-[var(--secondary)] text-[var(--text)] !py-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                            <input type="text" name="lastName" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                         </div>
                                     </div>
                                     
-                                    <!-- Username -->
                                     <div class="flex flex-col justify-center gap-1 w-[480px]"> 
                                         <span class="text-[13px] font-medium">Username:*</span> 
                                         <input type="text" name="username" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                     </div>
                                     
-                                    <!-- Email Address -->
                                     <div class="flex flex-col justify-center gap-1 w-[480px]"> 
                                         <span class="text-[13px] font-medium">Email Address:*</span> 
                                         <input type="email" name="email" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
                                     </div>
                                     
-                                    <!-- Password and Confirm Password on the same line -->
                                     <div class="flex justify-center gap-2">
                                         <div class="flex flex-col gap-1 max-w-[238px]"> 
                                             <span class="text-[13px] font-medium">Password:*</span> 
@@ -137,7 +133,6 @@ export class RegisterView extends View {
 
         const formData = this.getFormData();
         
-        // Client-side validation
         if (formData.password !== formData.confirmPassword) {
             toast.show('Passwords do not match', { 
                 type: 'error', 
@@ -146,10 +141,9 @@ export class RegisterView extends View {
             return;
         }
 
-        // Show loading toast and store its ID for potential updates
         this.currentLoadingToastId = toast.show('Creating your account...', { 
             type: 'loading', 
-            duration: 0, // Don't auto-dismiss loading toasts
+            duration: 0,
             dismissible: false 
         });
 
@@ -169,7 +163,6 @@ export class RegisterView extends View {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('pending-verification-email', formData.email);
                 
-                // Update loading toast to success
                 if (this.currentLoadingToastId) {
                     toast.dismiss(this.currentLoadingToastId);
                     this.currentLoadingToastId = null;
@@ -187,7 +180,6 @@ export class RegisterView extends View {
                 }, 2000);
             }
         } catch (error: any) {
-            // Dismiss loading toast and show error
             if (this.currentLoadingToastId) {
                 toast.dismiss(this.currentLoadingToastId);
                 this.currentLoadingToastId = null;

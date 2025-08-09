@@ -70,12 +70,12 @@ export class SettingsView extends View{
                             </header>
 
                             <!-- Nav section -->
-                           <div class="settings-section rounded-4xl border border-white/30 w-[50%] h-[50px] !m-auto flex justify-around items-center">
-                                <div class="tab-button active cursor-pointer text-sm profile" data-tab="profile">Profile</div>
+                            <div class="settings-section rounded-4xl border border-white/30 w-[50%] h-[50px] !m-auto flex justify-around items-center">
+                                <div class="tab-button active !cursor-pointer text-sm profile !px-7 !py-2 rounded-2xl "data-tab="profile">Profile</div>
                                 <div class="w-[2px] h-7 bg-[var(--text-secondary)] "></div>
-                                <div class="tab-button opacity-30 cursor-pointer text-sm security" data-tab="security">Security</div>
+                                <div class="tab-button opacity-30 !cursor-pointer text-sm security !px-7 !py-2 rounded-2xl" data-tab="security">Security</div>
                                 <div class="w-[2px] h-7 bg-[var(--text-secondary)]"></div>
-                                <div class="tab-button opacity-30 cursor-pointer text-sm game" data-tab="game">Game</div>
+                                <div class="tab-button opacity-30 !cursor-pointer text-sm game !px-7 !py-2 rounded-2xl" data-tab="game">Game</div>
                             </div>
                         </div>
 
@@ -163,11 +163,11 @@ export class SettingsView extends View{
                                         <!-- Action Buttons -->
                                         <div class="flex items-center justify-end space-x-4 !pt-6 border-t border-white/10 gap-5">
                                             <button type="button" 
-                                                    class="text-sm !px-6 !py-3 text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
+                                                    class="text-sm !px-6 !py-3 cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
                                                 Cancel
                                             </button>
                                             <button type="submit" 
-                                                    class="text-sm !px-8 !py-3 bg-[var(--accent)] text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                                    class="text-sm !px-8 !py-3 bg-[var(--accent)] cursor-pointer text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                                                 Save Changes
                                             </button>
                                         </div>
@@ -225,11 +225,11 @@ export class SettingsView extends View{
                                         <!-- Action Buttons -->
                                         <div class="flex justify-end gap-4 !pt-6 border-t border-white/10">
                                             <button type="button"
-                                                class="!px-6 !py-3 text-[14px] text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
+                                                class="!px-6 !py-3 text-[14px] cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
                                                 Cancel
                                             </button>
                                             <button type="button" id="save-board-btn"
-                                                class="!px-8 !py-3 bg-[var(--accent)] text-[14px] text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                                class="!px-8 !py-3 bg-[var(--accent)] cursor-pointer text-[14px] text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                                                 Save Changes
                                             </button>
                                         </div>
