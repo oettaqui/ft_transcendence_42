@@ -662,13 +662,13 @@ header a:hover {
 }
 
 .game-card {
-    transition: transform 0.3s ease;
+    /* transition: transform 0.3s ease; */
     cursor: pointer;
 }
 
-.game-card:hover {
+/* .game-card:hover {
     transform: scale(1.05);
-}
+} */
 
 .info-bar {
     transform: translateY(100%);

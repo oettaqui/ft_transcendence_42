@@ -8,28 +8,13 @@ class EmailService {
   }
 
   initializeTransporter() {
-    // Configure based on your email provider
-    // This example uses Gmail - you'll need to set up environment variables
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER, // Your Gmail address
-        pass: process.env.EMAIL_APP_PASSWORD // Gmail App Password (not regular password)
-      }
-    });
-
-    // Alternative configuration for other providers:
-    /*
-    this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: process.env.SMTP_PORT || 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        pass: process.env.EMAIL_APP_PASSWORD 
       }
     });
-    */
   }
 
   async sendEmailVerification(email, username, token) {
@@ -258,7 +243,6 @@ class EmailService {
   }
 
   async resendVerificationEmail(email, username, token) {
-    // Reuse the same template as initial verification
     return this.sendEmailVerification(email, username, token);
   }
 
@@ -424,7 +408,6 @@ class EmailService {
     }
   }
 
-  // Test email configuration
   async testConnection() {
     try {
       await this.transporter.verify();
@@ -436,7 +419,6 @@ class EmailService {
     }
   }
 
-  // Send a test email
   async sendTestEmail(email) {
     const mailOptions = {
       from: `"Transcendence Pong" <${process.env.EMAIL_USER}>`,
@@ -483,7 +465,6 @@ class EmailService {
   }
 }
 
-// Create singleton instance
 const emailService = new EmailService();
 
 module.exports = emailService;

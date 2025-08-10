@@ -21,8 +21,6 @@ services:
       - FRONTEND_URL=${FRONTEND_URL}
     networks:
       - transcendence-network
-    # Remove restart policy for debugging
-    # restart: unless-stopped
   frontend:
     build:
       context: ./front-end
