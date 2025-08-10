@@ -6,6 +6,8 @@ async function authRoutes(fastify, options) {
     preHandler: ValidationMiddleware.validateRegistration
   }, AuthController.register);
 
+
+
   fastify.post('/login', {
     preHandler: ValidationMiddleware.validateLogin
   }, AuthController.login);
