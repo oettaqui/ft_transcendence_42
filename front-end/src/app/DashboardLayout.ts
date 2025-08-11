@@ -106,7 +106,7 @@ export class DashboardLayout {
                     </nav>
                 </header>
                 
-                <main class="flex   !p-24">
+                <main class="flex max-w-[1800px] !p-24">
                    
                     <aside class="w-[25%] flex flex-col items-start justify-center ">
                         <div class="absolute bottom-20 left-10 w-16 h-16 bg-accent opacity-5 rounded-full blur-2xl animate-bounce"></div>
