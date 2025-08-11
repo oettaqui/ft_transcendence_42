@@ -21,16 +21,16 @@ render(): HTMLElement {
     element.classList.add('!mt-8');
     element.classList.add('flex'); 
     // element.classList.add('overflow-x-hidden'); 
-    // element.classList.add('items-center');
-    // element.classList.add('justify-center');
+    element.classList.add('items-center');
+    element.classList.add('justify-center');
     // element.classList.add('!gap-5'); // Add gap on mobile
     // element.classList.add('!p-2'); //// Add padding on mobile
 
     element.innerHTML = `
-        <aside class="flex flex-col items-start w-[68%] !gap-4 !p-4">
-            <div class="relative w-full">
+        <aside class="w-[65%] flex flex-col items-start  !gap-4 !px-4">
+            <div class="relative w-[100%] h-full">
                 <!-- bg coalition -->
-                <div class="bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full h-auto min-h-[200px] h-full rounded-3xl !p-8  flex flex-col justify-center !gap-10">
+                <div class="bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full  min-h-[200px] h-full rounded-3xl !p-8  flex flex-col justify-center !gap-10">
                     <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
                         <div class="relative flex justify-center items-center w-[80px] h-[80px] lg:w-[110px] lg:h-[110px]">
                             <div class="absolute w-[72px] h-[72px] lg:w-[102px] lg:h-[102px] bg-[var(--accent)] rounded-full"></div>
@@ -99,8 +99,8 @@ render(): HTMLElement {
             </div>
         </aside>
         
-        <aside class=" w-[40%] overflow-y-auto overflow-x-hidden rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-4 !my-4">
-            <div class="flex flex-col h-full">
+        <aside class=" w-[35%] h-[95%] overflow-y-auto overflow-x-hidden rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-4 !my-4">
+            <div class="flex flex-col ">
                 <header class="sticky top-0 z-10 flex justify-around !py-2  bg-[var(--secondary)]">
                     <button id="tab-all" class="tab-btn active !text-xs !px-2  !py-1 " data-category="all">All</button>
                     <button id="tab-online" class="tab-btn !text-xs !px-2  !py-1 " data-category="online">Online</button>
@@ -109,7 +109,7 @@ render(): HTMLElement {
                 </header>
 
                 <!-- Loading state -->
-                <div id="friends-loading" class="hidden flex justify-center items-center !py-4 lg:!py-8">
+                <div id="friends-loading" class="hidden flex justify-center items-center !py-4 ">
                     <div class="animate-spin rounded-full h-6 w-6 lg:h-8 lg:w-8 border-b-2 border-white"></div>
                 </div>
 
@@ -118,8 +118,8 @@ render(): HTMLElement {
 
                 <!-- No Data State -->
                 <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
-                    <i class="ti ti-user-off text-2xl lg:text-4xl text-[var(--text-secondary)]"></i>
-                    <div class="text-xs lg:text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
+                    <i class="ti ti-user-off text-2xl  text-[var(--text-secondary)]"></i>
+                    <div class="text-xs  font-medium text-[var(--text-secondary)]">No data found here</div>
                 </div>
             </div>
         </aside>
