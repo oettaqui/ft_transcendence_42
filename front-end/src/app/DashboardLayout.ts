@@ -31,7 +31,7 @@ export class DashboardLayout {
         this.elementContainer.innerHTML = `
             <div class="w-full flex justify-center !m-auto">
                 <!-- Responsive Header -->
-                <header class="h-16 lg:h-20 !pt-4 lg:!pt-5 w-full fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-4 lg:!px-40 xl:!px-50 2xl:!px-80">
+                <header class="h-16 lg:h-20 !pt-4 lg:!pt-5 w-full fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-4 lg:!px-20 xl:!px-30 2xl:!px-80">
                     <nav class="flex justify-between items-center h-full">
                         <!-- Logo -->
                         <h1 class="text-xl lg:text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline">
