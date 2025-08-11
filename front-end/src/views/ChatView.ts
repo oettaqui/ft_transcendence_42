@@ -29,9 +29,9 @@ export class ChatView extends View{
         element.innerHTML = `
                 <div  class="overflow-y-hidden flex justify-center items-center w-full gap-6 bg-[rgba(220,219,219,0.08)] backdrop-blur-3xl rounded-4xl border border-white/10 !px-4">
 
-                    <div  class="flex justify-center items-center w-[100%] h-[90%] gap-2 !m-auto !py-4">
+                    <div  class="flex justify-center items-center w-[100%] h-[90%] gap-2 !m-auto !py-4 !ml-4">
                         <!-- start section 1 -->
-                        <div class=" h-[95%] w-[28%] rounded-2xl !mt-10 flex flex-col gap-5">
+                        <div class=" h-[95%] w-[28%] rounded-2xl flex flex-col gap-5">
                             <div class="flex flex-col gap-10 sticky">
                                 <div class="flex items-center gap-3">
                                     <div class="relative">
@@ -48,10 +48,10 @@ export class ChatView extends View{
                                 <div class="relative flex items-center gap-7">
                                     <input 
                                         type="text" 
-                                        class="bg-[var(--secondary)] w-[250px] h-[40px] border border-[var(--accent)] rounded-[8px] !pl-2 !pr-12 focus:outline-none transition-all"
+                                        class="bg-[var(--secondary)] w-[94%] h-[40px] border border-[var(--accent)] rounded-[8px] !pl-2 !pr-12 focus:outline-none transition-all"
                                         placeholder="Search..."
                                     />
-                                    <div class="rounded-full w-[45px] h-[45px] flex justify-center items-center absolute right-[50px] top-[-3px]">
+                                    <div class="rounded-full w-[45px] h-[45px] flex justify-center items-center absolute right-[20px] top-[-3px]">
                                         <i class="ti ti-search text-[22px]"></i>
                                     </div>
                                 </div>
@@ -78,6 +78,106 @@ export class ChatView extends View{
                                     </div>
                                 </div>
                                 <!-- itme 2 -->
+                                <div class="unreaded-message w-[95%] relative rounded-3xl">
+                                    
+                                    <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="relative">
+                                                <img src="/public/assets/bchokri.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                                <div class="absolute w-[10px] h-[10px] bg-[var(--success)] rounded-full top-[70%] right-0"></div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-center items-center gap-4">
+                                                    <div class="font-medium text-sm">Badr Chokri</div>
+                                                    <div class="font-medium text-[10px] opacity-50">-</div>
+                                                    <div class="font-medium text-[10px] opacity-50">24min</div>
+                                                </div>
+                                                <div class="font-medium text-[10px] opacity-50">New message </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- itme 3 -->
+                                <div class="unreaded-message w-[95%] relative rounded-3xl ">
+                                    
+                                    <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="relative">
+                                                <img src="/public/assets/yakhay.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                                <div class="absolute w-[10px] h-[10px] bg-[var(--success)] rounded-full top-[70%] right-0"></div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-center itmes-center gap-4">
+                                                    <div class="font-medium text-sm">Yassin Khay</div>
+                                                    <div class="font-medium text-[10px] opacity-50">-</div>
+                                                    <div class="font-medium text-[10px] opacity-50">4h</div>
+                                                </div>
+                                                <div class="font-medium text-[10px] opacity-50">New message</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <!-- itme 4 -->
+                                <div class="unreaded-message w-[95%] relative rounded-3xl">
+                                    
+                                    <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="relative">
+                                                <img src="/public/assets/bchokri.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                                <div class="absolute w-[10px] h-[10px] bg-[var(--success)] rounded-full top-[70%] right-0"></div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-center items-center gap-4">
+                                                    <div class="font-medium text-sm">Badr Chokri</div>
+                                                    <div class="font-medium text-[10px] opacity-50">-</div>
+                                                    <div class="font-medium text-[10px] opacity-50">24min</div>
+                                                </div>
+                                                <div class="font-medium text-[10px] opacity-50">New message </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- itme 5 -->
+                                <div class="unreaded-message w-[95%] relative rounded-3xl ">
+                                    
+                                    <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="relative">
+                                                <img src="/public/assets/yakhay.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                                <div class="absolute w-[10px] h-[10px] bg-[var(--success)] rounded-full top-[70%] right-0"></div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-center itmes-center gap-4">
+                                                    <div class="font-medium text-sm">Yassin Khay</div>
+                                                    <div class="font-medium text-[10px] opacity-50">-</div>
+                                                    <div class="font-medium text-[10px] opacity-50">4h</div>
+                                                </div>
+                                                <div class="font-medium text-[10px] opacity-50">New message</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <!-- itme 6 -->
+                                <div class="unreaded-message w-[95%] relative rounded-3xl">
+                                    
+                                    <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="relative">
+                                                <img src="/public/assets/bchokri.jpeg" class="w-10 h-10 rounded-full object-cover">
+                                                <div class="absolute w-[10px] h-[10px] bg-[var(--success)] rounded-full top-[70%] right-0"></div>
+                                            </div>
+                                            <div>
+                                                <div class="flex justify-center items-center gap-4">
+                                                    <div class="font-medium text-sm">Badr Chokri</div>
+                                                    <div class="font-medium text-[10px] opacity-50">-</div>
+                                                    <div class="font-medium text-[10px] opacity-50">24min</div>
+                                                </div>
+                                                <div class="font-medium text-[10px] opacity-50">New message </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <!-- itme 7 -->
                                 <div class="unreaded-message w-[95%] relative rounded-3xl">
                                     
                                     <div class="flex items-center justify-between backdrop-blur-3xl rounded-3xl border border-white/5 !p-3">
@@ -212,7 +312,7 @@ export class ChatView extends View{
                         </div>
                     <!-- end section 3-->
                     
-                       <div class="w-[30%] h-full flex flex-col items-center gap-3 max-h-[100%]">
+                       <div class="w-[30%] h-full flex flex-col items-center gap-3 max-h-[95%]">
                             <div class="text-center text-white text-lg font-semibold glass-effect !px-6 !py-5 rounded-2xl modern-shadow header-hover border border-white/10">
                                 <div class="flex items-center justify-center gap-3">
                                     <i class="ti ti-history text-xl text-blue-400"></i>
