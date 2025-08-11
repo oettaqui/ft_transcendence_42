@@ -22,12 +22,12 @@ render(): HTMLElement {
     element.classList.add('flex'); 
     // element.classList.add('overflow-x-hidden'); 
     element.classList.add('items-center');
-    element.classList.add('justify-center');
+    element.classList.add('justify-between');
     // element.classList.add('!gap-5'); // Add gap on mobile
     // element.classList.add('!p-2'); //// Add padding on mobile
 
     element.innerHTML = `
-        <aside class="w-[65%] flex flex-col items-start  !gap-4 !px-4">
+        <aside class="w-[67%] flex flex-col items-start  !gap-4 !pl-4">
             <div class="relative w-[100%] h-full">
                 <!-- bg coalition -->
                 <div class="bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full  min-h-[200px] h-full rounded-3xl !p-8  flex flex-col justify-center !gap-10">
@@ -99,13 +99,13 @@ render(): HTMLElement {
             </div>
         </aside>
         
-        <aside class=" w-[35%] h-[95%] overflow-y-auto overflow-x-hidden rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-4 !my-4">
+        <aside class=" w-[30%]  h-[95%] overflow-y-auto overflow-x-hidden rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-4 !my-4 ">
             <div class="flex flex-col ">
-                <header class="sticky top-0 z-10 flex justify-around !py-2  bg-[var(--secondary)]">
-                    <button id="tab-all" class="tab-btn active !text-xs !px-2  !py-1 " data-category="all">All</button>
-                    <button id="tab-online" class="tab-btn !text-xs !px-2  !py-1 " data-category="online">Online</button>
-                    <button id="tab-requests" class="tab-btn !text-xs !px-2  !py-1 " data-category="requests">Requests</button>
-                    <button id="tab-pending" class="tab-btn !text-xs !px-2  !py-1 " data-category="pending">Pending</button>
+                <header class="sticky top-0 z-10 flex justify-between !py-2  bg-[var(--secondary)]">
+                    <button id="tab-all" class="tab-btn active !text-xs " data-category="all">All</button>
+                    <button id="tab-online" class="tab-btn !text-xs " data-category="online">Online</button>
+                    <button id="tab-requests" class="tab-btn !text-xs " data-category="requests">Requests</button>
+                    <button id="tab-pending" class="tab-btn !text-xs " data-category="pending">Pending</button>
                 </header>
 
                 <!-- Loading state -->
