@@ -12,126 +12,121 @@ export class HomeView extends View{
         // Initialize with static data - replace with API calls later
         this.friendsData = this.getStaticFriendsData();
     }
-    render (): HTMLElement{
+render(): HTMLElement {
+    const element = document.createElement('section');
+    element.classList.add('bg-[var(--primary)]');
+    element.classList.add('w-full');
+    element.classList.add('h-full');
+    element.classList.add('rounded-4xl');
+    element.classList.add('!mt-8');
+    element.classList.add('flex'); 
+    // element.classList.add('overflow-x-hidden'); 
+    // element.classList.add('items-center');
+    // element.classList.add('justify-center');
+    // element.classList.add('!gap-5'); // Add gap on mobile
+    // element.classList.add('!p-2'); //// Add padding on mobile
+
+    element.innerHTML = `
+        <aside class="flex flex-col items-start w-[68%] !gap-4 !p-4">
+            <div class="relative w-full">
+                <!-- bg coalition -->
+                <div class="bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full h-auto min-h-[200px] h-full rounded-3xl !p-8  flex flex-col justify-center !gap-10">
+                    <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
+                        <div class="relative flex justify-center items-center w-[80px] h-[80px] lg:w-[110px] lg:h-[110px]">
+                            <div class="absolute w-[72px] h-[72px] lg:w-[102px] lg:h-[102px] bg-[var(--accent)] rounded-full"></div>
+                            <img class="w-[70px] h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src="/public/assets/oettaqui.jpeg" />
+                        </div>
+                        <div class="flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+                            <h2 class="text-xl lg:text-[28px] font-bold">Oussama Ettaqui</h2>
+                            <p class="font-light text-xs lg:text-[14px]">oettaqui</p>
+                        </div>
+                    </div>
+                    <div class="level flex flex-col sm:flex-row justify-center items-center !gap-2 lg:!gap-4">
+                        <!-- Progress -->
+                        <div class="text-2xl lg:text-3xl font-bold">08</div>
+                        <div class="flex flex-col items-center sm:items-start justify-center w-full sm:w-auto">
+                            <div class="percentage text-xs lg:text-[14px] !mb-1" id="percentageText">97%</div>
+                            <div class="progress-bar h-[8px] lg:h-[10px] w-full max-w-[300px] sm:max-w-[400px] lg:w-[600px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
+                                <div class="progress-fill h-full rounded-3xl" id="progressFill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-4 lg:top-[90px] right-4 lg:right-[100px] w-auto lg:w-[100px] h-[30px] lg:h-[35px] rounded-xl lg:rounded-3xl flex justify-center items-center">
+                    <div class="">
+                        <span class="!px-2 lg:!px-4 !py-1 lg:!py-2 rounded-xl bg-[var(--freax)] font-bold text-[10px] lg:text-[12px]">Freax</span>
+                    </div>
+                </div>
+            </div>   
+            
+            <div class="w-full h-full rounded-3xl bg-[var(--secondary)] flex  justify-center items-center ">
+                <div class="border border-[var(--accent)] rounded-2xl flex flex-row justify-between items-center w-[50%] !px-4 !py-6 !ml-15 !gap-4">
+                    <canvas id="donutChart" width="200" height="200" ></canvas>
+                    <div class="flex flex-col !gap-3 text-left">
+                        <div class="flex flex-col">
+                            <div class="text-sm">Your Balance</div> 
+                            <div id="balanceValue" class="text-[var(--accent)] text-2xl"></div> 
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="text-sm">Your Level</div> 
+                            <div id="levelValue" class="text-[var(--accent)] text-2xl"></div> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col !gap-2  !mr-10 !p-4">
+                    <div class="flex justify-center items-center !gap-2">
+                        <div class="border border-[var(--accent)] rounded-2xl  w-[140px] h-[125px]  flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                            <div class="opacity-[0.7] text-[14px] text-center">Matches Played</div>
+                            <div id="matchesPlayed" class="text-[var(--accent)] text-2xl"></div>
+                        </div>
+                        <div class="border border-[var(--accent)] rounded-2xl w-[140px] h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                            <div class="opacity-[0.7] text-[14px] text-center">Friends Count</div>
+                            <div id="friendsCount" class="text-[var(--accent)] text-2xl"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center !gap-2">
+                        <div class="border border-[var(--accent)] rounded-2xl ] w-[140px] h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                            <div class="opacity-[0.7] text-[14px] text-center ">Global Rank</div>
+                            <div id="globalRank" class="text-[var(--accent)] text-2xl"></div>
+                        </div>
+                        <div class="border border-[var(--accent)] rounded-2xl w-[140px] h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                            <div class="opacity-[0.7] text-[14px] text-center ">Win Rate</div>
+                            <div id="winRate" class="text-[var(--accent)] text-2xl"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
         
-        const element = document.createElement('section');
-        element.classList.add('bg-[var(--primary)]');
-        element.classList.add('w-[100%]');
-        element.classList.add('h-[100%]');
-        element.classList.add('rounded-4xl');
-        element.classList.add('!mt-[24px]');
-        element.classList.add('flex');
-        element.classList.add('items-cente');
-        element.innerHTML = `
-                    <aside class="flex flex-col justify-between w-[70%] h-[95%] gap-10 !m-auto ">
-                        <div class="w-full h-[70%] relative">
-                            <!-- bg coalition -->
-                            <div class=" bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full h-full rounded-3xl !p-4 !pl-10 flex flex-col justify-center gap-10" >
-                                <div class="z-[10] flex justify-start items-center gap-8">
-                                    <div class="relative flex justify-center items-center w-[110px] h-[110px]">
-                                        <div class="absolute w-[102px] h-[102px] bg-[var(--accent)] rounded-full"> </div>
-                                        <img class="w-[100px] h-[100px] bg-contain bg-no-repeat bg-center  rounded-full z-[11] flex justify-center items-center" src="/public/assets/oettaqui.jpeg" />
-                                    </div>
-                                    <div class="flex flex-col justify-center items-start">
-                                        <h2 class="text-[28px] font-bold"> Oussama Ettaqui </h2>
-                                        <p class="font-light text-[14px]">oettaqui</p>
-                                    </div>
-                                </div>
-                                <div class="level flex justify-center items-center gap-4">
-                                    <!-- Progress -->
-                                    <div class="text-3xl font-bold">08</div>
-                                    <div class="flex flex-col items-start justify-center !mb-8">
-                                        <div class="percentage text-[14px]" id="percentageText">97%</div>
-                                        <div class="progress-bar h-[10px] w-[600px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
-                                            <div class="progress-fill h-full rounded-3xl" id="progressFill"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute top-[90px] right-[100px] w-[100px] h-[35px] rounded-3xlflex justify-center items-center">
-                                    <div class="">
-                                        <span class="!px-4 !py-2 rounded-xl bg-[var(--freax)] font-bold text-[12px]"> Freax </span>
-                                    </div>
-                            </div>
-                        </div>   
-                        <div class="w-[100%] h-[100%] rounded-3xl bg-[var(--secondary)] flex justify-center items-center gap-16 ">
+        <aside class=" w-[40%] overflow-y-auto overflow-x-hidden rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-4 !my-4">
+            <div class="flex flex-col h-full">
+                <header class="sticky top-0 z-10 flex justify-around !py-2  bg-[var(--secondary)]">
+                    <button id="tab-all" class="tab-btn active !text-xs !px-2  !py-1 " data-category="all">All</button>
+                    <button id="tab-online" class="tab-btn !text-xs !px-2  !py-1 " data-category="online">Online</button>
+                    <button id="tab-requests" class="tab-btn !text-xs !px-2  !py-1 " data-category="requests">Requests</button>
+                    <button id="tab-pending" class="tab-btn !text-xs !px-2  !py-1 " data-category="pending">Pending</button>
+                </header>
 
-                            <div class="border border-[var(--accent)] rounded-3xl flex justify-between items-center w-[50%] !pr-8 !ml-6">
-                                <canvas id="donutChart" width="300" height="300"></canvas>
-                                <div class="flex flex-col gap-6">
-                                    <div class="flex flex-col">
-                                        <div>Your Balance</div> 
-                                        <div id="balanceValue" class="text-[var(--accent)] text-2xl"></div> 
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <div>Your Level</div> 
-                                        <div id="levelValue" class="text-[var(--accent)] text-2xl"></div> 
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <div class="flex flex-col gap-10 !mr-8">
-                                <div class="flex justify-center items-center gap-8 ">
-                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px]  flex flex-col justify-center items-center gap-2
-                                        transition-transform duration-300 hover:scale-[1.03]">
-                                        <div class=" opacity-[0.7]">Matches Played</div>
-                                        <div id="matchesPlayed" class=" text-[var(--accent)] text-2xl"></div>
-                                    </div>
-                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px] flex flex-col justify-center items-center gap-2
-                                        transition-transform duration-300 hover:scale-[1.03]">
-                                        <div class=" opacity-[0.7]">Friends Count</div>
-                                        <div id="friendsCount" class=" text-[var(--accent)] text-2xl"></div>
-                                    </div>
-                                </div>
-                                <div class="flex justify-center items-center gap-8">
-                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px] flex flex-col justify-center items-center gap-2
-                                        transition-transform duration-300 hover:scale-[1.03]">
-                                        <div class="opacity-[0.7] ">Global Rank</div>
-                                        <div id="globalRank" class="text-[var(--accent)] text-2xl"></div>
-                                    </div>
-                                    <div class="border border-[var(--accent)] rounded-2xl w-[200px] h-[125px] flex flex-col justify-center items-center gap-2
-                                        transition-transform duration-300 hover:scale-[1.03]">
-                                        <div class="opacity-[0.7] ">Win Rate</div>
-                                        <div id="winRate" class="text-[var(--accent)] text-2xl"></div>
-                                    </div>
-                                    
-                                    
-                                </div>
-                            </div>
-                                
-                        </div>
-                    </aside>
+                <!-- Loading state -->
+                <div id="friends-loading" class="hidden flex justify-center items-center !py-4 lg:!py-8">
+                    <div class="animate-spin rounded-full h-6 w-6 lg:h-8 lg:w-8 border-b-2 border-white"></div>
+                </div>
 
-                    <aside class="w-[25%] h-[95%] !m-auto overflow-y-auto overflow-x-hidden rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
-                        <div class="flex flex-col h-full">
-                            <header class="sticky top-0 z-10 flex justify-around !py-4">
-                                <button id="tab-all" class="tab-btn active" data-category="all">All</button>
-                                <button id="tab-online" class="tab-btn" data-category="online">Online</button>
-                                <button id="tab-requests" class="tab-btn" data-category="requests">Requests</button>
-                                <button id="tab-pending" class="tab-btn" data-category="pending">Pending</button>
-                            </header>
+                <!-- Friends List Container -->
+                <div id="friends-list" class="flex-1"></div>
 
-                            <!-- Loading state -->
-                            <div id="friends-loading" class="hidden flex justify-center items-center !py-8">
-                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                            </div>
+                <!-- No Data State -->
+                <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
+                    <i class="ti ti-user-off text-2xl lg:text-4xl text-[var(--text-secondary)]"></i>
+                    <div class="text-xs lg:text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
+                </div>
+            </div>
+        </aside>
+    `;
 
-                            <!-- Friends List Container -->
-                            <div id="friends-list" class="flex-1"></div>
-
-                            <!-- No Data State -->
-                            <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
-                                <i class="ti ti-user-off text-4xl text-[var(--text-secondary)]"></i>
-                                <div class="text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
-                            </div>
-                        </div>
-                    </aside>
-                    
-                    `;
-
-        return element;
-
-    }
+    return element;
+}
 
 
 
@@ -250,7 +245,7 @@ export class HomeView extends View{
 
     private renderRequestItem(friend: Friend): string {
         return `
-            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
+            <div class="flex items-center justify-between !py-4 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover" />
                     <div class="flex flex-col">
@@ -272,7 +267,7 @@ export class HomeView extends View{
 
     private renderOnlineItem(friend: Friend): string {
         return `
-            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition">
+            <div class="flex items-center justify-between !py-3 rounded-xl hover:bg-[var(--light-hover)] transition">
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover" />
                     <div class="flex flex-col">
@@ -292,7 +287,7 @@ export class HomeView extends View{
 
     private renderPendingItem(friend: Friend): string {
         return `
-            <div class="flex items-center justify-between !p-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
+            <div class="flex items-center justify-between !py-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
                     <div>
@@ -312,7 +307,7 @@ export class HomeView extends View{
 
     private renderAllItem(friend: Friend): string {
         return `
-            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !p-3 !mt-3">
+            <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !py-3 !mt-3">
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
                     <div>
@@ -647,3 +642,30 @@ animateNumber(elementId: string, targetValue: number, duration: number = 1000, d
         console.log('Opening chat with friend:', friendId);
     }
 */
+
+
+
+//  <aside class="w-[15%] !m-auto overflow-y-auto overflow-x-hidden rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
+//                         <div class="flex flex-col h-full">
+//                             <header class="sticky top-0 z-10 flex justify-around !py-4">
+//                                 <button id="tab-all" class="tab-btn active" data-category="all">All</button>
+//                                 <button id="tab-online" class="tab-btn" data-category="online">Online</button>
+//                                 <button id="tab-requests" class="tab-btn" data-category="requests">Requests</button>
+//                                 <button id="tab-pending" class="tab-btn" data-category="pending">Pending</button>
+//                             </header>
+
+//                             <!-- Loading state -->
+//                             <div id="friends-loading" class="hidden flex justify-center items-center !py-8">
+//                                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+//                             </div>
+
+//                             <!-- Friends List Container -->
+//                             <div id="friends-list" class="flex-1"></div>
+
+//                             <!-- No Data State -->
+//                             <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
+//                                 <i class="ti ti-user-off text-4xl text-[var(--text-secondary)]"></i>
+//                                 <div class="text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
+//                             </div>
+//                         </div>
+//                     </aside>

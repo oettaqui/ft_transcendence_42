@@ -26,7 +26,7 @@ export class DashboardLayout {
          this.elementContainer.classList.add('w-[100%]');
          this.elementContainer.classList.add('h-[100%]');
          this.elementContainer.innerHTML = `
-            <div class= "max-w-[100%] !m-auto">
+            <div class= "w-[100%] !m-auto ">
                 <header class="h-20 !pt-[20px] w-[100%] fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-40">
                     <nav class="flex justify-between items-center">
                         <h1 class="text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h1>
@@ -106,16 +106,16 @@ export class DashboardLayout {
                     </nav>
                 </header>
                 
-                <main class="flex h-[100vh] !p-24">
+                <main class="flex   !p-24">
                    
-                    <aside class="w-[350px] flex flex-col items-start justify-center ">
+                    <aside class="w-[25%] flex flex-col items-start justify-center ">
                         <div class="absolute bottom-20 left-10 w-16 h-16 bg-accent opacity-5 rounded-full blur-2xl animate-bounce"></div>
                         
 
                         <!-- Navigation -->
                         <nav class="">
                             <ul class="flex flex-col itmes-center justify-center gap-10 ">
-                                <li class="nav-item-animated opacity-0 home-parent 1">
+                                <li class="nav-item-animated opacity-0 w-[180px] home-parent 1">
                                     <a href="/dashboard" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light  hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <!-- Slide effect -->
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
@@ -130,7 +130,7 @@ export class DashboardLayout {
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0 game-parent 1">
+                                <li class="nav-item-animated opacity-0 w-[180px] game-parent 1">
                                     <a href="/dashboard/game" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -144,9 +144,9 @@ export class DashboardLayout {
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0 chat 1">
+                                <li class="nav-item-animated opacity-0 w-[180px] chat 1">
                                     <a href="/dashboard/chat" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
-                                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
+                                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent  w-[180px] -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex items-center w-full">
                                             <div class="icon-hover w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mr-4 group-hover:bg-accent transition-all duration-300">
@@ -158,7 +158,7 @@ export class DashboardLayout {
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0 tournament 1">
+                                <li class="nav-item-animated opacity-0 w-[180px] tournament 1">
                                     <a href="#" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -172,7 +172,7 @@ export class DashboardLayout {
                                     </a>
                                 </li>
 
-                                <li class="nav-item-animated opacity-0 settings">
+                                <li class="nav-item-animated opacity-0 w-[180px] settings">
                                     <a href="/dashboard/settings" class="group relative flex items-center !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -191,7 +191,7 @@ export class DashboardLayout {
                     
                     </aside>
                     
-                    <div class="new-section w-full h-full">
+                    <div class="new-section w-[80%] ">
                         
                     </div>
 
