@@ -20,7 +20,7 @@ interface ApiResponse {
 }
 
 export class RegisterView extends View {
-    private API_BASE = 'http://localhost:3001/api';
+    private API_BASE = 'http://localhost:3000/api';
     private currentLoadingToastId: string | null = null;
 
     constructor() {

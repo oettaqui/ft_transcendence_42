@@ -19,7 +19,7 @@ interface ApiResponse {
 }
 
 export class LoginView extends View {
-    private API_BASE = 'http://localhost:3001/api';
+    private API_BASE = 'http://localhost:3000/api';
     private requires2FA = false;
     private pendingLoginData: { email: string; password: string } | null = null;
     private currentLoadingToastId: string | null = null;
@@ -136,6 +136,7 @@ export class LoginView extends View {
     }
 
     private async handleGoogleAuth(): Promise<void> {
+        toast.dismiss(this.currentLoadingToastId!);
         try {
             this.currentLoadingToastId = toast.show('Loading Google authentication...', {
                 type: 'loading',
@@ -169,7 +170,6 @@ export class LoginView extends View {
                         });
                         return;
                     }
-
                     try {
                         const result = await this.apiCall('/auth/google/verify', {
                             method: 'POST',
