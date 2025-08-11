@@ -31,7 +31,7 @@ export class DashboardLayout {
         this.elementContainer.innerHTML = `
             <div class="w-full flex justify-center !m-auto">
                 <!-- Responsive Header -->
-                <header class="h-16 lg:h-20 !pt-4 lg:!pt-5 w-full fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-4 lg:!px-40">
+                <header class="h-16 lg:h-20 !pt-4 lg:!pt-5 w-full fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-4 lg:!px-25 xl:!px-35 2xl:!px-45">
                     <nav class="flex justify-between items-center h-full">
                         <!-- Logo -->
                         <h1 class="text-xl lg:text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline">
@@ -52,7 +52,7 @@ export class DashboardLayout {
                         </div>
                         
                         <!-- Right Side Navigation -->
-                        <div class="flex justify-center items-center !gap-4 lg:!gap-12">
+                        <div class="flex justify-center items-center !gap-4 lg:!gap-10">
                             <!-- Balance - Hidden on small screens -->
                             <div class="hidden sm:flex items-center justify-end !mt-2 !gap-2">
                                 <img class="w-6 h-6 lg:w-8 lg:h-8 rounded-full object-cover !mb-1" src="../../public/assets/qoins.png" alt="Coins" />
@@ -63,7 +63,7 @@ export class DashboardLayout {
                             </div>
                             
                             <!-- Notification & Profile -->
-                            <div class="relative flex items-end !gap-4 lg:!gap-8 justify-end">
+                            <div class="relative flex items-end !gap-4 lg:!gap-4 justify-end">
                                 <!-- Notification Bell -->
                                 <div class="relative flex justify-center items-center">
                                     <i class="ti ti-bell-filled text-2xl lg:text-[34px] font-light text-gray-300 hover:text-white transition-colors cursor-pointer"></i>
@@ -115,7 +115,7 @@ export class DashboardLayout {
                 </header>
                 
                 <!-- Main Content Area -->
-                <main class="flex flex-col lg:flex-row justify-between items-center !pt-16 lg:!pt-20 w-full min-h-screen">
+                <main class="flex flex-col lg:flex-row justify-between items-center !pt-1 lg:!pt-20 w-full min-h-screen">
                     <!-- Sidebar Navigation -->
                     <aside class="w-full lg:w-[20%] flex flex-col items-start justify-start !p-4 lg:!p-0">
                         <!-- Decorative Element -->
@@ -123,7 +123,7 @@ export class DashboardLayout {
                         
                         <!-- Navigation Menu -->
                         <nav class="w-full">
-                            <ul class="flex flex-row lg:flex-col items-center lg:items-start justify-center lg:justify-start !gap-2 lg:!gap-10 overflow-x-auto lg:overflow-visible">
+                            <ul class="flex flex-row lg:flex-col items-start lg:items-start justify-center lg:justify-start !gap-2 lg:!gap-10 overflow-x-auto lg:overflow-visible">
                                 
                                 <!-- Home Navigation Item -->
                                 <li class="nav-item-animated opacity-0 w-full lg:w-[200px] home-parent flex-shrink-0">
@@ -200,7 +200,7 @@ export class DashboardLayout {
                     </aside>
                     
                     <!-- Main Content Section -->
-                    <div class="new-section w-full lg:w-[80%] !p-4 lg:!p-0">
+                    <div class="new-section w-full lg:w-[80%] !p-4 lg:!p-0 ">
                         <!-- Content will be inserted here -->
                     </div>
                 </main>

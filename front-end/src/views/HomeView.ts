@@ -18,7 +18,7 @@ render(): HTMLElement {
     element.classList.add('w-full');
     element.classList.add('h-full');
     element.classList.add('rounded-4xl');
-    element.classList.add('!mt-10');
+    element.classList.add('!mt-4');
     element.classList.add('flex');
     element.classList.add('flex-col', 'lg:flex-row'); // Stack on small screens
     element.classList.add('items-center', 'lg:items-stretch');
