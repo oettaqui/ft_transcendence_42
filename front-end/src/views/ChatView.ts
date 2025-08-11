@@ -29,10 +29,10 @@ export class ChatView extends View{
         element.innerHTML = `
                 <div  class="overflow-y-hidden flex justify-center items-center w-full gap-6 bg-[rgba(220,219,219,0.08)] backdrop-blur-3xl rounded-4xl border border-white/10 !px-4">
 
-                    <div  class="flex justify-center items-center w-[100%] h-[90%] gap-2 !m-auto !py-4 !ml-4">
+                    <div  class="flex justify-center items-center w-[100%] h-[95%] gap-2 !m-auto !py-4 !ml-4">
                         <!-- start section 1 -->
                         <div class=" h-[95%] w-[28%] rounded-2xl flex flex-col gap-5">
-                            <div class="flex flex-col gap-10 sticky">
+                            <div class="flex flex-col gap-6 sticky">
                                 <div class="flex items-center gap-3">
                                     <div class="relative">
                                         <img class="w-[50px] h-[50px] rounded-full" src="../../public/assets/oettaqui.jpeg"/>
@@ -202,7 +202,7 @@ export class ChatView extends View{
                         
                         </div>
                         <!-- start section 2 -->
-                        <div class="chat backdrop-blur-3xl rounded-4xl border border-white/5 w-[40%]  flex flex-col justify-center items-center bg-[rgba(220,219,219,0.05)] !my-4">
+                        <div class="chat backdrop-blur-3xl rounded-4xl border border-white/5 w-[40%] h-[95%]  flex flex-col justify-center items-center bg-[rgba(220,219,219,0.05)]">
                             <div class="flex flex-col h-[530px]">
                             <!-- header -->
                                 <div class="!py-2 w-[95%] !mt-2 bg-[var(--secondary)] !m-auto border border-white/25 rounded-4xl">
@@ -312,7 +312,7 @@ export class ChatView extends View{
                         </div>
                     <!-- end section 3-->
                     
-                       <div class="w-[30%] h-full flex flex-col items-center gap-3 max-h-[95%]">
+                       <div class="w-[30%] h-full flex flex-col items-center gap-3 max-h-[98%]">
                             <div class="text-center text-white text-lg font-semibold glass-effect !px-6 !py-5 rounded-2xl modern-shadow header-hover border border-white/10">
                                 <div class="flex items-center justify-center gap-3">
                                     <i class="ti ti-history text-xl text-blue-400"></i>
