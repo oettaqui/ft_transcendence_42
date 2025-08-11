@@ -23,11 +23,11 @@ export class DashboardLayout {
 
    render(): HTMLElement | null {
         this.elementContainer = document.createElement('div');
-         this.elementContainer.classList.add('w-[100%]');
-         this.elementContainer.classList.add('h-[100%]');
+        //  this.elementContainer.classList.add('w-[100%]');
+        //  this.elementContainer.classList.add('h-[100%]');
          this.elementContainer.innerHTML = `
-            <div class= "w-[100%] !m-auto ">
-                <header class="h-20 !pt-[20px] w-[100%] fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-40">
+            <div class= "w-[1600px] flex justify-center !m-auto ">
+                <header class="h-20 !pt-[20px] w-[80%]  fixed z-[100] bg-[rgba(13, 17, 23, 0.95)] backdrop-blur-md shadow-md !px-40 ">
                     <nav class="flex justify-between items-center">
                         <h1 class="text-3xl font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h1>
                         <div class="relative flex items-center gap-7">

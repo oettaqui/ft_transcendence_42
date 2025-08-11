@@ -18,7 +18,7 @@ render(): HTMLElement {
     element.classList.add('w-full');
     element.classList.add('h-full');
     element.classList.add('rounded-4xl');
-    element.classList.add('!mt-8');
+    element.classList.add('!mt-10');
     element.classList.add('flex'); 
     // element.classList.add('overflow-x-hidden'); 
     element.classList.add('items-center');
