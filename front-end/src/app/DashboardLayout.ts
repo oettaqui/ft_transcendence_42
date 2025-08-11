@@ -123,10 +123,10 @@ export class DashboardLayout {
                         
                         <!-- Navigation Menu -->
                         <nav class="w-full">
-                            <ul class="flex flex-row lg:flex-col items-center lg:items-start justify-center lg:justify-start !gap-2 lg:!gap-10 overflow-x-auto lg:overflow-visible">
+                            <ul class="flex flex-row lg:flex-col items-center lg:items-start justify-center lg:justify-start !gap-2 lg:!gap-6 overflow-x-auto lg:overflow-visible">
                                 
                                 <!-- Home Navigation Item -->
-                                <li class="nav-item-animated opacity-0 w-full lg:w-[200px] home-parent flex-shrink-0">
+                                <li class="nav-item-animated opacity-0 w-full lg:w-[220px] home-parent flex-shrink-0">
                                     <a href="/dashboard" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:translate-x-0 lg:hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <!-- Slide effect -->
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
@@ -135,13 +135,13 @@ export class DashboardLayout {
                                             <div class="icon-hover w-10 h-10 lg:w-12 lg:h-12 bg-secondary rounded-lg flex items-center justify-center lg:!mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-home text-xl lg:text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="home text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[12px] group-hover:text-accent transition-colors duration-300">Home</span>
+                                            <span class="home text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[8px] group-hover:text-accent transition-colors duration-300">Home</span>
                                         </div>
                                     </a>
                                 </li>
 
                                 <!-- Games Navigation Item -->
-                                <li class="nav-item-animated opacity-0 w-full lg:w-[200px] game-parent flex-shrink-0">
+                                <li class="nav-item-animated opacity-0 w-full lg:w-[220px] game-parent flex-shrink-0">
                                     <a href="/dashboard/game" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-0 lg:hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -149,13 +149,13 @@ export class DashboardLayout {
                                             <div class="icon-hover w-10 h-10 lg:w-12 lg:h-12 bg-secondary rounded-lg flex items-center justify-center lg:!mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-device-gamepad-2 text-xl lg:text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="game text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[12px] group-hover:text-accent transition-colors duration-300">Games</span>
+                                            <span class="game text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[8px] group-hover:text-accent transition-colors duration-300">Games</span>
                                         </div>
                                     </a>
                                 </li>
 
                                 <!-- Chat Navigation Item -->
-                                <li class="nav-item-animated opacity-0 w-full lg:w-[200px] chat flex-shrink-0">
+                                <li class="nav-item-animated opacity-0 w-full lg:w-[220px] chat-parent flex-shrink-0">
                                     <a href="/dashboard/chat" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-0 lg:hover:translate-x-1 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 w-[180px] -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -163,13 +163,13 @@ export class DashboardLayout {
                                             <div class="icon-hover w-10 h-10 lg:w-12 lg:h-12 bg-secondary rounded-lg flex items-center justify-center lg:!mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-message text-xl lg:text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[12px] group-hover:text-accent transition-colors duration-300">Chat</span>
+                                            <span class="chat text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[8px] group-hover:text-accent transition-colors duration-300">Chat</span>
                                         </div>
                                     </a>
                                 </li>
 
                                 <!-- Tournament Navigation Item -->
-                                <li class="nav-item-animated opacity-0 w-full lg:w-[200px] tournament flex-shrink-0">
+                                <li class="nav-item-animated opacity-0 w-full lg:w-[220px] tournament-parent flex-shrink-0">
                                     <a href="#" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-0 lg:hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -177,13 +177,13 @@ export class DashboardLayout {
                                             <div class="icon-hover w-10 h-10 lg:w-12 lg:h-12 bg-secondary rounded-lg flex items-center justify-center lg:!mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-trophy text-xl lg:text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[12px] group-hover:text-accent transition-colors duration-300">Tournament</span>
+                                            <span class="tournament text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[8px] group-hover:text-accent transition-colors duration-300">Tournament</span>
                                         </div>
                                     </a>
                                 </li>
 
                                 <!-- Settings Navigation Item -->
-                                <li class="nav-item-animated opacity-0 w-full lg:w-[200px] settings flex-shrink-0">
+                                <li class="nav-item-animated opacity-0 w-full lg:w-[220px] settings-parent flex-shrink-0">
                                     <a href="/dashboard/settings" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-0 lg:hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
@@ -191,7 +191,7 @@ export class DashboardLayout {
                                             <div class="icon-hover w-10 h-10 lg:w-12 lg:h-12 bg-secondary rounded-lg flex items-center justify-center lg:!mr-4 group-hover:bg-accent transition-all duration-300">
                                                 <i class="ti ti-settings text-xl lg:text-2xl text-accent group-hover:text-black transition-colors duration-300"></i>
                                             </div>
-                                            <span class="text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[12px] group-hover:text-accent transition-colors duration-300">Settings</span>
+                                            <span class="settings text-animation font-semibold text-xs lg:text-[16px] !mt-1 lg:!mt-0 lg:!pl-[8px] group-hover:text-accent transition-colors duration-300">Settings</span>
                                         </div>
                                     </a>
                                 </li>
@@ -200,7 +200,7 @@ export class DashboardLayout {
                     </aside>
                     
                     <!-- Main Content Section -->
-                    <div class="new-section w-full lg:w-[80%] !p-4 lg:!p-0">
+                    <div class="new-section w-full h-full lg:w-[80%] !p-4 lg:!p-0">
                         <!-- Content will be inserted here -->
                     </div>
                 </main>
@@ -346,6 +346,19 @@ export class DashboardLayout {
         else if (path === "/dashboard/game" && item.classList.contains('game-parent')) {
             item.classList.add('active');
             const gameText = item.querySelector('.game');
+            if (gameText) gameText.classList.add('active-nav');
+        }
+        else if (path === "/dashboard/chat" && item.classList.contains('chat-parent')) {
+            item.classList.add('active');
+            const gameText = item.querySelector('.chat');
+            if (gameText) gameText.classList.add('active-nav');
+        }else if (path === "/dashboard/tounament" && item.classList.contains('tournament-parent')) {
+            item.classList.add('active');
+            const gameText = item.querySelector('.tournament');
+            if (gameText) gameText.classList.add('active-nav');
+        }else if (path === "/dashboard/settings" && item.classList.contains('settings-parent')) {
+            item.classList.add('active');
+            const gameText = item.querySelector('.settings');
             if (gameText) gameText.classList.add('active-nav');
         }
         else {

@@ -16,9 +16,9 @@ render(): HTMLElement {
     const element = document.createElement('section');
     element.classList.add('bg-[var(--primary)]');
     element.classList.add('w-full');
-    element.classList.add('h-full');
+    element.classList.add('h-[80%]');
     element.classList.add('rounded-4xl');
-    element.classList.add('!mt-4');
+    element.classList.add('!mt-16');
     element.classList.add('flex');
     element.classList.add('flex-col', 'lg:flex-row'); // Stack on small screens
     element.classList.add('items-center', 'lg:items-stretch');
@@ -27,8 +27,8 @@ render(): HTMLElement {
     element.classList.add('!p-2', 'lg:!p-0'); // Add responsive padding
 
     element.innerHTML = `
-        <aside class="w-full lg:w-[67%] flex flex-col items-start !gap-4 !py-4 lg:!pl-4">
-            <div class="relative w-full h-full">
+        <aside class="w-full h-full lg:w-[67%] flex flex-col  !gap-4 !py-4 lg:!pl-4">
+            <div class="relative w-full h-[40%]  ">
                 <!-- bg coalition -->
                 <div class="bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full min-h-[200px] h-auto lg:h-full rounded-2xl lg:rounded-3xl !p-4 lg:!p-8 flex flex-col justify-center !gap-6 lg:!gap-10">
                     <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
@@ -59,8 +59,8 @@ render(): HTMLElement {
                 </div>
             </div>   
             
-            <div class="w-full h-auto lg:h-full rounded-2xl lg:rounded-3xl bg-[var(--secondary)] flex flex-col lg:flex-row justify-center items-center !gap-4 lg:!gap-0 !p-4 lg:!p-0">
-                <div class="border border-[var(--accent)] rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-4">
+            <div class="w-full h-[100%]  rounded-2xl lg:rounded-3xl bg-[var(--secondary)] flex flex-col lg:flex-row justify-center items-center !gap-4 lg:!gap-0 !p-4 lg:!p-0">
+                <div class="border border-[var(--accent)] rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
                     <canvas id="donutChart" width="200" height="200" class="sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px]"></canvas>
                     <div class="flex flex-row lg:flex-col !gap-3 text-center lg:text-left">
                         <div class="flex flex-col">
