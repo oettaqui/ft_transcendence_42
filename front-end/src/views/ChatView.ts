@@ -200,7 +200,7 @@ export class ChatView extends View{
                         </div>
                         <!-- start section 2 -->
                         <div class="chat backdrop-blur-3xl rounded-4xl border border-white/5 w-[40%] h-[90%]  flex flex-col justify-center items-center bg-[rgba(220,219,219,0.05)] !p-3 ">
-                            <div class="flex flex-col h-[520px] !py-8">
+                            <div class="flex flex-col h-[590px] !py-8 !mt-2">
                             <!-- header -->
                                 <div class="!py-2 w-[95%] !mt-2 bg-[var(--secondary)] !m-auto border border-white/25 rounded-4xl">
                                     <div class="flex items-center gap-3 relative !ml-2">
