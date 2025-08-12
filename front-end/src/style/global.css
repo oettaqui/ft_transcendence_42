@@ -26,6 +26,11 @@
   --freax : #f5bc38;
 }
 
+html{
+    scrollbar-width: thin; /* or 'auto' or 'none' */
+    scrollbar-color: var(--accent) var(--secondary);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -47,9 +52,10 @@ body {
 
 
 
+
 /* start customize the scroll bar */
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 10px;
 }
 ::-webkit-scrollbar-track {
@@ -59,7 +65,7 @@ body {
   background: var(--accent);
     border-radius: 10px;
     height: 1px;
-}
+} */
 
 /* end */
 
