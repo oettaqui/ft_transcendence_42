@@ -152,8 +152,7 @@ export class LoginView extends View {
 
             const googleButtonContainer = document.createElement('div');
             googleButtonContainer.style.position = 'fixed';
-            googleButtonContainer.style.left = '-1000px';
-            googleButtonContainer.style.top = '-1000px';
+            googleButtonContainer.style.position = 'hidden';
             googleButtonContainer.id = 'hidden-google-button';
             document.body.appendChild(googleButtonContainer);
 
