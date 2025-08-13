@@ -170,7 +170,7 @@ export class DashboardLayout {
 
                                 <!-- Tournament Navigation Item -->
                                 <li class="nav-item-animated opacity-0 w-full lg:w-[220px] tournament-parent flex-shrink-0">
-                                    <a href="#" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-0 lg:hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
+                                    <a href="/dashboard/tournament" class="group relative flex items-center justify-center lg:justify-start !px-2 !py-2 text-primary rounded-xl transition-all duration-300 hover:bg-secondary hover-accent-light hover:transform hover:translate-x-0 lg:hover:translate-x-2 hover:shadow-lg hover-glow overflow-hidden">
                                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 -translate-x-full group-hover:translate-x-full group-hover:opacity-20 transition-all duration-700"></div>
                                         
                                         <div class="relative z-10 flex flex-col lg:flex-row items-center w-full lg:w-[210px]">
@@ -353,6 +353,10 @@ export class DashboardLayout {
             const gameText = item.querySelector('.chat');
             if (gameText) gameText.classList.add('active-nav');
         }else if (path === "/dashboard/tounament" && item.classList.contains('tournament-parent')) {
+            item.classList.add('active');
+            const gameText = item.querySelector('.tournament');
+            if (gameText) gameText.classList.add('active-nav');
+        }else if (path === "/dashboard/tournament" && item.classList.contains('tournament-parent')) {
             item.classList.add('active');
             const gameText = item.querySelector('.tournament');
             if (gameText) gameText.classList.add('active-nav');

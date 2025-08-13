@@ -73,6 +73,7 @@ export class Router {
           "/dashboard/chat",
           "/dashboard/settings",
           "/dashboard/profile",
+          "/dashboard/tournament",
           "/dashboard/analytics"
         ];
         
