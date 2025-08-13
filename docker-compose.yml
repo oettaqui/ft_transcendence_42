@@ -1,5 +1,24 @@
 services:
-
+  api-gateway:
+      build:
+        context: ./backend/api-gateway
+        dockerfile: Dockerfile
+      container_name: transcendence-gateway
+      ports:
+        - "3000:3000"  # Main entry point
+      volumes:
+        - ./backend/api-gateway:/app
+        - /app/node_modules
+      environment:
+        - NODE_ENV=development
+        - PORT=3000
+        - JWT_SECRET=${JWT_SECRET:-pingpong-secret-key-change-in-production}
+        - USER_SERVICE_URL=http://user-service:3001
+      depends_on:
+        - user-service
+      networks:
+        - transcendence-network
+      restart: unless-stopped
   user-service:
     build:
       context: ./backend/user-service
@@ -31,7 +50,7 @@ services:
       - /app/node_modules
       - ./front-end:/app
     depends_on:
-      - user-service
+      - api-gateway
     networks:
       - transcendence-network
 
