@@ -351,6 +351,10 @@ header a:hover {
     transition: all 0.3s ease;
 }
 
+header h1:hover{
+    cursor: default;
+}
+
 /* Features  section*/
 
 .feature-card {

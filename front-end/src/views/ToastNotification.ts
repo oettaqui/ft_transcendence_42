@@ -56,10 +56,10 @@ export class ToastNotification {
             #toast-container {
                 position: fixed !important;
                 top: 1rem !important;
-                right: 20% !important;
+                right: 25% !important;
                 z-index: 99999 !important;
                 max-width: 24rem !important;
-                width: auto !important;
+                width: 19rem !important;
                 min-width: 20rem !important;
                 display: flex !important;
                 flex-direction: column !important;
