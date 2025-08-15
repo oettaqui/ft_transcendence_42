@@ -74,6 +74,7 @@ export class Router {
           "/dashboard/settings",
           "/dashboard/profile",
           "/dashboard/tournament",
+          "/dashboard/game/localgame",
           "/dashboard/analytics"
         ];
         

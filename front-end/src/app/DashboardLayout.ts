@@ -198,7 +198,6 @@ export class DashboardLayout {
                             </ul>
                         </nav>
                     </aside>
-                    
                     <!-- Main Content Section -->
                     <div class="new-section w-full h-full lg:w-[80%] !p-4 lg:!p-0">
                         <!-- Content will be inserted here -->

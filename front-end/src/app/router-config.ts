@@ -5,6 +5,7 @@ import { EmailVerificationView } from "../views/EmailVerificationView";
 import { RouteConfig } from "../types/RouteConfig";
 import { HomeView } from "../views/HomeView";
 import { GameView } from "../views/GameView";
+import { LocalGameView } from "../views/LocalGameView";
 import { ChatView } from "../views/ChatView";
 import { SettingsView } from "../views/SettingsView";
 import { TournamentView } from "../views/TournamentView";
@@ -17,6 +18,7 @@ export const routes: RouteConfig[] = [
   { path: '/dashboard', view: HomeView},
   { path: '/dashboard/chat', view: ChatView},
   { path: '/dashboard/game', view: GameView},
+  { path: '/dashboard/game/localgame', view: LocalGameView},
   { path: '/dashboard/settings', view: SettingsView},
   { path: '/dashboard/tournament', view: TournamentView}
 ];
