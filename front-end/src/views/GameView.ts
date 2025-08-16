@@ -164,7 +164,7 @@ export class GameView extends View{
             return;
         }
 
-        const scrollAmount = card.offsetWidth + 100; // card width + !gap-8 (32px)
+        const scrollAmount = card.offsetWidth + 100;
 
         scrollRightBtn.addEventListener('click', () => {
             cardContainer.scrollBy({

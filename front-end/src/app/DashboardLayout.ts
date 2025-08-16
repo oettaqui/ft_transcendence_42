@@ -338,12 +338,10 @@ export class DashboardLayout {
             const response = await this.apiService.post('/auth/logout', {});
 
             if (response.ok) {
-            // 1. Remove the token from local storage
             localStorage.removeItem('token');
             console.log('Logged out successfully and token removed!');
 
-            // 2. Redirect the user or update the UI
-            // Example: window.location.href = '/login';
+            
             } else {
             const errorData = await response.json();
             console.error('Logout failed:', errorData.message);

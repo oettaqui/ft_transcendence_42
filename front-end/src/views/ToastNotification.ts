@@ -1,6 +1,6 @@
 interface ToastOptions {
     type: 'success' | 'error' | 'warning' | 'loading' | 'info';
-    duration?: number; // in milliseconds, 0 means no auto-dismiss
+    duration?: number;
     dismissible?: boolean;
 }
 
@@ -348,13 +348,13 @@ export class ToastNotification {
             ${progressBar}
         `;
 
-        // Re-add event listener for dismiss button
+        
         if (toast.dismissible) {
             const closeBtn = element.querySelector('.toast-dismiss');
             closeBtn?.addEventListener('click', () => this.dismiss(toast.id));
         }
 
-        // Set new timeout if duration is specified
+        
         if (toast.duration > 0) {
             this.startProgressBar(element, toast.duration);
             toast.timeoutId = window.setTimeout(() => {

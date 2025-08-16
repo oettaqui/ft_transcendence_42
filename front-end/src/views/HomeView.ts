@@ -24,11 +24,11 @@ render(user: User | null): HTMLElement {
     element.classList.add('rounded-4xl');
     element.classList.add('!mt-16');
     element.classList.add('flex');
-    element.classList.add('flex-col', 'lg:flex-row'); // Stack on small screens
+    element.classList.add('flex-col', 'lg:flex-row'); 
     element.classList.add('items-center', 'lg:items-stretch');
     element.classList.add('justify-between');
-    element.classList.add('!gap-4', 'lg:!gap-0'); // Add responsive gaps
-    element.classList.add('!p-2', 'lg:!p-0'); // Add responsive padding
+    element.classList.add('!gap-4', 'lg:!gap-0');
+    element.classList.add('!p-2', 'lg:!p-0');
 
     element.innerHTML = `
         <aside class="w-full h-full lg:w-[67%] flex flex-col  !gap-4 !py-4 lg:!pl-4">
@@ -144,7 +144,7 @@ render(user: User | null): HTMLElement {
         this.animateNumber('globalRank', 30, 1000);
         this.animateNumber('winRate', 62.5, 1000, 1);
 
-        // Initialize friends panel
+       
         this.setupTabFiltering();
         this.loadFriendsData('all');
        
@@ -168,13 +168,13 @@ render(user: User | null): HTMLElement {
     }
 
     private switchTab(category: string): void {
-        // Update active tab styling
+        
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
         });
         document.querySelector(`[data-category="${category}"]`)?.classList.add('active');
 
-        // Load data for the selected tab
+        
         this.currentTab = category;
         this.loadFriendsData(category);
     }
@@ -188,19 +188,19 @@ render(user: User | null): HTMLElement {
             // TODO: Replace with actual API calls
             switch(category) {
                 case 'all':
-                    // data = await this.fetchAllFriends();
+                    
                     data = this.friendsData.all;
                     break;
                 case 'online':
-                    // data = await this.fetchOnlineFriends();
+                    
                     data = this.friendsData.online;
                     break;
                 case 'requests':
-                    // data = await this.fetchFriendRequests();
+                   
                     data = this.friendsData.requests;
                     break;
                 case 'pending':
-                    // data = await this.fetchFriendPending();
+                    
                     data = this.friendsData.pending;
                     break;
             }
@@ -231,7 +231,7 @@ render(user: User | null): HTMLElement {
             return this.renderFriendItem(friend, category);
         }).join('');
 
-        // Bind action events after rendering
+        
         this.bindFriendActionEvents(category);
     }
 
@@ -328,17 +328,16 @@ render(user: User | null): HTMLElement {
     }
 
     private bindFriendActionEvents(category: string): void {
-        // Accept friend request
+        
         document.querySelectorAll('.accept-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
                 const friendId = target.dataset.id;
                 console.log('Accept friend request:', friendId);
                 
-                // TODO: Call API to accept friend request
-                // await this.acceptFriendRequest(Number(friendId));
                 
-                // Refresh the current tab after action
+                
+                
                 this.loadFriendsData(this.currentTab);
             });
         });
@@ -350,10 +349,9 @@ render(user: User | null): HTMLElement {
                 const friendId = target.dataset.id;
                 console.log('Reject friend request:', friendId);
                 
-                // TODO: Call API to reject friend request
-                // await this.rejectFriendRequest(Number(friendId));
                 
-                // Refresh the current tab after action
+                
+                
                 this.loadFriendsData(this.currentTab);
             });
         });
@@ -365,11 +363,7 @@ render(user: User | null): HTMLElement {
                 const friendId = target.dataset.id;
                 console.log('Add friend:', friendId);
                 
-                // TODO: Call API to add friend
-                // await this.addFriend(Number(friendId));
                 
-                // Refresh the current tab after action
-                this.loadFriendsData(this.currentTab);
             });
         });
 
@@ -380,8 +374,7 @@ render(user: User | null): HTMLElement {
                 const friendId = target.dataset.id;
                 console.log('Message friend:', friendId);
                 
-                // TODO: Navigate to chat or open chat modal
-                // this.openChat(Number(friendId));
+                
             });
         });
     }
@@ -596,81 +589,3 @@ animateNumber(elementId: string, targetValue: number, duration: number = 1000, d
 };
 
 
-
-
-// TODO: Implement these API methods when backend is ready
-    /*
-    private async fetchAllFriends(): Promise<Friend[]> {
-        const response = await fetch('/api/friends/all');
-        return response.json();
-    }
-
-    private async fetchOnlineFriends(): Promise<Friend[]> {
-        const response = await fetch('/api/friends/online');
-        return response.json();
-    }
-
-    private async fetchFriendRequests(): Promise<Friend[]> {
-        const response = await fetch('/api/friends/requests');
-        return response.json();
-    }
-
-    private async fetchFriendSuggestions(): Promise<Friend[]> {
-        const response = await fetch('/api/friends/suggestions');
-        return response.json();
-    }
-
-    private async acceptFriendRequest(friendId: number): Promise<void> {
-        await fetch(`/api/friends/requests/${friendId}/accept`, {
-            method: 'POST'
-        });
-    }
-
-    private async rejectFriendRequest(friendId: number): Promise<void> {
-        await fetch(`/api/friends/requests/${friendId}/reject`, {
-            method: 'POST'
-        });
-    }
-
-    private async addFriend(friendId: number): Promise<void> {
-        await fetch('/api/friends/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ friendId })
-        });
-    }
-
-    private openChat(friendId: number): void {
-        // Navigate to chat page or trigger chat component
-        console.log('Opening chat with friend:', friendId);
-    }
-*/
-
-
-
-//  <aside class="w-[15%] !m-auto overflow-y-auto overflow-x-hidden rounded-l-3xl rounded-bl-3xl bg-[var(--secondary)] !p-4 friends-and-request">
-//                         <div class="flex flex-col h-full">
-//                             <header class="sticky top-0 z-10 flex justify-around !py-4">
-//                                 <button id="tab-all" class="tab-btn active" data-category="all">All</button>
-//                                 <button id="tab-online" class="tab-btn" data-category="online">Online</button>
-//                                 <button id="tab-requests" class="tab-btn" data-category="requests">Requests</button>
-//                                 <button id="tab-pending" class="tab-btn" data-category="pending">Pending</button>
-//                             </header>
-
-//                             <!-- Loading state -->
-//                             <div id="friends-loading" class="hidden flex justify-center items-center !py-8">
-//                                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-//                             </div>
-
-//                             <!-- Friends List Container -->
-//                             <div id="friends-list" class="flex-1"></div>
-
-//                             <!-- No Data State -->
-//                             <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center gap-3 bg-[var(--primary)] rounded-2xl !p-6 !mt-3">
-//                                 <i class="ti ti-user-off text-4xl text-[var(--text-secondary)]"></i>
-//                                 <div class="text-sm font-medium text-[var(--text-secondary)]">No data found here</div>
-//                             </div>
-//                         </div>
-//                     </aside>
