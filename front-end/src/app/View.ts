@@ -1,4 +1,5 @@
 
+import { User } from "../types/User";
 
 export abstract class View {
     protected element: HTMLElement | null = null;
@@ -8,7 +9,7 @@ export abstract class View {
         handler: EventListener;
     }> = [];
 
-    abstract render(): HTMLElement;
+    abstract render(user: User | null): HTMLElement;
 
     protected onMount(): void {
     }

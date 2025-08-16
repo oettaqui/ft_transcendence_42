@@ -24,6 +24,18 @@ async function authenticate(request, reply) {
   }
 }
 
+async function authenticate_v2(request, reply) {
+  try {
+    await request.jwtVerify();
+    console.log("===========AUTH==========");
+  } catch (err) {
+    return reply.code(401).send({ 
+      success: false, 
+      error: 'Invalid or expired token' 
+    });
+  }
+}
+
 class ValidationMiddleware {
   static async validateRegistration(request, reply) {
     const { email, password, username, firstName, lastName } = request.body;
@@ -134,5 +146,6 @@ class ValidationMiddleware {
 
 module.exports = {
   authenticate,
-  ValidationMiddleware
+  ValidationMiddleware,
+  authenticate_v2
 };

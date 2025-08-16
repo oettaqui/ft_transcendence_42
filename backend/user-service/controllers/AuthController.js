@@ -445,6 +445,19 @@ class AuthController {
   }
 
 
+  static async isAuth(request, reply) {
+    console.log("============ getCurrentUser process begin ==========");
+    try {
+      return {
+        success: true,
+        code:200
+      };
+    } catch (error) {
+      console.error('Invalid or expired token', error);
+      return reply.code(500).send({ success: false, error: 'Invalid or expired token' });
+    }
+  }
+  
   static async getCurrentUser(request, reply) {
     console.log("============ getCurrentUser process begin ==========");
     try {

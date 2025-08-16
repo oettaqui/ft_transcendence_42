@@ -141,7 +141,7 @@ export class LoginView extends View {
             this.currentLoadingToastId = toast.show('Loading Google authentication...', {
                 type: 'loading',
                 duration: 0,
-                dismissible: false
+                dismissible: true
             });
 
             await this.loadGoogleScript();
@@ -151,8 +151,11 @@ export class LoginView extends View {
             }
 
             const googleButtonContainer = document.createElement('div');
-            googleButtonContainer.style.position = 'fixed';
-            googleButtonContainer.style.position = 'hidden';
+            // googleButtonContainer.style.position = 'fixed';
+            googleButtonContainer.style.visibility = 'hidden';
+            googleButtonContainer.style.zIndex = 'unset';
+            // googleButtonContainer.style.left = '-1000px';
+            // googleButtonContainer.style.top = '-1000px';
             googleButtonContainer.id = 'hidden-google-button';
             document.body.appendChild(googleButtonContainer);
 
@@ -342,7 +345,7 @@ export class LoginView extends View {
                 this.currentLoadingToastId = null;
             }
 
-            toast.show(`Login failed: ${error.message}`, { 
+            toast.show(`Login failed: Invalid Email or Password`, { 
                 type: 'error', 
                 duration: 4000 
             });

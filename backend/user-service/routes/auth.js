@@ -1,5 +1,5 @@
 const AuthController = require('../controllers/AuthController');
-const { authenticate, ValidationMiddleware } = require('../middleware/auth');
+const { authenticate, ValidationMiddleware,authenticate_v2 } = require('../middleware/auth');
 
 async function authRoutes(fastify, options) {
   fastify.post('/register', {
@@ -37,6 +37,10 @@ async function authRoutes(fastify, options) {
   fastify.post('/2fa/backup-codes', { 
     preHandler: authenticate 
   }, AuthController.generateNewBackupCodes);
+
+  fastify.get('/isAuth', { 
+  preHandler: authenticate_v2 
+  }, AuthController.isAuth);
 
   fastify.get('/me', { 
     preHandler: authenticate 

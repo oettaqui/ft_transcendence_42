@@ -1,20 +1,20 @@
 export interface User{
     id: number;
     username: string;
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     avatar: string;
-    level: number;
-    exp: number;
-    balance: number;
-    coalition?: string;
-    stats: UserStats;
-    rank?: UserRank;
+    // level: number;
+    // exp: number;
+    // balance: number;
+    // coalition?: string;
+    // stats: UserStats;
+    // rank?: UserRank;
 }
 
 
 export interface UserStats {
-  matchesPlayed: number;
+  gamesPlayed: number;
   wins: number;
   losses: number;
   winRate: number;

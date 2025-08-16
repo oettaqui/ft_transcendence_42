@@ -1,5 +1,8 @@
 import { Router } from "./Router";
 import { View } from "./View";
+import { ApiService } from "../utils/ApiService";
+
+import { User } from "../types/User";
 
 export class DashboardLayout {
     private view: View;
@@ -7,7 +10,11 @@ export class DashboardLayout {
     private element: HTMLElement | null = null;
     private elementContainer: HTMLElement | null = null;
     private isDropdownOpen: boolean = false;
-    // private userState: UserState;
+    private API_BASE = 'http://localhost:3000/api';
+    private apiService = new ApiService(this.API_BASE);
+    public user: User | null = null;
+
+    
     protected eventListeners: Array<{
         element: HTMLElement;
         event: string;
@@ -19,9 +26,10 @@ export class DashboardLayout {
         this.view = view ;
         this.element = null;
         this.router = router;
+        
     }
-    render(): HTMLElement | null {
-        // Create container with efficient class assignment
+    async render(): Promise<HTMLElement | null>{
+        this.user = await this.fetchUser();
         this.elementContainer = document.createElement('div');
         this.elementContainer.classList.add('w-full');
         this.elementContainer.classList.add('max-w-7xl');
@@ -73,7 +81,7 @@ export class DashboardLayout {
                                 <!-- Profile Dropdown -->
                                 <div class="relative" id="profileDropdown">
                                     <div class="profil w-[36px] h-[36px] lg:w-[42px] lg:h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all duration-200" id="profileTrigger">
-                                        <img class="w-[34px] h-[34px] lg:w-[40px] lg:h-[40px] rounded-full object-cover" src="../../public/assets/oettaqui.jpeg" alt="Profile" />
+                                        <img class="w-[34px] h-[34px] lg:w-[40px] lg:h-[40px] rounded-full object-cover" src=${this.user?.avatar} alt="Profile" />
                                     </div>
                                     
                                     <!-- Dropdown Menu -->
@@ -210,8 +218,22 @@ export class DashboardLayout {
         return this.elementContainer;
     }
 
-    mount(container : HTMLElement): void {
-        this.element = this.render();
+    async fetchUser(): Promise<User | null>{
+        try {
+            const response = await this.apiService.get<User>("/auth/me");
+            console.log("USER ME =>", response.data.user);
+            const user = response.data.user;
+            this.user = user;
+            return this.user;
+        } catch (err) {
+             console.error("Failed to fetch user:", err);
+            return null;
+        }
+    }
+
+
+    async mount(container: HTMLElement): Promise<void> {
+        this.element = await this.render(); 
         if (!this.element) return;
         container.innerHTML = "";
         const sectionContainer = this.element.querySelector(
@@ -222,7 +244,7 @@ export class DashboardLayout {
         if (this.view)
         {
             
-            sectionContainer.appendChild(this.view.render());
+            sectionContainer.appendChild(this.view.render(this.user));
             this.view.onMount();
         }
         
@@ -311,10 +333,30 @@ export class DashboardLayout {
         dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
     }
 
+    async logout() {
+        try {
+            const response = await this.apiService.post('/auth/logout', {});
+
+            if (response.ok) {
+            // 1. Remove the token from local storage
+            localStorage.removeItem('token');
+            console.log('Logged out successfully and token removed!');
+
+            // 2. Redirect the user or update the UI
+            // Example: window.location.href = '/login';
+            } else {
+            const errorData = await response.json();
+            console.error('Logout failed:', errorData.message);
+            }
+        } catch (error) {
+            console.error('An error occurred during logout:', error);
+        }
+    }
+
     private handleLogout(): void {
         this.closeDropdown();
-        
-        console.log('Logging out...');
+        this.logout();
+        // console.log('Logging out...');
         
        
         this.router.navigateTo('/');
@@ -399,6 +441,8 @@ export class DashboardLayout {
     onMount(): void{
         const path = window.location.pathname;
         this.updateSidebarActiveStates(path);
+        // this.setupEventListeners();
+       
 
     }
 

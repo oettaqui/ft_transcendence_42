@@ -2,17 +2,21 @@ import { View } from "../app/View";
 
 import { FriendsData } from "../types/FriendData";
 import { Friend } from "../types/FriendData";
+import { ApiService } from "../utils/ApiService";
+import { User } from "../types/User";
 
 export class HomeView extends View{
+    private API_BASE = 'http://localhost:3000/api';
     private currentTab: string = 'all';
     private friendsData: FriendsData;
+    private apiService = new ApiService(this.API_BASE);
 
     constructor(){
         super();
-        // Initialize with static data - replace with API calls later
         this.friendsData = this.getStaticFriendsData();
     }
-render(): HTMLElement {
+render(user: User | null): HTMLElement {
+
     const element = document.createElement('section');
     element.classList.add('bg-[var(--primary)]');
     element.classList.add('w-full');
@@ -34,11 +38,11 @@ render(): HTMLElement {
                     <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
                         <div class="relative flex justify-center items-center w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] lg:w-[110px] lg:h-[110px]">
                             <div class="absolute w-[62px] h-[62px] sm:w-[72px] sm:h-[72px] lg:w-[102px] lg:h-[102px] bg-[var(--accent)] rounded-full"></div>
-                            <img class="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src="/public/assets/oettaqui.jpeg" />
+                            <img class="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src=${user?.avatar} />
                         </div>
                         <div class="flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
-                            <h2 class="text-lg sm:text-xl lg:text-[28px] font-bold">Oussama Ettaqui</h2>
-                            <p class="font-light text-[10px] sm:text-xs lg:text-[14px]">oettaqui</p>
+                            <h2 class="text-lg sm:text-xl lg:text-[28px] font-bold">${user?.firstName} ${user?.lastName}</h2>
+                            <p class="font-light text-[10px] sm:text-xs lg:text-[14px]">${user?.username}</p>
                         </div>
                     </div>
                     <div class="level flex flex-col sm:flex-row justify-center items-center !gap-2 lg:!gap-4">
@@ -143,6 +147,7 @@ render(): HTMLElement {
         // Initialize friends panel
         this.setupTabFiltering();
         this.loadFriendsData('all');
+       
     }
 
     // ===== FRIENDS PANEL FUNCTIONALITY =====
