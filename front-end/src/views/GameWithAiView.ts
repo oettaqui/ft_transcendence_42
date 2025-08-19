@@ -1,6 +1,6 @@
 import { View } from "../app/View";
 
-export class LocalGameView extends View
+export class GameWithAiView extends View
 {
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
@@ -141,7 +141,7 @@ export class LocalGameView extends View
 		goalmsg.style.left = `${this.canvas.width/2 - 100}px`;
 		goalmsg.style.top = `${this.canvas.height/2 + 100}px`;
 
-		// goalmsg.classList.remove("hidden");
+		goalmsg.classList.remove("hidden");
 		goalmsg.classList.add('animate-ping');
 		
 		setTimeout(()=> {
@@ -216,7 +216,7 @@ export class LocalGameView extends View
 			if(max <= 0){
 				clearInterval(countdown);
 				this.DisplayWiner();
-				// this.DisplayButtonPlay();
+				this.DisplayButtonPlay();
 			}
 		}, 1000);
 	}
@@ -238,13 +238,13 @@ export class LocalGameView extends View
 			this.score[1]++;
 			this.resetBall(false);
 			this.UpdateScore();
-			this.AnimationGoal();
+			// this.AnimationGoal();
 		}
 		if(this.x + this.rayon > this.canvas.width){
 			this.score[0]++;
 			this.resetBall(false);
 			this.UpdateScore();
-			this.AnimationGoal();
+			// this.AnimationGoal();
 		}
 
 		this.x += this.dx;
@@ -307,6 +307,14 @@ export class LocalGameView extends View
 			this.moveBallHori();
 		}
 		
+		// console.log(this.x, this.xPaddleLeft);
+		if(this.y <= this.yPaddleLeft + 50){
+			// console.log(this.x, this.yPaddleLeft);
+			this.yPaddleLeft = this.yPaddleLeft - 10;
+		}
+		if(this.y > this.yPaddleLeft + 50){
+			this.yPaddleLeft = this.yPaddleLeft + 10;
+		}
 		this.ctx.fillStyle = "white";
 		this.ctx.beginPath();
 		this.ctx.roundRect(this.xPaddleLeft, this.yPaddleLeft, 10, 100, 5);
@@ -325,18 +333,7 @@ export class LocalGameView extends View
 		document.addEventListener('keydown', (event : KeyboardEvent) => {
 			switch(event.key)
 			{
-				case 'w':
-					if(this.yPaddleLeft > 0)
-					{
-						this.yPaddleLeft -= 10;
-					}
-					break;
-				case 's':
-					if(this.yPaddleLeft < 400)
-					{
-						this.yPaddleLeft += 10;
-					}
-					break;
+				
 				case 'ArrowUp':
 					if(this.yPaddleRight > 0)
 					{

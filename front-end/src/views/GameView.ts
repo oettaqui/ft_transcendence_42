@@ -81,7 +81,7 @@ export class GameView extends View{
                         <div class="absolute w-9 h-9 bottom-[10px] left-[253px] bg-[var(--secondary)] inverted-triangle z-30"></div>
                     </a>
 
-                    <div  class="game-card relative">
+                    <a href="/dashboard/game/gamewithIA" class="game-card relative">
                         <div class="absolute w-18 h-18 top-0 bg-[var(--accent)] triangle z-20"></div>
                         <div class="absolute w-9 h-9 top-[12px] left-[10px] bg-[var(--secondary)] triangle z-30"></div>
                         <div class="flex justify-center items-center w-[300px] h-full bg-[var(--accent)] shap relative overflow-hidden">
@@ -108,7 +108,7 @@ export class GameView extends View{
                         </div>
                         <div class="absolute w-18 h-18 bottom-0 left-[230px] bg-[var(--accent)] inverted-triangle z-20"></div>
                         <div class="absolute w-9 h-9 bottom-[10px] left-[253px] bg-[var(--secondary)] inverted-triangle z-30"></div>
-                    </div>
+                    </a>
 
                     <div class="game-card relative">
                         <div class="absolute w-18 h-18 top-0 bg-[var(--accent)] triangle z-20"></div>
