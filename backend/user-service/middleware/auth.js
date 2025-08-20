@@ -3,7 +3,6 @@ const User = require('../models/User');
 async function authenticate(request, reply) {
   try {
     await request.jwtVerify();
-    
     console.log("===========AUTH==========");
     const user = await User.findById(request.user.userId);
     if (!user) {
@@ -12,10 +11,21 @@ async function authenticate(request, reply) {
         error: 'User not found' 
       });
     }
-    
     request.user = user;
     console.log("User authenticated:", user.username);
     console.log("==========================");
+  } catch (err) {
+    return reply.code(401).send({ 
+      success: false, 
+      error: 'Invalid or expired token' 
+    });
+  }
+}
+
+async function authenticate_v2(request, reply) {
+  try {
+    await request.jwtVerify();
+    console.log("===========AUTH==========");
   } catch (err) {
     return reply.code(401).send({ 
       success: false, 
@@ -103,7 +113,7 @@ class ValidationMiddleware {
   }
   
   static async validateSearch(request, reply) {
-    const { q: query } = request.query;
+    const { search_value: query } = request.query;
     
     if (!query || query.length < 2) {
       return reply.code(400).send({
@@ -134,5 +144,6 @@ class ValidationMiddleware {
 
 module.exports = {
   authenticate,
+  authenticate_v2,
   ValidationMiddleware
 };

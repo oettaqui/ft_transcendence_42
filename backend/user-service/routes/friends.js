@@ -4,6 +4,7 @@ const { authenticate, ValidationMiddleware } = require('../middleware/auth');
 async function friendsRoutes(fastify, options) {
   fastify.addHook('preHandler', authenticate);
 
+  http://localhost:3001/api/friends/search?search_value=ba
   fastify.get('/search', {
     preHandler: ValidationMiddleware.validateSearch
   }, FriendsController.searchUsers);

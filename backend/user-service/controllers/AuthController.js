@@ -2,8 +2,35 @@ const User = require('../models/User');
 const UserStats = require('../models/UserStats');
 const { OAuth2Client } = require('google-auth-library');
 const EmailService = require('../services/EmailService');
+const axios = require('axios');
+
+
+const COALITIONS = {
+  'Freax': '#f5bc39',
+  'Pandora': '#b61282', 
+  'Bios': '#02cdd1',
+  'Commodore': '#235a16'
+};
+function getRandomCoalition() {
+  const coalitionNames = Object.keys(COALITIONS);
+  const randomIndex = Math.floor(Math.random() * coalitionNames.length);
+  const selectedCoalition = coalitionNames[randomIndex];
+  
+  return {
+    coalition: selectedCoalition,
+    color_theme: COALITIONS[selectedCoalition]
+  };
+}
 
 const googleClient = new OAuth2Client('394069384301-1b8bqmnv35qkfgk9icofqc5gthofupvk.apps.googleusercontent.com');
+const INTRA_CONFIG = {
+  clientId: process.env.INTRA_CLIENT_ID || 'u-s4t2ud-1fd9ab391aacad4bdf8b9e1b81bae0f5d4c31d0b591d66249aa50a9ac852d727',
+  clientSecret: process.env.INTRA_CLIENT_SECRET || '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',
+  redirectUri: process.env.INTRA_REDIRECT_URI || 'http://localhost:8080/oauth-callback.html',
+  authUrl: 'https://api.intra.42.fr/oauth/authorize',
+  tokenUrl: 'https://api.intra.42.fr/oauth/token',
+  userInfoUrl: 'https://api.intra.42.fr/v2/me'
+};
 
 class AuthController {
   static async register(request, reply) {
@@ -41,13 +68,19 @@ class AuthController {
       }
       
       const hashedPassword = await User.hashPassword(password);
-      
+      // add the coalition  
+      // Freax = #f5bc39 |  Pandora : #b61282  | Bios : #02cdd1
+      //  | Commodore : #235a16
+      const { coalition, color_theme } = getRandomCoalition();
       const userId = await User.create({
-        username, 
-        email, 
-        password: hashedPassword, 
-        firstName, 
-        lastName
+          username, 
+          email, 
+          password: hashedPassword, 
+          firstName, 
+          lastName,
+          avatar : null,
+          coalition,
+          color_theme
       });
       
       try {
@@ -165,6 +198,226 @@ class AuthController {
     } catch (error) {
       console.error('Login error:', error);
       return reply.code(500).send({ success: false, error: 'Login failed' });
+    }
+  }
+
+  static async intraAuthUrl(request, reply) {
+    console.log("============ intraAuthUrl process begin ==========");
+    console.log("===========Print values of the INTRA_CONFIG ================");
+    console.log(INTRA_CONFIG.redirectUri);
+    console.log(INTRA_CONFIG.clientId);
+    console.log(INTRA_CONFIG.redirectUri);
+    console.log("========================= End Print values =================");
+    
+    const state = Math.random().toString(36).substring(2, 15);
+    const authUrl = `${INTRA_CONFIG.authUrl}?client_id=${INTRA_CONFIG.clientId}&redirect_uri=${encodeURIComponent(INTRA_CONFIG.redirectUri)}&response_type=code&scope=public&state=${state}`;
+    
+    console.log("============ intraAuthUrl process end ============");
+    return {
+      success: true,
+      data: {
+        authUrl,
+        state
+      }
+    };
+  }
+
+  static async intraCallback(request, reply) {
+    const { code } = request.body;
+
+    if (!INTRA_CONFIG.clientId || !INTRA_CONFIG.clientSecret || !INTRA_CONFIG.redirectUri) {
+      console.error("Missing OAuth configuration:", {
+        hasClientId: !!INTRA_CONFIG.clientId,
+        hasClientSecret: !!INTRA_CONFIG.clientSecret,
+        hasRedirectUri: !!INTRA_CONFIG.redirectUri
+      });
+      return reply.code(500).send({
+        success: false,
+        error: 'Server configuration error'
+      });
+    }
+
+    if (!code || typeof code !== 'string') {
+      return reply.code(400).send({
+        success: false,
+        error: 'Invalid authorization code'
+      });
+    }
+
+    try {
+      const params = new URLSearchParams();
+      params.append('grant_type', 'authorization_code');
+      params.append('client_id', INTRA_CONFIG.clientId.trim());
+      params.append('client_secret', INTRA_CONFIG.clientSecret.trim());
+      params.append('code', code.trim());
+      params.append('redirect_uri', INTRA_CONFIG.redirectUri.trim());
+
+      console.log("Token request prepared:", {
+        grant_type: 'authorization_code',
+        client_id: INTRA_CONFIG.clientId.substring(0, 6) + '...',
+        code_length: code.length,
+        redirect_uri: INTRA_CONFIG.redirectUri
+      });
+
+      const tokenResponse = await axios.post(
+        'https://api.intra.42.fr/oauth/token',
+        params.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          timeout: 10500
+        }
+      );
+
+      if (!tokenResponse.data?.access_token) {
+        console.error("Token response missing access_token:", tokenResponse.data);
+        return reply.code(401).send({
+          success: false,
+          error: 'Authentication failed - no access token received'
+        });
+      }
+
+      const userResponse = await axios.get('https://api.intra.42.fr/v2/me', {
+        headers: {
+          'Authorization': `Bearer ${tokenResponse.data.access_token}`
+        },
+        timeout: 10500
+      });
+
+      if (!userResponse.data?.id) {
+        console.error("Invalid user data received:", userResponse.data);
+        return reply.code(401).send({
+          success: false,
+          error: 'Authentication failed - invalid user data'
+        });
+      }
+      const intraUser = userResponse.data;
+      // console.log("/*/*/*/*/**/*/*/*/*");
+      // console.log(intraUser);
+      // console.log("/*/*/*/*/**/*/*/*/*");
+      // GET /v2/users/:user_id/coalitions
+      // GET /v2/user_candidatures
+      const userResponse_coalition = await axios.get(`https://api.intra.42.fr/v2/users/${intraUser.id}/coalitions`,{
+        headers:{
+          'Authorization': `Bearer ${tokenResponse.data.access_token}`
+        },
+        timeout:10500
+      });
+      // const userResponse_email = await axios.get(`https://api.intra.42.fr/v2/users/${intraUser.id}/user_candidature`,{
+      //   headers:{
+      //     'Authorization': `Bearer ${tokenResponse.data.access_token}`
+      //   },
+      //   timeout:10500
+      // });
+      const intraUser_coalitions = userResponse_coalition.data;
+      // const intraUser_email = userResponse_email.data;
+      // console.log("=-=-=-=-=-=-==-=-=-=-=-=-=");
+      // console.log(intraUser_coalitions);
+      // console.log("=-=-=-=-=-=-==-=-=-=-=-=-=");
+      // console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+");
+      // // console.log(intraUser_email);
+      // console.log( intraUser_coalitions[0].name);
+      // console.log( intraUser_coalitions[0].color);
+      // console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+");
+      console.log("Received Intra user data:", {
+        id: intraUser.id,
+        login: intraUser.login,
+        email: intraUser.email
+      });
+
+      let user = await User.findByIntraId(intraUser.id);
+      
+      if (!user) {
+        if (intraUser.email) {
+          user = await User.findByEmail(intraUser.email);
+        }
+        
+        if (user) {
+          console.log(`Linking existing user ${user.id} with Intra account`);
+          await User.updateIntraId(user.id, intraUser.id);
+        } else {
+          console.log(`Creating new user for Intra ID ${intraUser.id}`);
+          const username = intraUser.login || intraUser.email.split('@')[0];
+          const userId = await User.create({
+            username,
+            email: intraUser.email,
+            password: null,
+            firstName: intraUser.first_name,
+            lastName: intraUser.last_name,
+            intraId: intraUser.id,
+            avatar: intraUser.image?.link || "default.jpg",
+            coalition : intraUser_coalitions[0].name,
+            color_theme : intraUser_coalitions[0].color,
+            emailVerified: true,
+          });
+          user = await User.findById(userId);
+        }
+      }
+
+      await user.updateOnlineStatus(true);
+
+      const jwtToken = request.server.jwt.sign(
+        {
+          userId: user.id,
+          email: user.email,
+          username: user.username
+        },
+        { expiresIn: '7d' }
+      );
+
+      console.log(`✅ Successful authentication for user ${user.id}`);
+
+      return {
+        success: true,
+        data: {
+          token: jwtToken,
+          user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            avatar: user.avatar,
+            isOnline: true,
+            emailVerified: user.emailVerified,
+            intraId: user.intraId
+          }
+        }
+      };
+
+    } catch (error) {
+      if (error.response) {
+        console.error("42 API Error Response:", {
+          status: error.response.status,
+          headers: error.response.headers,
+          data: error.response.data
+        });
+
+        if (error.response.status === 401) {
+          return reply.code(401).send({
+            success: false,
+            error: 'Authentication failed',
+            details: {
+              reason: 'Invalid client credentials',
+              solution: 'Verify your client_id and client_secret match exactly what\'s in your 42 OAuth app settings'
+            }
+          });
+        }
+      }
+
+      console.error("Complete error context:", {
+        message: error.message,
+        stack: error.stack,
+        config: error.config
+      });
+
+      return reply.code(500).send({
+        success: false,
+        error: 'Authentication processing failed',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   }
 
@@ -397,7 +650,7 @@ class AuthController {
           const username = email.split('@')[0];
           const firstName = name?.split(' ')[0] || username;
           const lastName = name?.split(' ')[1] || '';
-          
+          const { coalition, color_theme } = getRandomCoalition();
           const userId = await User.create({
             username,
             email,
@@ -405,7 +658,9 @@ class AuthController {
             firstName,
             lastName,
             googleId,
-            avatar: picture
+            avatar: picture,
+            coalition,
+            color_theme
           });
           
           user = await User.findById(userId);
@@ -441,6 +696,19 @@ class AuthController {
         error: 'Invalid Google token',
         details: error.message 
       });
+    }
+  }
+
+  static async isAuth(request, reply) {
+    console.log("============ getCurrentUser process begin ==========");
+    try {
+      return {
+        success: true,
+        code:200
+      };
+    } catch (error) {
+      console.error('Invalid or expired token', error);
+      return reply.code(500).send({ success: false, error: 'Invalid or expired token' });
     }
   }
 

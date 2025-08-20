@@ -284,6 +284,7 @@ export class ToastNotification {
     }
 
     dismiss(id: string): void {
+        console.log(`id of notice is  : ${id}`);
         const toast = this.toasts.get(id);
         if (!toast) return;
 

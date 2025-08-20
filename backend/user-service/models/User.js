@@ -11,6 +11,8 @@ class User {
     this.firstName = data.first_name || data.firstName;
     this.lastName = data.last_name || data.lastName;
     this.avatar = data.avatar;
+    this.coalition = data.coalition;
+    this.colorTheme = data.color_theme || data.colorTheme;
     this.googleId = data.google_id || data.googleId;
     this.intraId = data.intra_id || data.intraId; 
     this.isOnline = data.is_online || data.isOnline || false;
@@ -30,15 +32,28 @@ class User {
     this.twoFactorCodeExpires = data.two_factor_code_expires || data.twoFactorCodeExpires;
   }
 
-  static async create({ username, email, password, firstName, lastName, googleId = null, intraId = null, avatar = null }) {
+  static async create({ username, email, password, firstName, lastName,avatar,coalition,color_theme, googleId = null, intraId = null}) {
     return new Promise((resolve, reject) => {
       const emailVerified = googleId || intraId ? true : false;
-      
+      console.log(`
+      username   :${username}
+      email      :${email}
+      password   :${password}
+      firstname  :${firstName}
+      googleId   :${googleId}
+      intraId    :${intraId}
+      avatar     :${avatar}
+      coalition  :${coalition}
+      color_theme:${color_theme}
+      googleId   :${googleId}
+      intraId    :${intraId}
+                    `);
+
       db.run(
         `INSERT INTO users 
-         (username, email, password, first_name, last_name, google_id, avatar, is_online, email_verified) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, TRUE, ?)`,
-        [username, email, password, firstName, lastName, googleId, avatar, emailVerified],
+         (username, email, password, first_name, last_name, google_id, intra_id, avatar,coalition,color_theme, is_online, email_verified) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE, ?)`,
+        [username, email, password, firstName, lastName, googleId, intraId, avatar,coalition,color_theme, emailVerified],
         function(err) {
           if (err) return reject(err);
           
@@ -133,8 +148,8 @@ class User {
 
   static async create2FACode(userId, purpose = 'login') {
     return new Promise((resolve, reject) => {
-      const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
-      const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+      const code = Math.floor(100000 + Math.random() * 900000).toString(); 
+      const expires = new Date(Date.now() + 10 * 60 * 1000); 
       
       db.run(
         `UPDATE users 
@@ -321,7 +336,6 @@ class User {
     });
   }
 
-
   async updateProfile({ firstName, lastName, avatar }) {
     return new Promise((resolve, reject) => {
       const updates = [];
@@ -388,6 +402,38 @@ class User {
     });
   }
 
+  static async getAllUsers(currentUserId) {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT id, username, first_name, last_name, avatar, coalition, color_theme,
+                is_online, last_login, created_at, email_verified
+        FROM users 
+        WHERE id != ?
+        ORDER BY is_online DESC, username ASC`,
+        [currentUserId],
+        (err, rows) => {
+          if (err) return reject(err);
+          resolve(rows);
+        }
+      );
+    });
+  }
+
+  static async getOnlineUsersCount(currentUserId) {
+    return new Promise((resolve, reject) => {
+      db.get(
+        `SELECT COUNT(*) as count 
+        FROM users 
+        WHERE id != ? AND is_online = TRUE`,
+        [currentUserId],
+        (err, row) => {
+          if (err) return reject(err);
+          resolve(row ? row.count : 0);
+        }
+      );
+    });
+  }
+
   async verifyPassword(password) {
     return await bcrypt.compare(password, this.password);
   }
@@ -405,6 +451,8 @@ class User {
       firstName: this.firstName,
       lastName: this.lastName,
       avatar: this.avatar,
+      coalition : this.coalition,
+      colorTheme : this.colorTheme,
       isOnline: this.isOnline,
       lastLogin: this.lastLogin,
       createdAt: this.createdAt,
@@ -417,3 +465,4 @@ class User {
 }
 
 module.exports = User;
+

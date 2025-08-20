@@ -1,16 +1,17 @@
 const AuthController = require('../controllers/AuthController');
-const { authenticate, ValidationMiddleware } = require('../middleware/auth');
+const { authenticate, ValidationMiddleware,authenticate_v2} = require('../middleware/auth');
 
 async function authRoutes(fastify, options) {
   fastify.post('/register', {
     preHandler: ValidationMiddleware.validateRegistration
   }, AuthController.register);
 
-
-
   fastify.post('/login', {
     preHandler: ValidationMiddleware.validateLogin
   }, AuthController.login);
+
+  fastify.get('/intra/url', AuthController.intraAuthUrl);
+  fastify.post('/intra/callback', AuthController.intraCallback);
 
   fastify.post('/google/verify', AuthController.googleVerify);
 
@@ -41,6 +42,10 @@ async function authRoutes(fastify, options) {
   fastify.get('/me', { 
     preHandler: authenticate 
   }, AuthController.getCurrentUser);
+
+  fastify.get('/isAuth', { 
+  preHandler: authenticate_v2 
+  }, AuthController.isAuth);
 
   fastify.put('/profile', { 
     preHandler: [authenticate, ValidationMiddleware.validateProfileUpdate]

@@ -316,7 +316,7 @@ export class DashboardLayout {
         
         console.log('Logging out...');
         
-       
+        localStorage.removeItem('token');
         this.router.navigateTo('/');
     }
 

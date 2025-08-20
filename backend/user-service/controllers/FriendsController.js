@@ -4,7 +4,7 @@ const Friendship = require('../models/Friendship');
 class FriendsController {
   static async searchUsers(request, reply) {
     console.log("============ searchUsers procces begin ==========");
-    const { q: query, limit = 10 } = request.query;
+    const { search_value: query, limit = 10 } = request.query;
     
     if (!query || query.length < 2) {
       return reply.code(400).send({ 

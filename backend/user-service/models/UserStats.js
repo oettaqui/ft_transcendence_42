@@ -7,6 +7,9 @@ class UserStats {
     this.gamesWon = data.games_won || data.gamesWon || 0;
     this.gamesLost = data.games_lost || data.gamesLost || 0;
     this.rankingPoints = data.ranking_points || data.rankingPoints || 1000;
+    this.userRank = data.user_rank || data.userRank || -1;
+    this.coins = data.coins || 0;
+    this.exp = data.exp || 0;
     this.bestScore = data.best_score || data.bestScore || 0;
   }
 
@@ -83,6 +86,9 @@ class UserStats {
       gamesWon: this.gamesWon,
       gamesLost: this.gamesLost,
       rankingPoints: this.rankingPoints,
+      userRank: this.userRank,
+      coins: this.coins,
+      exp: this.exp,
       bestScore: this.bestScore,
       winRate: this.getWinRate()
     };

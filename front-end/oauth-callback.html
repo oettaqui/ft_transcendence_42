@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth Callback</title>
+</head>
+<body>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h2>Processing authentication...</h2>
+        <p>Please wait while we complete your sign-in.</p>
+    </div>
+    
+    <script>
+        // Extract parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        const errorDescription = urlParams.get('error_description');
+        
+        // Send data back to parent window
+        const data = {
+            code,
+            state,
+            error: error || (errorDescription ? `${error}: ${errorDescription}` : null)
+        };
+        
+        // Send message to parent window and close popup
+        if (window.opener) {
+            window.opener.postMessage(data, window.location.origin);
+            window.close();
+        } else {
+            // Fallback if not in popup - redirect to main page with data
+            const params = new URLSearchParams(data).toString();
+            window.location.href = `/?${params}`;
+        }
+    </script>
+</body>
+</html>

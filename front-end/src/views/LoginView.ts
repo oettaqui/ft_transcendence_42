@@ -14,8 +14,11 @@ interface ApiResponse {
     data?: {
         token: string;
         user?: any;
+        authUrl?: string;
+        state?: string;
     };
     message?: string;
+    error?: string;
 }
 
 export class LoginView extends View {
@@ -23,6 +26,7 @@ export class LoginView extends View {
     private requires2FA = false;
     private pendingLoginData: { email: string; password: string } | null = null;
     private currentLoadingToastId: string | null = null;
+    private intraPopup: Window | null = null;
 
     constructor() {
         super();
@@ -93,12 +97,18 @@ export class LoginView extends View {
                                 </div>
 
                                 <div class="flex items-center justify-center gap-4 w-[450px]">
-                                    <button id="custom-google-button" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105">
+                                    <button id="custom-google-button" class="flex items-center justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105 hover:cursor-pointer">
                                         <svg class="w-6 h-6" viewBox="0 0 24 24">
                                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                        </svg>
+                                    </button>
+                                    <button id="custom-intra-button" class="flex items-center !w-[74px] h-[50px] justify-center gap-3 bg-[var(--secondary)] text-[var(--text)] border border-[var(--text-secondary)] hover:border-[var(--accent)] hover:bg-opacity-80 !py-3 !px-6 rounded-lg transition-all hover:scale-105 hover:cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 137.6 96.6" fill="#fff" stroke="transparent" width="40" height="32">
+                                            <path d="M229.2 443.9h50.7v25.4h25.3v-45.9h-50.6l50.6-50.7h-25.3l-50.7 50.7zM316.1 398.1l25.3-25.4h-25.3z" fill="#fff" transform="translate(-229.2 -372.7)"></path>
+                                            <path d="m341.4 398.1-25.3 25.3v25.3h25.3v-25.3l25.4-25.3v-25.4h-25.4zM366.8 423.4l-25.4 25.3h25.4z" fill="#fff" transform="translate(-229.2 -372.7)"></path>
                                         </svg>
                                     </button>
                                 </div>
@@ -117,6 +127,7 @@ export class LoginView extends View {
     protected onMount(): void {
         this.setupFormHandler();
         this.setupGoogleAuth();
+        this.setupIntraAuth();
     }
 
     private setupFormHandler(): void {
@@ -380,6 +391,143 @@ export class LoginView extends View {
         twoFAInput.value = '';
     }
 
+    private setupIntraAuth(): void {
+        const intraButton = document.getElementById('custom-intra-button');
+        if (!intraButton) return;
+
+        intraButton.addEventListener('click', () => {
+            this.handleIntraAuth();
+        });
+    }
+private handleIntraAuthCallback = async (event: MessageEvent): Promise<void> => {
+    if (event.origin !== window.location.origin) return;
+    
+    const { code, state, error } = event.data;
+    
+    if (error) {
+        this.cleanupIntraAuth();
+        return;
+    }
+    
+    if (!code) {
+        this.cleanupIntraAuth();
+        return;
+    }
+    
+    try {
+        if (this.currentLoadingToastId) {
+            toast.dismiss(this.currentLoadingToastId);
+        }
+        
+        this.currentLoadingToastId = toast.show('Completing Intra sign-in...', {
+            type: 'loading',
+            duration: 0,
+            dismissible: true
+        });
+
+        console.log(`Completing id : ${this.currentLoadingToastId}`);
+
+        const response = await this.apiCall('/auth/intra/callback', {
+            method: 'POST',
+            body: JSON.stringify({ code, state })
+        });
+        
+        if (response.success) {
+            // Store token
+            localStorage.setItem('token', response.data!.token);
+
+            console.log(`dimiss the completing notice : ${this.currentLoadingToastId}`);
+            if (this.currentLoadingToastId) {
+                toast.dismiss(this.currentLoadingToastId);
+            }
+            
+            this.cleanupIntraAuth();
+            
+            setTimeout(() => {
+                toast.show('Intra sign-in successful!', {
+                    type: 'success',
+                    duration: 2000 
+                });
+                
+                setTimeout(() => {
+                    router.navigateTo('/dashboard');
+                }, 100);
+            }, 400);
+        } else {
+            throw new Error(response.error || 'Intra authentication failed');
+        }
+    } catch (error: any) {
+
+        if (this.currentLoadingToastId) {
+            toast.dismiss(this.currentLoadingToastId);
+            this.currentLoadingToastId = null;
+        }
+        
+
+        setTimeout(() => {
+            toast.show(`Intra sign-in failed: ${error.message}`, {
+                type: 'error',
+                duration: 4000
+            });
+        }, 400);
+        
+        this.cleanupIntraAuth();
+    }
+}
+private async handleIntraAuth(): Promise<void> {
+    toast.dismiss(this.currentLoadingToastId!);
+    try {
+        this.currentLoadingToastId = toast.show('Redirecting to Intra 42...', {
+            type: 'loading',
+            duration: 0,
+            dismissible: true
+        });
+        console.log(`Redirecting id : ${this.currentLoadingToastId}`);
+        const response = await this.apiCall('/auth/intra/url');
+        console.log(`response = ${response.success}`)
+        if (response.success) {
+            localStorage.setItem('intra-oauth-state', response.data!.state!);
+            
+            this.intraPopup = window.open(
+                response.data!.authUrl!,
+                'intraOAuth',
+                'width=500,height=600,scrollbars=yes,resizable=yes'
+            );
+            
+            const checkClosed = setInterval(() => {
+                if (this.intraPopup?.closed) {
+                    clearInterval(checkClosed);
+                    toast.dismiss(this.currentLoadingToastId!);
+                    toast.show('Intra sign-in was cancelled', {
+                        type: 'error',
+                        duration: 4000
+                    });
+                    this.cleanupIntraAuth();
+                }
+            }, 1000);
+            
+            window.addEventListener('message', this.handleIntraAuthCallback);
+            
+        } else {
+            throw new Error(response.error || 'Failed to get Intra authorization URL');
+        }
+    } catch (error: any) {
+        toast.dismiss(this.currentLoadingToastId!);
+        toast.show(`Intra sign-in failed: ${error.message}`, {
+            type: 'error',
+            duration: 4000
+        });
+    }
+}
+
+private cleanupIntraAuth(): void {
+    window.removeEventListener('message', this.handleIntraAuthCallback);
+    localStorage.removeItem('intra-oauth-state');
+    if (this.intraPopup) {
+        this.intraPopup.close();
+        this.intraPopup = null;
+    }
+}
     private async apiCall(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {
         const token = localStorage.getItem('token');
         const config: RequestInit = {
