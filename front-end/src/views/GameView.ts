@@ -45,14 +45,10 @@ export class GameView extends View{
             </div>
             
             <div class="relative flex items-center justify-center !p-8 h-full">
-                <button id="scroll-left-btn" class="absolute left-0 z-10 !p-3 text-white bg-[var(--accent)] rounded-full shadow-lg hover:bg-[var(--accent)]/80 transition-all duration-200">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </button>
+               
                 
-                <div id="card-container" class="flex overflow-x-hidden snap-x snap-mandatory !gap-8 h-[400px] !mx-6 hide-scrollbar">
-                    <div class="game-card relative  ">
+                <div id="card-container" class="grid grid-cols-3  overflow-x-hidden snap-x snap-mandatory !gap-6 h-[400px]  hide-scrollbar">
+                    <div class="game-card relative ">
                         <div class="absolute w-18 h-18 top-0 bg-[var(--accent)] triangle z-20"></div>
                         <div class="absolute w-9 h-9 top-[12px] left-[10px] bg-[var(--secondary)] triangle z-30"></div>
                         <div class="flex justify-center items-center w-[300px] h-full bg-[var(--accent)] shap relative overflow-hidden">
@@ -81,7 +77,7 @@ export class GameView extends View{
                         <div class="absolute w-9 h-9 bottom-[10px] left-[253px] bg-[var(--secondary)] inverted-triangle z-30"></div>
                     </div>
 
-                    <div class="game-card relative">
+                    <div class="game-card relative ">
                         <div class="absolute w-18 h-18 top-0 bg-[var(--accent)] triangle z-20"></div>
                         <div class="absolute w-9 h-9 top-[12px] left-[10px] bg-[var(--secondary)] triangle z-30"></div>
                         <div class="flex justify-center items-center w-[300px] h-full bg-[var(--accent)] shap relative overflow-hidden">
@@ -110,7 +106,7 @@ export class GameView extends View{
                         <div class="absolute w-9 h-9 bottom-[10px] left-[253px] bg-[var(--secondary)] inverted-triangle z-30"></div>
                     </div>
 
-                    <div class="game-card relative">
+                    <div class="game-card relative ">
                         <div class="absolute w-18 h-18 top-0 bg-[var(--accent)] triangle z-20"></div>
                         <div class="absolute w-9 h-9 top-[12px] left-[10px] bg-[var(--secondary)] triangle z-30"></div>
                         <div class="flex justify-center items-center w-[300px] h-full bg-[var(--accent)] shap relative overflow-hidden">
@@ -139,41 +135,8 @@ export class GameView extends View{
                         <div class="absolute w-9 h-9 bottom-[10px] left-[253px] bg-[var(--secondary)] inverted-triangle z-30"></div>
                     </div>
 
-                    <div class="game-card relative">
-                        <div class="absolute w-18 h-18 top-0 bg-[var(--accent)] triangle z-20"></div>
-                        <div class="absolute w-9 h-9 top-[12px] left-[10px] bg-[var(--secondary)] triangle z-30"></div>
-                        <div class="flex justify-center items-center w-[300px] h-full bg-[var(--accent)] shap relative overflow-hidden">
-                            <div class="flex justify-center items-center w-[280px] h-[75%] shap bg-[var(--secondary)]">
-                                <img class="bg-center bg-cover w-[260px] h-[94%] shap" 
-                                    src="../../public/assets/multiplayer_1.png"
-                                    alt="Multiplayer Game"/>
-                            </div>
-                            <div class="info-bar absolute bottom-0 left-0 right-0 h-[200px] bg-[var(--secondary)]/90 text-white !p-6 flex flex-col justify-end !pb-15">
-                                <div class="flex items-end justify-between !mb-5">
-                                    <div class="flex flex-col !m-auto">
-                                        <div class="text-lg font-bold !mb-1 text-[var(--accent)] tracking-[3px]">Multiplayer Game</div>
-                                    </div>
-                                </div>
-                                <div class="flex !gap-3">
-                                    <button class="flex-1 bg-[var(--text)] hover:bg-[var(--accent)] text-[var(--secondary)] hover:text-white !py-3 !px-6 rounded-lg font-semibold text-sm transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center !gap-2">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M8 5v10l8-5-8-5z"/>
-                                        </svg>
-                                        Play Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="absolute w-18 h-18 bottom-0 left-[230px] bg-[var(--accent)] inverted-triangle z-20"></div>
-                        <div class="absolute w-9 h-9 bottom-[10px] left-[253px] bg-[var(--secondary)] inverted-triangle z-30"></div>
-                    </div>
-                </div>
-
-                <button id="scroll-right-btn" class="absolute right-0 z-10 !p-3 text-white bg-[var(--accent)] rounded-full shadow-lg hover:bg-[var(--accent)]/80 transition-all duration-200">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
+                    
+                
             </div>
         </main>
     `;
@@ -201,7 +164,7 @@ export class GameView extends View{
             return;
         }
 
-        const scrollAmount = card.offsetWidth + 100; // card width + !gap-8 (32px)
+        const scrollAmount = card.offsetWidth + 100;
 
         scrollRightBtn.addEventListener('click', () => {
             cardContainer.scrollBy({

@@ -5,6 +5,7 @@ import { View } from "./View";
 import { ErrorView404 } from "../views/Error/ErrorView404";
 import { DashboardLayout } from "./DashboardLayout";
 
+
 export class Router {
     private routes: RouteConfig[];
     private currentView: View | null;
@@ -26,6 +27,32 @@ export class Router {
         
     }
 
+  async isLoggedIn(): Promise<boolean> {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return false;
+    }
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/isAuth", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+      });
+
+      if (response.status === 401) 
+      {
+        return false;
+      }
+      if (!response.ok) return false;
+
+      return true;
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+      return false;
+    }
+  }
+
     public navigateTo(path: string) {
       if (path.length > 1 && path.endsWith('/')) {
           path = path.slice(0, -1);
@@ -36,7 +63,7 @@ export class Router {
     }
 
 
-    public handleRoute(){
+    async handleRoute(){
       try {
         let currentPath = window.location.pathname;
         if (currentPath.length > 1 && currentPath.endsWith('/')) {
@@ -78,6 +105,13 @@ export class Router {
         ];
         
         if (allowedDashboardRoutes.includes(currentPath)){
+
+          const loggedIn = await this.isLoggedIn();  // wait for result
+
+          if (!loggedIn) {
+              this.navigateTo("/login");
+              return;
+          }
           
           this.currentLayout = new DashboardLayout(this.currentView, this);
           if (this.currentLayout)

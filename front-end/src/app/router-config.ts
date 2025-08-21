@@ -18,5 +18,5 @@ export const routes: RouteConfig[] = [
   { path: '/dashboard/chat', view: ChatView},
   { path: '/dashboard/game', view: GameView},
   { path: '/dashboard/settings', view: SettingsView},
-  { path: '/dashboard/tournament', view: TournamentView},
+  { path: '/dashboard/tournament', view: TournamentView}
 ];
