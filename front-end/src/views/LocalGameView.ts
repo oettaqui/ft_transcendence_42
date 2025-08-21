@@ -141,7 +141,7 @@ export class LocalGameView extends View
 		goalmsg.style.left = `${this.canvas.width/2 - 100}px`;
 		goalmsg.style.top = `${this.canvas.height/2 + 100}px`;
 
-		// goalmsg.classList.remove("hidden");
+		goalmsg.classList.remove("hidden");
 		goalmsg.classList.add('animate-ping');
 		
 		setTimeout(()=> {
@@ -366,7 +366,6 @@ export class LocalGameView extends View
 						this.startFlag = true;
 					}
 				},1000);
-				// this.startFlag = true;
 			});
 		}
 		this.draw();

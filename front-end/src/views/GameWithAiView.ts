@@ -138,8 +138,8 @@ export class GameWithAiView extends View
 
 		if(!goalmsg) return;
 
-		goalmsg.style.left = `${this.canvas.width/2 - 100}px`;
-		goalmsg.style.top = `${this.canvas.height/2 + 100}px`;
+		goalmsg.style.left = `${this.canvas.width/2}px`;
+		goalmsg.style.top = `${this.canvas.height/2 + 150}px`;
 
 		goalmsg.classList.remove("hidden");
 		goalmsg.classList.add('animate-ping');
@@ -157,7 +157,7 @@ export class GameWithAiView extends View
 
 		if(!winermsg) return;
 
-		winermsg.style.left = `${this.canvas.width/2 - 140}px`;
+		winermsg.style.left = `${this.canvas.width/2}px`;
 		winermsg.style.top = `${this.canvas.height/2 + 100}px`;
 
 		winermsg.classList.remove("hidden");
@@ -170,10 +170,10 @@ export class GameWithAiView extends View
 		winermsg.style.padding = "20px";
 		winermsg.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
 		this.startFlag = false;
-		if(this.score[0] > this.score[1])
-			this.textWiner.textContent = "user1 is the winner";
-		else
-			this.textWiner.textContent = "user2 is the winner";
+		// if(this.score[0] > this.score[1])
+		this.textWiner.textContent = this.score[0].toString() + " - " + this.score[1].toString();
+		// else
+		// 	this.textWiner.textContent = "user2 is the winner";
 		this.resetBall(true);
 		this.winnerFlag = true;
 		this.score[0] = 0;
@@ -244,7 +244,7 @@ export class GameWithAiView extends View
 			this.score[0]++;
 			this.resetBall(false);
 			this.UpdateScore();
-			// this.AnimationGoal();
+			// this.AnimationGoal(); 
 		}
 
 		this.x += this.dx;
@@ -306,14 +306,11 @@ export class GameWithAiView extends View
 		else{
 			this.moveBallHori();
 		}
-		
-		// console.log(this.x, this.xPaddleLeft);
-		if(this.y <= this.yPaddleLeft + 50){
-			// console.log(this.x, this.yPaddleLeft);
-			this.yPaddleLeft = this.yPaddleLeft - 10;
+		if(this.y <= this.yPaddleLeft + 50 && this.x < 200 && this.yPaddleLeft > 0){
+			this.yPaddleLeft = this.yPaddleLeft - 3;
 		}
-		if(this.y > this.yPaddleLeft + 50){
-			this.yPaddleLeft = this.yPaddleLeft + 10;
+		if(this.y > this.yPaddleLeft + 50 && this.x < 200 && this.yPaddleLeft < 400){
+			this.yPaddleLeft = this.yPaddleLeft + 3;
 		}
 		this.ctx.fillStyle = "white";
 		this.ctx.beginPath();
@@ -363,7 +360,6 @@ export class GameWithAiView extends View
 						this.startFlag = true;
 					}
 				},1000);
-				// this.startFlag = true;
 			});
 		}
 		this.draw();
