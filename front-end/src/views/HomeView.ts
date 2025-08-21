@@ -10,13 +10,34 @@ export class HomeView extends View{
     private currentTab: string = 'all';
     private friendsData: FriendsData;
     private apiService = new ApiService(this.API_BASE);
+    private user: User | null = null;
 
     constructor(){
         super();
         this.friendsData = this.getStaticFriendsData();
+        
     }
 render(user: User | null): HTMLElement {
+    if (user)
+        this.user = user;
+    const bgClasses = {
+        'Bios': 'bg-[url(/public/assets/BiosBG.jpg)]',
+        'Freax': 'bg-[url(/public/assets/Freax_BG.jpg)]',
+        'Commodore': 'bg-[url(/public/assets/Commodore_BG.jpg)]',
+        'Pandora': 'bg-[url(/public/assets/Pandora_BG.jpg)]'
+    };
 
+    const bgUrl = bgClasses[user?.coalition] || '';
+    const colorClasses ={
+        'Bios': 'var(--bios)',
+        'Freax': 'var(--freax)',
+        'Commodore': 'var(--commodore)',
+        'Pandora': 'var(--pandora)',
+    }
+    const colorTheme = colorClasses[user?.coalition] || '';
+    console.log(colorTheme);
+    // console.log(this.user?.colorTheme);
+ 
     const element = document.createElement('section');
     element.classList.add('bg-[var(--primary)]');
     element.classList.add('w-full');
@@ -34,69 +55,69 @@ render(user: User | null): HTMLElement {
         <aside class="w-full h-full lg:w-[67%] flex flex-col  !gap-4 !py-4 lg:!pl-4">
             <div class="relative w-full h-[40%]  ">
                 <!-- bg coalition -->
-                <div class="bg-[url(/public/assets/Freax_BG.jpg)] bg-cover w-full min-h-[200px] h-auto lg:h-full rounded-2xl lg:rounded-3xl !p-4 lg:!p-8 flex flex-col justify-center !gap-6 lg:!gap-10">
+                <div class="${bgUrl} bg-cover w-full min-h-[200px] h-auto lg:h-full rounded-2xl lg:rounded-3xl !p-4 lg:!p-8 flex flex-col justify-center !gap-6 lg:!gap-10">
                     <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
                         <div class="relative flex justify-center items-center w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] lg:w-[110px] lg:h-[110px]">
-                            <div class="absolute w-[62px] h-[62px] sm:w-[72px] sm:h-[72px] lg:w-[102px] lg:h-[102px] bg-[var(--accent)] rounded-full"></div>
-                            <img class="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src=${user?.avatar} />
+                            <div style="background-color: ${colorTheme}" class="absolute w-[62px] h-[62px] sm:w-[72px] sm:h-[72px] lg:w-[102px] lg:h-[102px] rounded-full"></div>
+                            <img class="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src=${this.user?.avatar} />
                         </div>
                         <div class="flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
-                            <h2 class="text-lg sm:text-xl lg:text-[28px] font-bold">${user?.firstName} ${user?.lastName}</h2>
-                            <p class="font-light text-[10px] sm:text-xs lg:text-[14px]">${user?.username}</p>
+                            <h2 class="text-lg sm:text-xl lg:text-[28px] font-bold">${this.user?.firstName} ${this.user?.lastName}</h2>
+                            <p class="font-light text-[10px] sm:text-xs lg:text-[14px]">${this.user?.username}</p>
                         </div>
                     </div>
                     <div class="level flex flex-col sm:flex-row justify-center items-center !gap-2 lg:!gap-4">
                         <!-- Progress -->
-                        <div class="text-xl sm:text-2xl lg:text-3xl font-bold">08</div>
+                        <div class="text-xl sm:text-2xl lg:text-3xl font-bold">${this.user?.stats.exp}</div>
                         <div class="flex flex-col items-center sm:items-start justify-center w-full sm:w-auto">
-                            <div class="percentage text-[10px] sm:text-xs lg:text-[14px] !mb-1" id="percentageText">97%</div>
+                            <div class="percentage text-[10px] sm:text-xs lg:text-[14px]  !mb-1" id="percentageText">22%</div>
                             <div class="progress-bar h-[6px] sm:h-[8px] lg:h-[10px] w-full max-w-[250px] sm:max-w-[300px] md:max-w-[400px] lg:w-[600px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
-                                <div class="progress-fill h-full rounded-3xl" id="progressFill"></div>
+                                <div class="progress-fill h-full rounded-3xl" style="background-color: ${colorTheme} !important;" id="progressFill"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-[90px] lg:right-[100px] w-auto lg:w-[100px] h-[25px] sm:h-[30px] lg:h-[35px] rounded-lg lg:rounded-3xl flex justify-center items-center">
                     <div class="">
-                        <span class="!px-2 lg:!px-4 !py-1 lg:!py-2 rounded-lg lg:rounded-xl bg-[var(--freax)] font-bold text-[8px] sm:text-[10px] lg:text-[12px]">Freax</span>
+                        <span style="background-color: ${colorTheme}" class="!px-2 lg:!px-4 !py-1 lg:!py-2 rounded-lg lg:rounded-xl  font-bold text-[8px] sm:text-[10px] lg:text-[12px]">${this.user?.coalition}</span>
                     </div>
                 </div>
             </div>   
             
             <div class="w-full h-[100%]  rounded-2xl lg:rounded-3xl bg-[var(--secondary)] flex flex-col lg:flex-row justify-center items-center !gap-4 lg:!gap-0 !p-4 lg:!p-0">
-                <div class="border border-[var(--accent)] rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
+                <div  style="border-color: ${colorTheme}" class="border  rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
                     <canvas id="donutChart" width="200" height="200" class="sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px]"></canvas>
                     <div class="flex flex-row lg:flex-col !gap-3 text-center lg:text-left">
                         <div class="flex flex-col">
                             <div class="text-xs lg:text-sm">Your Balance</div> 
-                            <div id="balanceValue" class="text-[var(--accent)] text-lg lg:text-2xl"></div> 
+                            <div style="color: ${colorTheme}" id="balanceValue" class="text-lg lg:text-2xl"></div> 
                         </div>
                         <div class="flex flex-col">
                             <div class="text-xs lg:text-sm">Your Level</div> 
-                            <div id="levelValue" class="text-[var(--accent)] text-lg lg:text-2xl"></div> 
+                            <div style="color: ${colorTheme}" id="levelValue" class="text-lg lg:text-2xl"></div> 
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex flex-col !gap-2 lg:!mr-10 !p-2 lg:!p-4 w-full lg:w-auto">
                     <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
-                        <div class="border border-[var(--accent)] rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
                             <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Matches Played</div>
-                            <div id="matchesPlayed" class="text-[var(--accent)] text-lg lg:text-2xl"></div>
+                            <div style="color: ${colorTheme}" id="matchesPlayed" class="text-lg lg:text-2xl"></div>
                         </div>
-                        <div class="border border-[var(--accent)] rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
                             <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Friends Count</div>
-                            <div id="friendsCount" class="text-[var(--accent)] text-lg lg:text-2xl"></div>
+                            <div style="color: ${colorTheme}" id="friendsCount" class="text-lg lg:text-2xl"></div>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
-                        <div class="border border-[var(--accent)] rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
                             <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Global Rank</div>
-                            <div id="globalRank" class="text-[var(--accent)] text-lg lg:text-2xl"></div>
+                            <div style="color: ${colorTheme}" id="globalRank" class="text-lg lg:text-2xl"></div>
                         </div>
-                        <div class="border border-[var(--accent)] rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
                             <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Win Rate</div>
-                            <div id="winRate" class="text-[var(--accent)] text-lg lg:text-2xl"></div>
+                            <div style="color: ${colorTheme}" id="winRate" class=" text-lg lg:text-2xl"></div>
                         </div>
                     </div>
                 </div>
@@ -135,18 +156,21 @@ render(user: User | null): HTMLElement {
 
 
     public onMount(): void {
-        this.animateProgress();
-        this.chatWinLose();
-        this.animateNumber('balanceValue', 500, 1000);
-        this.animateNumber('levelValue', 8.97, 1000, 2);
-        this.animateNumber('matchesPlayed', 8, 1000);
-        this.animateNumber('friendsCount', 5, 1000);
-        this.animateNumber('globalRank', 30, 1000);
-        this.animateNumber('winRate', 62.5, 1000, 1);
+        if (this.user){
 
-       
-        this.setupTabFiltering();
-        this.loadFriendsData('all');
+            this.animateProgress();
+            this.chatWinLose();
+            this.animateNumber('balanceValue', this.user?.stats.coins, 1000);
+            this.animateNumber('levelValue', this.user?.stats.exp, 1000, 2);
+            this.animateNumber('matchesPlayed', this.user?.stats.gamesPlayed, 1000);
+            this.animateNumber('friendsCount', 5, 1000);
+            this.animateNumber('globalRank', this.user?.stats.userRank, 1000);
+            this.animateNumber('winRate', this.user?.stats.winRate, 1000, 1);
+    
+           
+            this.setupTabFiltering();
+            this.loadFriendsData('all');
+        }
        
     }
 
@@ -505,8 +529,8 @@ chatWinLose() {
     const innerRadius = 80;
 
     const data = [
-        { label: 'Win', value: 5, color: '#f39c12' },
-        { label: 'Lose', value: 3, color: '#f39d1267' }
+        { label: 'Win', value: this.user?.stats.gamesWon, color: this.user?.colorTheme },
+        { label: 'Lose', value: this.user?.stats.gamesLost, color: '#ffffff' }
     ];
     const total = data.reduce((sum, item) => sum + item.value, 0);
 
@@ -536,10 +560,9 @@ chatWinLose() {
             if (remainingValue <= 0) break;
         }
 
-        // Inner circle (donut hole)
         ctx.beginPath();
         ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = '#2e2e2e';
+        ctx.fillStyle = '#3e3e3e';
         ctx.fill();
 
         
@@ -547,8 +570,8 @@ chatWinLose() {
         ctx.font = '20px Orbitron';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('Win: 5', centerX, centerY - 12);
-        ctx.fillText('Lose: 3', centerX, centerY + 12);
+        ctx.fillText(`Win: ${this.user?.stats.gamesWon}`, centerX, centerY - 12);
+        ctx.fillText(`Lose: ${this.user?.stats.gamesLost}`, centerX, centerY + 12);
 
         if (currentProgress < 1) {
             currentProgress += animationSpeed;
@@ -581,10 +604,6 @@ animateNumber(elementId: string, targetValue: number, duration: number = 1000, d
 
     requestAnimationFrame(animate);
 }
-
-
-
-
 
 };
 

@@ -30,6 +30,21 @@ export class DashboardLayout {
     }
     async render(): Promise<HTMLElement | null>{
         this.user = await this.fetchUser();
+
+        const colorClasses ={
+            'Bios': 'var(--bios)',
+            'Freax': 'var(--freax)',
+            'Commodore': 'var(--commodore)',
+            'Pandora': 'var(--pandora)',
+        }
+        const colorTheme = colorClasses[this.user?.coalition] || '';
+        const hoverColorClasses ={
+            'Bios': ' hover:ring-[var(--bios)]',
+            'Freax': ' hover:ring-[var(--freax)]',
+            'Commodore': 'hover:ring-[var(--commodore)]',
+            'Pandora': 'hover:ring-[var(--pandora)]',
+        }
+        const hoverTheme = hoverColorClasses[this.user?.coalition] || '';
         this.elementContainer = document.createElement('div');
         this.elementContainer.classList.add('w-full');
         this.elementContainer.classList.add('max-w-7xl');
@@ -66,7 +81,7 @@ export class DashboardLayout {
                                 <img class="w-6 h-6 lg:w-8 lg:h-8 rounded-full object-cover !mb-1" src="../../public/assets/qoins.png" alt="Coins" />
                                 <div class="flec flex-col justify-center itmes-center">
                                     <div class="text-[8px] opacity-60">Balance</div> 
-                                    <div class="text-sm lg:text-[18px] font-bold">500</div>
+                                    <div class="text-sm lg:text-[18px] font-bold">${this.user?.stats.coins}</div>
                                 </div>
                             </div>
                             
@@ -80,8 +95,8 @@ export class DashboardLayout {
                                 
                                 <!-- Profile Dropdown -->
                                 <div class="relative" id="profileDropdown">
-                                    <div class="profil w-[36px] h-[36px] lg:w-[42px] lg:h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2 hover:ring-[var(--accent)] transition-all duration-200" id="profileTrigger">
-                                        <img class="w-[34px] h-[34px] lg:w-[40px] lg:h-[40px] rounded-full object-cover" src=${this.user?.avatar} alt="Profile" />
+                                    <div class="profil w-[36px] h-[36px] lg:w-[42px] lg:h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2 ${hoverTheme} transition-all duration-200" id="profileTrigger">
+                                        <img class="w-[34px] h-[34px] lg:w-[40px] lg:h-[40px] rounded-full object-cover" src=${this.user?.avatar}  />
                                     </div>
                                     
                                     <!-- Dropdown Menu -->
@@ -222,11 +237,11 @@ export class DashboardLayout {
         try {
             const response = await this.apiService.get<User>("/auth/me");
             console.log("USER ME =>", response.data.user);
-            const user = response.data.user;
-            this.user = user;
+            console.log("=================================");
+            this.user = response.data.user;
             return this.user;
         } catch (err) {
-             console.error("Failed to fetch user:", err);
+            console.error("Failed to fetch user:", err);
             return null;
         }
     }

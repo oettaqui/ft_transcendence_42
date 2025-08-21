@@ -1,28 +1,29 @@
-export interface User{
-    id: number;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar: string;
-    // level: number;
-    // exp: number;
-    // balance: number;
-    // coalition?: string;
-    // stats: UserStats;
-    // rank?: UserRank;
-}
-
-
-export interface UserStats {
+interface UserStats {
+  userId: number;
   gamesPlayed: number;
-  wins: number;
-  losses: number;
+  gamesWon: number;
+  gamesLost: number;
+  rankingPoints: number;
+  userRank: number;
+  coins: number;
+  exp: number;
+  bestScore: number;
   winRate: number;
-  friendsCount: number;
 }
 
-
-export interface UserRank {
-  global: number;
-  coalition?: number;
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  username: string;
+  coalition: string;
+  avatar: string;
+  colorTheme: string;
+  email: string;
+  lastLogin: string;
+  createdAt: string;
+  updatedAt: string;
+  emailVerified: number; 
+  twoFactorEnabled: boolean;
+  stats: UserStats;
 }

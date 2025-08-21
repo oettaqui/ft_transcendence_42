@@ -25,6 +25,9 @@
 
   /* Coalitions */
   --freax : #f5bc38;
+  --bios : #02cdd1;
+  --commodore : #235a16;
+  --pandora : #B61182;
 }
 
 html{
@@ -493,7 +496,7 @@ header h1:hover{
 .progress-fill {
     width: 0%;
     transition: width 2s ease-out;
-    background-color: var(--freax);
+    /* background-color: var(--freax); */
 }
 
 /* style Friends and requests section */

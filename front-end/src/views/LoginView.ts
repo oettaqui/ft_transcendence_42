@@ -504,7 +504,7 @@ private async handleIntraAuth(): Promise<void> {
                     });
                     this.cleanupIntraAuth();
                 }
-            }, 1000);
+           }, 25000);
             
             window.addEventListener('message', this.handleIntraAuthCallback);
             
