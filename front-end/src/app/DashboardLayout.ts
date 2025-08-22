@@ -30,21 +30,7 @@ export class DashboardLayout {
     }
     async render(): Promise<HTMLElement | null>{
         this.user = await this.fetchUser();
-
-        const colorClasses ={
-            'Bios': 'var(--bios)',
-            'Freax': 'var(--freax)',
-            'Commodore': 'var(--commodore)',
-            'Pandora': 'var(--pandora)',
-        }
-        const colorTheme = colorClasses[this.user?.coalition] || '';
-        const hoverColorClasses ={
-            'Bios': ' hover:ring-[var(--bios)]',
-            'Freax': ' hover:ring-[var(--freax)]',
-            'Commodore': 'hover:ring-[var(--commodore)]',
-            'Pandora': 'hover:ring-[var(--pandora)]',
-        }
-        const hoverTheme = hoverColorClasses[this.user?.coalition] || '';
+       
         this.elementContainer = document.createElement('div');
         this.elementContainer.classList.add('w-full');
         this.elementContainer.classList.add('max-w-7xl');
@@ -95,7 +81,7 @@ export class DashboardLayout {
                                 
                                 <!-- Profile Dropdown -->
                                 <div class="relative" id="profileDropdown">
-                                    <div class="profil w-[36px] h-[36px] lg:w-[42px] lg:h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2 ${hoverTheme} transition-all duration-200" id="profileTrigger">
+                                    <div class="profil w-[36px] h-[36px] lg:w-[42px] lg:h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2  hover:ring-[var(--accent)] transition-all duration-200" id="profileTrigger">
                                         <img class="w-[34px] h-[34px] lg:w-[40px] lg:h-[40px] rounded-full object-cover" src=${this.user?.avatar}  />
                                     </div>
                                     
@@ -236,8 +222,9 @@ export class DashboardLayout {
     async fetchUser(): Promise<User | null>{
         try {
             const response = await this.apiService.get<User>("/auth/me");
-            console.log("USER ME =>", response.data.user);
-            console.log("=================================");
+            // console.log("=================================");
+            // console.log("USER ME =>", response.data.user);
+            // console.log("=================================");
             this.user = response.data.user;
             if(this.user?.avatar === null)
                 this.user.avatar = "../../public/assets/default.jpg";
@@ -282,14 +269,13 @@ export class DashboardLayout {
         const logoutBtn = this.element.querySelector('#logoutBtn') as HTMLButtonElement;
 
         if (profileTrigger && dropdownMenu) {
-            // Toggle dropdown on profile click
+            
             const profileClickHandler = (e: Event) => {
                 e.stopPropagation();
                 this.toggleDropdown();
             };
             this.addEventListener(profileTrigger, 'click', profileClickHandler);
 
-            // Close dropdown when clicking outside
             const documentClickHandler = (e: Event) => {
                 if (!profileDropdown.contains(e.target as Node)) {
                     this.closeDropdown();
@@ -297,7 +283,6 @@ export class DashboardLayout {
             };
             this.addEventListener(document, 'click', documentClickHandler);
 
-            // Close dropdown on escape key
             const keydownHandler = (e: KeyboardEvent) => {
                 if (e.key === 'Escape') {
                     this.closeDropdown();
@@ -305,7 +290,6 @@ export class DashboardLayout {
             };
             this.addEventListener(document, 'keydown', keydownHandler);
 
-            // Prevent dropdown from closing when clicking inside it
             const dropdownClickHandler = (e: Event) => {
                 e.stopPropagation();
             };
@@ -355,12 +339,12 @@ export class DashboardLayout {
             const response = await this.apiService.post('/auth/logout', {});
 
             if (response.ok) {
-            localStorage.removeItem('token');
-            console.log('Logged out successfully and token removed!');
+                localStorage.removeItem('token');
+                console.log('Logged out successfully and token removed!');
             
             } else {
-            const errorData = await response.json();
-            console.error('Logout failed:', errorData.message);
+                const errorData = await response.json();
+                console.error('Logout failed:', errorData.message);
             }
         } catch (error) {
             console.error('An error occurred during logout:', error);
@@ -370,7 +354,10 @@ export class DashboardLayout {
     private handleLogout(): void {
         this.closeDropdown();
         this.logout();
-        localStorage.removeItem('token');
+        if (localStorage.getItem('token')){
+            console.log('token still exist !!!!!!!!!!!!!!');
+            localStorage.removeItem('token');
+        }
         this.router.navigateTo('/');
     }
 

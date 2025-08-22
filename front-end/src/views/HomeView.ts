@@ -17,141 +17,143 @@ export class HomeView extends View{
         this.friendsData = this.getStaticFriendsData();
         
     }
-render(user: User | null): HTMLElement {
-    if (user)
-        this.user = user;
-    const bgClasses = {
-        'Bios': 'bg-[url(/public/assets/BiosBG.jpg)]',
-        'Freax': 'bg-[url(/public/assets/Freax_BG.jpg)]',
-        'Commodore': 'bg-[url(/public/assets/Commodore_BG.jpg)]',
-        'Pandora': 'bg-[url(/public/assets/Pandora_BG.jpg)]'
-    };
+    render(user: User | null): HTMLElement {
+        const element = document.createElement('section');
+        element.classList.add('bg-[var(--primary)]');
+        element.classList.add('w-full');
+        element.classList.add('h-[80%]');
+        element.classList.add('rounded-4xl');
+        element.classList.add('!mt-16');
+        element.classList.add('flex');
+        element.classList.add('flex-col', 'lg:flex-row'); 
+        element.classList.add('items-center', 'lg:items-stretch');
+        element.classList.add('justify-between');
+        element.classList.add('!gap-4', 'lg:!gap-0');
+        element.classList.add('!p-2', 'lg:!p-0');
+        if (user){
+            this.user = user;
 
-    const bgUrl = bgClasses[user?.coalition] || '';
-    const colorClasses ={
-        'Bios': 'var(--bios)',
-        'Freax': 'var(--freax)',
-        'Commodore': 'var(--commodore)',
-        'Pandora': 'var(--pandora)',
-    }
-    const colorTheme = colorClasses[user?.coalition] || '';
-    console.log(colorTheme);
-    // console.log(this.user?.colorTheme);
- 
-    const element = document.createElement('section');
-    element.classList.add('bg-[var(--primary)]');
-    element.classList.add('w-full');
-    element.classList.add('h-[80%]');
-    element.classList.add('rounded-4xl');
-    element.classList.add('!mt-16');
-    element.classList.add('flex');
-    element.classList.add('flex-col', 'lg:flex-row'); 
-    element.classList.add('items-center', 'lg:items-stretch');
-    element.classList.add('justify-between');
-    element.classList.add('!gap-4', 'lg:!gap-0');
-    element.classList.add('!p-2', 'lg:!p-0');
+            const bgClasses = {
+                'Bios': 'bg-[url(/public/assets/BiosBG.jpg)]',
+                'Freax': 'bg-[url(/public/assets/Freax_BG.jpg)]',
+                'Commodore': 'bg-[url(/public/assets/Commodore_BG.jpg)]',
+                'Pandora': 'bg-[url(/public/assets/Pandora_BG.jpg)]'
+            };
 
-    element.innerHTML = `
-        <aside class="w-full h-full lg:w-[67%] flex flex-col  !gap-4 !py-4 lg:!pl-4">
-            <div class="relative w-full h-[40%]  ">
-                <!-- bg coalition -->
-                <div class="${bgUrl} bg-cover w-full min-h-[200px] h-auto lg:h-full rounded-2xl lg:rounded-3xl !p-4 lg:!p-8 flex flex-col justify-center !gap-6 lg:!gap-10">
-                    <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
-                        <div class="relative flex justify-center items-center w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] lg:w-[110px] lg:h-[110px]">
-                            <div style="background-color: ${colorTheme}" class="absolute w-[62px] h-[62px] sm:w-[72px] sm:h-[72px] lg:w-[102px] lg:h-[102px] rounded-full"></div>
-                            <img class="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src=${this.user?.avatar} />
+            const bgUrl = bgClasses[user?.coalition] || '';
+            const colorClasses ={
+                'Bios': 'var(--bios)',
+                'Freax': 'var(--freax)',
+                'Commodore': 'var(--commodore)',
+                'Pandora': 'var(--pandora)',
+            }
+            const colorTheme = colorClasses[user?.coalition] || ''; 
+            // console.log(colorTheme);
+            // console.log(this.user?.colorTheme);
+    
+
+            element.innerHTML = `
+                <aside class="w-full h-full lg:w-[67%] flex flex-col  !gap-4 !py-4 lg:!pl-4">
+                    <div class="relative w-full h-[40%]  ">
+                        <!-- bg coalition -->
+                        <div class="${bgUrl} bg-cover w-full min-h-[200px] h-auto lg:h-full rounded-2xl lg:rounded-3xl !p-4 lg:!p-8 flex flex-col justify-center !gap-6 lg:!gap-10">
+                            <div class="z-[10] flex flex-col sm:flex-row justify-start items-center !gap-4 lg:!gap-8">
+                                <div class="relative flex justify-center items-center w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] lg:w-[110px] lg:h-[110px]">
+                                    <div style="background-color: ${colorTheme}" class="absolute w-[62px] h-[62px] sm:w-[72px] sm:h-[72px] lg:w-[102px] lg:h-[102px] rounded-full"></div>
+                                    <img class="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] lg:w-[100px] lg:h-[100px] bg-contain bg-no-repeat bg-center rounded-full z-[11] flex justify-center items-center" src=${this.user?.avatar} />
+                                </div>
+                                <div class="flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+                                    <h2 class="text-lg sm:text-xl lg:text-[28px] font-bold">${this.user?.firstName} ${this.user?.lastName}</h2>
+                                    <p class="font-light text-[10px] sm:text-xs lg:text-[14px]">${this.user?.username}</p>
+                                </div>
+                            </div>
+                            <div class="level flex flex-col sm:flex-row justify-center items-center !gap-2 lg:!gap-4">
+                                <!-- Progress -->
+                                <div class="text-xl sm:text-2xl lg:text-3xl font-bold">${this.user?.stats.exp}</div>
+                                <div class="flex flex-col items-center sm:items-start justify-center w-full sm:w-auto">
+                                    <div class="percentage text-[10px] sm:text-xs lg:text-[14px]  !mb-1" id="percentageText">22%</div>
+                                    <div class="progress-bar h-[6px] sm:h-[8px] lg:h-[10px] w-full max-w-[250px] sm:max-w-[300px] md:max-w-[400px] lg:w-[600px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
+                                        <div class="progress-fill h-full rounded-3xl" style="background-color: ${colorTheme} !important;" id="progressFill"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
-                            <h2 class="text-lg sm:text-xl lg:text-[28px] font-bold">${this.user?.firstName} ${this.user?.lastName}</h2>
-                            <p class="font-light text-[10px] sm:text-xs lg:text-[14px]">${this.user?.username}</p>
+                        <div class="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-[90px] lg:right-[100px] w-auto lg:w-[100px] h-[25px] sm:h-[30px] lg:h-[35px] rounded-lg lg:rounded-3xl flex justify-center items-center">
+                            <div class="">
+                                <span style="background-color: ${colorTheme}" class="!px-2 lg:!px-4 !py-1 lg:!py-2 rounded-lg lg:rounded-xl  font-bold text-[8px] sm:text-[10px] lg:text-[12px]">${this.user?.coalition}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="level flex flex-col sm:flex-row justify-center items-center !gap-2 lg:!gap-4">
-                        <!-- Progress -->
-                        <div class="text-xl sm:text-2xl lg:text-3xl font-bold">${this.user?.stats.exp}</div>
-                        <div class="flex flex-col items-center sm:items-start justify-center w-full sm:w-auto">
-                            <div class="percentage text-[10px] sm:text-xs lg:text-[14px]  !mb-1" id="percentageText">22%</div>
-                            <div class="progress-bar h-[6px] sm:h-[8px] lg:h-[10px] w-full max-w-[250px] sm:max-w-[300px] md:max-w-[400px] lg:w-[600px] bg-[var(--text)] rounded-3xl relative overflow-hidden">
-                                <div class="progress-fill h-full rounded-3xl" style="background-color: ${colorTheme} !important;" id="progressFill"></div>
+                    </div>   
+                    
+                    <div class="w-full h-[100%]  rounded-2xl lg:rounded-3xl bg-[var(--secondary)] flex flex-col lg:flex-row justify-center items-center !gap-4 lg:!gap-0 !p-4 lg:!p-0">
+                        <div  style="border-color: ${colorTheme}" class="border  rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
+                            <canvas id="donutChart" width="200" height="200" class="sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px]"></canvas>
+                            <div class="flex flex-row lg:flex-col !gap-3 text-center lg:text-left">
+                                <div class="flex flex-col">
+                                    <div class="text-xs lg:text-sm">Your Balance</div> 
+                                    <div style="color: ${colorTheme}" id="balanceValue" class="text-lg lg:text-2xl"></div> 
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="text-xs lg:text-sm">Your Level</div> 
+                                    <div style="color: ${colorTheme}" id="levelValue" class="text-lg lg:text-2xl"></div> 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col !gap-2 lg:!mr-10 !p-2 lg:!p-4 w-full lg:w-auto">
+                            <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
+                                <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                                    <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Matches Played</div>
+                                    <div style="color: ${colorTheme}" id="matchesPlayed" class="text-lg lg:text-2xl"></div>
+                                </div>
+                                <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                                    <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Friends Count</div>
+                                    <div style="color: ${colorTheme}" id="friendsCount" class="text-lg lg:text-2xl"></div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
+                                <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                                    <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Global Rank</div>
+                                    <div style="color: ${colorTheme}" id="globalRank" class="text-lg lg:text-2xl"></div>
+                                </div>
+                                <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                                    <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Win Rate</div>
+                                    <div style="color: ${colorTheme}" id="winRate" class=" text-lg lg:text-2xl"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-[90px] lg:right-[100px] w-auto lg:w-[100px] h-[25px] sm:h-[30px] lg:h-[35px] rounded-lg lg:rounded-3xl flex justify-center items-center">
-                    <div class="">
-                        <span style="background-color: ${colorTheme}" class="!px-2 lg:!px-4 !py-1 lg:!py-2 rounded-lg lg:rounded-xl  font-bold text-[8px] sm:text-[10px] lg:text-[12px]">${this.user?.coalition}</span>
-                    </div>
-                </div>
-            </div>   
-            
-            <div class="w-full h-[100%]  rounded-2xl lg:rounded-3xl bg-[var(--secondary)] flex flex-col lg:flex-row justify-center items-center !gap-4 lg:!gap-0 !p-4 lg:!p-0">
-                <div  style="border-color: ${colorTheme}" class="border  rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
-                    <canvas id="donutChart" width="200" height="200" class="sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px]"></canvas>
-                    <div class="flex flex-row lg:flex-col !gap-3 text-center lg:text-left">
-                        <div class="flex flex-col">
-                            <div class="text-xs lg:text-sm">Your Balance</div> 
-                            <div style="color: ${colorTheme}" id="balanceValue" class="text-lg lg:text-2xl"></div> 
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="text-xs lg:text-sm">Your Level</div> 
-                            <div style="color: ${colorTheme}" id="levelValue" class="text-lg lg:text-2xl"></div> 
-                        </div>
-                    </div>
-                </div>
+                </aside>
                 
-                <div class="flex flex-col !gap-2 lg:!mr-10 !p-2 lg:!p-4 w-full lg:w-auto">
-                    <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
-                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
-                            <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Matches Played</div>
-                            <div style="color: ${colorTheme}" id="matchesPlayed" class="text-lg lg:text-2xl"></div>
+                <aside class="w-full lg:w-[30%]  overflow-y-auto overflow-x-hidden rounded-2xl lg:rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-0 lg:!mr-4 !my-2 lg:!my-4">
+                    <div class="flex flex-col h-full">
+                        <header class="sticky top-0 z-10 flex justify-between !py-2 bg-[var(--secondary)] rounded-t-2xl lg:rounded-t-3xl">
+                            <button id="tab-all" class="tab-btn active !text-[10px] lg:!text-xs !px-2 !py-1" data-category="all">All</button>
+                            <button id="tab-online" class="tab-btn !text-[10px] lg:!text-xs !px-2 !py-1" data-category="online">Online</button>
+                            <button id="tab-requests" class="tab-btn !text-[10px] lg:!text-xs !px-2 !py-1" data-category="requests">Requests</button>
+                            <button id="tab-pending" class="tab-btn !text-[10px] lg:!text-xs !px-2 !py-1" data-category="pending">Pending</button>
+                        </header>
+
+                        <!-- Loading state -->
+                        <div id="friends-loading" class="hidden flex justify-center items-center !py-4">
+                            <div class="animate-spin rounded-full h-5 w-5 lg:h-6 lg:w-6 xl:h-8 xl:w-8 border-b-2 border-white"></div>
                         </div>
-                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
-                            <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Friends Count</div>
-                            <div style="color: ${colorTheme}" id="friendsCount" class="text-lg lg:text-2xl"></div>
+
+                        <!-- Friends List Container -->
+                        <div id="friends-list" class="flex-1 !py-2"></div>
+
+                        <!-- No Data State -->
+                        <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center !gap-2 lg:!gap-3 bg-[var(--primary)] rounded-2xl !p-4 lg:!p-6 !mt-2 lg:!mt-3">
+                            <i class="ti ti-user-off text-xl lg:text-2xl text-[var(--text-secondary)]"></i>
+                            <div class="text-[10px] lg:text-xs font-medium text-[var(--text-secondary)]">No data found here</div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
-                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
-                            <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Global Rank</div>
-                            <div style="color: ${colorTheme}" id="globalRank" class="text-lg lg:text-2xl"></div>
-                        </div>
-                        <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2 transition-transform duration-300 hover:scale-[1.02]">
-                            <div class="opacity-[0.7] text-[11px] lg:text-[14px] text-center">Win Rate</div>
-                            <div style="color: ${colorTheme}" id="winRate" class=" text-lg lg:text-2xl"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        
-        <aside class="w-full lg:w-[30%]  overflow-y-auto overflow-x-hidden rounded-2xl lg:rounded-3xl bg-[var(--secondary)] !p-2 friends-and-request !mr-0 lg:!mr-4 !my-2 lg:!my-4">
-            <div class="flex flex-col h-full">
-                <header class="sticky top-0 z-10 flex justify-between !py-2 bg-[var(--secondary)] rounded-t-2xl lg:rounded-t-3xl">
-                    <button id="tab-all" class="tab-btn active !text-[10px] lg:!text-xs !px-2 !py-1" data-category="all">All</button>
-                    <button id="tab-online" class="tab-btn !text-[10px] lg:!text-xs !px-2 !py-1" data-category="online">Online</button>
-                    <button id="tab-requests" class="tab-btn !text-[10px] lg:!text-xs !px-2 !py-1" data-category="requests">Requests</button>
-                    <button id="tab-pending" class="tab-btn !text-[10px] lg:!text-xs !px-2 !py-1" data-category="pending">Pending</button>
-                </header>
+                </aside>
+            `;
 
-                <!-- Loading state -->
-                <div id="friends-loading" class="hidden flex justify-center items-center !py-4">
-                    <div class="animate-spin rounded-full h-5 w-5 lg:h-6 lg:w-6 xl:h-8 xl:w-8 border-b-2 border-white"></div>
-                </div>
-
-                <!-- Friends List Container -->
-                <div id="friends-list" class="flex-1 !py-2"></div>
-
-                <!-- No Data State -->
-                <div id="friends-no-data" class="hidden flex flex-col items-center justify-center text-center !gap-2 lg:!gap-3 bg-[var(--primary)] rounded-2xl !p-4 lg:!p-6 !mt-2 lg:!mt-3">
-                    <i class="ti ti-user-off text-xl lg:text-2xl text-[var(--text-secondary)]"></i>
-                    <div class="text-[10px] lg:text-xs font-medium text-[var(--text-secondary)]">No data found here</div>
-                </div>
-            </div>
-        </aside>
-    `;
-
-    return element;
-}
+        }
+        return element;
+    }
 
 
 
@@ -174,7 +176,7 @@ render(user: User | null): HTMLElement {
        
     }
 
-    // ===== FRIENDS PANEL FUNCTIONALITY =====
+    
 
     private setupTabFiltering(): void {
         const buttons = document.querySelectorAll('.tab-btn');
@@ -209,7 +211,7 @@ render(user: User | null): HTMLElement {
         try {
             let data: Friend[] = [];
             
-            // TODO: Replace with actual API calls
+            
             switch(category) {
                 case 'all':
                     
@@ -229,7 +231,7 @@ render(user: User | null): HTMLElement {
                     break;
             }
 
-            // Simulate API delay
+            
             await new Promise(resolve => setTimeout(resolve, 300));
             
             this.renderFriends(data, category);
@@ -366,7 +368,7 @@ render(user: User | null): HTMLElement {
             });
         });
 
-        // Reject friend request
+        
         document.querySelectorAll('.reject-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
@@ -380,7 +382,7 @@ render(user: User | null): HTMLElement {
             });
         });
 
-        // Add friend
+       
         document.querySelectorAll('.add-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
@@ -391,7 +393,7 @@ render(user: User | null): HTMLElement {
             });
         });
 
-        // Message friend
+        
         document.querySelectorAll('.message-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
@@ -403,7 +405,7 @@ render(user: User | null): HTMLElement {
         });
     }
 
-    // Loading and No Data states
+   
     private showFriendsLoading(): void {
         document.getElementById('friends-loading')?.classList.remove('hidden');
         document.getElementById('friends-list')!.innerHTML = '';

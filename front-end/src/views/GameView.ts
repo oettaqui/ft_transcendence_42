@@ -145,40 +145,9 @@ export class GameView extends View{
 }
 
     onMount(): void {
-       this.setupCardScroll();
+        console.log("Game View Mounted");
     }
     
-    private setupCardScroll(): void {
-        const cardContainer = document.getElementById('card-container');
-        const scrollLeftBtn = document.getElementById('scroll-left-btn');
-        const scrollRightBtn = document.getElementById('scroll-right-btn');
-
-        if (!cardContainer || !scrollLeftBtn || !scrollRightBtn) {
-            console.error('Card container or scroll buttons not found.');
-            return;
-        }
-
-        const card = cardContainer.querySelector('.game-card') as HTMLElement;
-        if (!card) {
-            console.error('Game card not found.');
-            return;
-        }
-
-        const scrollAmount = card.offsetWidth + 100;
-
-        scrollRightBtn.addEventListener('click', () => {
-            cardContainer.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth'
-            });
-        });
-
-        scrollLeftBtn.addEventListener('click', () => {
-            cardContainer.scrollBy({
-                left: -scrollAmount,
-                behavior: 'smooth'
-            });
-        });
-    }
+    
 
 }
