@@ -647,9 +647,15 @@ class AuthController {
         if (user && !user.googleId) {
           console.log('Linking existing account with Google auth');
         } else if (!user) {
-          const username = email.split('@')[0];
-          const firstName = name?.split(' ')[0] || username;
-          const lastName = name?.split(' ')[1] || '';
+          const nameParts = name.trim().split(' ');
+          const firstName = nameParts.slice(0, -1).join(' ');
+          const lastName = nameParts[nameParts.length - 1];
+          const firstChar = firstName.charAt(0).toLowerCase();
+          const lastNameForUsername = lastName.length > 8 ? lastName.substring(0, 8).toLowerCase() : lastName.toLowerCase();
+          const username = 'G-' + firstChar + lastNameForUsername;;
+          console.log(`lastName : ${lastName}`);
+          console.log(`firstName : ${firstName}`);
+          console.log(`username : ${username}`);
           const { coalition, color_theme } = getRandomCoalition();
           const userId = await User.create({
             username,

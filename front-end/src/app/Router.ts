@@ -54,6 +54,7 @@ export class Router {
   }
 
     public navigateTo(path: string) {
+
       if (path.length > 1 && path.endsWith('/')) {
           path = path.slice(0, -1);
           history.replaceState(null, '', path);
@@ -103,19 +104,25 @@ export class Router {
           "/dashboard/tournament",
           "/dashboard/analytics"
         ];
-        
+        const anaccessiblePages = [
+          "/",
+          "/login",
+          "/register"
+        ];
+        const loggedIn = await this.isLoggedIn(); 
         if (allowedDashboardRoutes.includes(currentPath)){
-
-          const loggedIn = await this.isLoggedIn();  // wait for result
-
           if (!loggedIn) {
               this.navigateTo("/login");
               return;
           }
-          
           this.currentLayout = new DashboardLayout(this.currentView, this);
           if (this.currentLayout)
             this.currentLayout.mount(this.root);
+        }
+        else if (anaccessiblePages.includes(currentPath) && loggedIn){
+          console.log('here is the token ' + localStorage.getItem('token'));
+          this.navigateTo('/dashboard');
+          return;
         }
         else {
           console.log(' Mounting new view...');
@@ -124,7 +131,7 @@ export class Router {
         
         
     } catch (error) {
-
+      console.log(error);
         this.root.innerHTML = `
           <div style="padding: 20px; text-align: center;">
             <h1>Something went wrong!</h1>

@@ -239,6 +239,8 @@ export class DashboardLayout {
             console.log("USER ME =>", response.data.user);
             console.log("=================================");
             this.user = response.data.user;
+            if(this.user?.avatar === null)
+                this.user.avatar = "../../public/assets/default.jpg";
             return this.user;
         } catch (err) {
             console.error("Failed to fetch user:", err);
@@ -355,7 +357,6 @@ export class DashboardLayout {
             if (response.ok) {
             localStorage.removeItem('token');
             console.log('Logged out successfully and token removed!');
-
             
             } else {
             const errorData = await response.json();
@@ -369,9 +370,7 @@ export class DashboardLayout {
     private handleLogout(): void {
         this.closeDropdown();
         this.logout();
-        // console.log('Logging out...');
-        
-       
+        localStorage.removeItem('token');
         this.router.navigateTo('/');
     }
 

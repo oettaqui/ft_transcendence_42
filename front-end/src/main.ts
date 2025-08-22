@@ -1,4 +1,4 @@
-// main.ts
+
 import { router } from "./app/router-instance.ts";
 
 function setupNavigation(): void {

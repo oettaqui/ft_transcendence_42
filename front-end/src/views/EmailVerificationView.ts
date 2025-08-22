@@ -49,10 +49,10 @@ export class EmailVerificationView extends View {
             
                         <div class="flex-1">
                             <div class="flex flex-col justify-center items-center gap-8">
+                             <h2 class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"><span class="text-[var(--accent)]">P</span>ING<span class="text-[var(--accent)]">P</span>ONG</h2>
                                 <div class="text-center">
                                     <h2 class="text-6xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline">📧</h2>
-                                    <h3 class="text-4xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline">Check Your Email</h3>
-                                    <div class="max-w-[400px] mt-8">
+                                    <h3 class="text-4xl !mb-[10px] font-extrabold tracking-widest text-[color:var(--text)] no-underline"> Check Your Email</h3>
                                         <p class="text-lg text-[var(--text-secondary)] mb-4">
                                             We've sent a verification email to 
                                             <strong id="verification-email" class="text-[var(--accent)]">${this.email}</strong>
@@ -63,11 +63,12 @@ export class EmailVerificationView extends View {
                                         
                                         <div id="verification-message" class="mb-6"></div>
                                         
-                                        <button id="resendBtn" class="enhanced-btn secondary-btn w-full mb-4">
+                                       <button id="resendBtn" class="enhanced-btn secondary-btn w-full !mb-4 !mt-4 cursor-pointer">
                                             <span class="flex items-center justify-center !mt-1"> Resend Verification Email </span>
                                         </button>
                                         
                                         <p class="auth-switch">
+                                            Want to verify later?
                                             <a href="/login">Back to Login</a>
                                         </p>
                                     </div>
