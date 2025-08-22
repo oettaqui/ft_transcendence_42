@@ -159,7 +159,6 @@ export class HomeView extends View{
 
     public onMount(): void {
         if (this.user){
-
             this.animateProgress();
             this.chatWinLose();
             this.animateNumber('balanceValue', this.user?.stats.coins, 1000);
@@ -168,15 +167,11 @@ export class HomeView extends View{
             this.animateNumber('friendsCount', 5, 1000);
             this.animateNumber('globalRank', this.user?.stats.userRank, 1000);
             this.animateNumber('winRate', this.user?.stats.winRate, 1000, 1);
-    
-           
             this.setupTabFiltering();
             this.loadFriendsData('all');
         }
        
     }
-
-    
 
     private setupTabFiltering(): void {
         const buttons = document.querySelectorAll('.tab-btn');
@@ -192,7 +187,7 @@ export class HomeView extends View{
             });
         });
     }
-
+    
     private switchTab(category: string): void {
         
         document.querySelectorAll('.tab-btn').forEach(btn => {

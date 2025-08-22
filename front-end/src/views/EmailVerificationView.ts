@@ -69,7 +69,7 @@ export class EmailVerificationView extends View {
                                         
                                         <p class="auth-switch">
                                             Want to verify later?
-                                            <a href="/login">Back to Login</a>
+                                            <a id="login_redirection" href="/login">Back to Login</a>
                                         </p>
                                     </div>
                                 </div>
@@ -91,8 +91,16 @@ export class EmailVerificationView extends View {
 
     private setupEventHandlers(): void {
         const resendBtn = document.getElementById('resendBtn') as HTMLButtonElement;
+        const login_redirection = document.getElementById('login_redirection') as HTMLButtonElement;
         if (resendBtn) {
             resendBtn.addEventListener('click', this.handleResendVerification.bind(this));
+        }
+        if(login_redirection)
+        {
+            login_redirection.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('pending-verification-email');
+            });    
         }
     }
 

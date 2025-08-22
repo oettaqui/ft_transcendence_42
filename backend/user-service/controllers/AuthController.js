@@ -267,7 +267,7 @@ class AuthController {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json'
           },
-          timeout: 25000
+          timeout: 20500
         }
       );
 
@@ -283,7 +283,7 @@ class AuthController {
         headers: {
           'Authorization': `Bearer ${tokenResponse.data.access_token}`
         },
-        timeout: 25000
+        timeout: 20500
       });
 
       if (!userResponse.data?.id) {
@@ -303,13 +303,13 @@ class AuthController {
         headers:{
           'Authorization': `Bearer ${tokenResponse.data.access_token}`
         },
-        timeout: 25000
+        timeout: 20500
       });
       // const userResponse_email = await axios.get(`https://api.intra.42.fr/v2/users/${intraUser.id}/user_candidature`,{
       //   headers:{
       //     'Authorization': `Bearer ${tokenResponse.data.access_token}`
       //   },
-      //  timeout: 25000
+      //  timeout: 20500
       // });
       const intraUser_coalitions = userResponse_coalition.data;
       // const intraUser_email = userResponse_email.data;

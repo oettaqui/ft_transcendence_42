@@ -1,6 +1,7 @@
 import { Router } from "./Router";
 import { View } from "./View";
 import { ApiService } from "../utils/ApiService";
+import { toast } from "../views/ToastNotification";
 
 import { User } from "../types/User";
 
@@ -13,6 +14,7 @@ export class DashboardLayout {
     private API_BASE = 'http://localhost:3000/api';
     private apiService = new ApiService(this.API_BASE);
     public user: User | null = null;
+    private currentLoadingToastId: string | null = null;
 
     
     protected eventListeners: Array<{
@@ -29,7 +31,17 @@ export class DashboardLayout {
         
     }
     async render(): Promise<HTMLElement | null>{
+       
+        this.checkVerificationEmail();
         this.user = await this.fetchUser();
+        if(!this.user)
+        {
+            if (localStorage.getItem('token')){
+                localStorage.removeItem('token');
+            }
+            this.router.navigateTo('/login');
+        }
+    
        
         this.elementContainer = document.createElement('div');
         this.elementContainer.classList.add('w-full');
@@ -235,7 +247,55 @@ export class DashboardLayout {
         }
     }
 
+    private checkVerificationEmail(): void {
+        const path = window.location.pathname;
+        if (path.startsWith('/verify-email/')) {
+            const emailToken = path.split('/verify-email/')[1];
+            if (emailToken) {
+                this.verifyEmailToken(emailToken);
+            }
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryToken = urlParams.get('token');
+        if (queryToken) {
+            this.verifyEmailToken(queryToken);
+        }
+    }
 
+    private async  verifyEmailToken(token:string) {
+        try {
+            const response = await fetch(`${this.API_BASE}/auth/verify-email/${token}`);
+            const data = await response.json();
+            if (data.success) {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show('Email verified successfully! You can now enable two-factor authentication.', {
+                    type: 'success',
+                    duration: 3000
+                });
+                // alert('✅ Email verified successfully! You can now enable two-factor authentication.');
+                if (!localStorage.getItem('token')) {
+                    this.router.navigateTo('/login');
+                }
+            } else {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show(`Email verification failed: ${data.error}`, {
+                    type: 'error',
+                    duration: 4000
+                });
+                // alert('❌ Email verification failed: ' + data.error);
+                this.router.navigateTo('/login');
+            }
+        } catch (error) {
+            console.error('Email verification error:', error);
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show('Email verification failed. Please try again.', {
+                type: 'error',
+                duration: 4000
+            });
+            // alert('❌ Email verification failed. Please try again.');
+            this.router.navigateTo('/login');
+        }
+    }
     async mount(container: HTMLElement): Promise<void> {
         this.element = await this.render(); 
         if (!this.element) return;
