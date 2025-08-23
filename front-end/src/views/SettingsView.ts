@@ -1,15 +1,19 @@
 
 
-
-
 import { View } from "../app/View";
+import { router } from "../app/router-instance.ts";
+import { User } from "../types/User";
+import { ApiService } from "../utils/ApiService";
 
 export class SettingsView extends View{
+    private API_BASE = 'http://localhost:3001/api';
+    private apiService = new ApiService(this.API_BASE);
+    private user: User | null = null;
     constructor(){
         super()
     }
 
-    render() : HTMLElement{
+    render(user: User | null) : HTMLElement{
         const element = document.createElement('section');
         element.classList.add('bg-[var(--primary)]');
         element.classList.add('w-[100%]');
@@ -19,6 +23,8 @@ export class SettingsView extends View{
         element.classList.add('flex');
         element.classList.add('items-center');
         element.classList.add('justify-center');
+        if (user)
+            this.user = user;
         element.innerHTML = `
             <div class="overflow-y-hidden w-[100%] h-[100%] !gap-2 !m-auto bg-[rgba(220,219,219,0.08)] backdrop-blur-3xl rounded-4xl border border-white/10">
                 <div class="flex justify-center items-center w-[95%] h-[100%] !gap-1 xl:!gap-2 !m-auto">
@@ -248,12 +254,12 @@ export class SettingsView extends View{
                                         Email Verification
                                     </h3>
                                     <div class="flex flex-col !gap-3 md:!gap-4 xl:!gap-5">
-                                        <div class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
+                                        <div id="verified-email"  class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
                                             <div class="flex items-center !gap-3 md:!gap-4">
                                                 <div class="flex items-center !gap-3 md:!gap-4">
                                                     <div class="w-2 md:w-3 h-2 md:h-3 bg-green-500 rounded-full animate-pulse"></div>
                                                     <div>
-                                                        <p class="text-[11px] md:text-[13px] xl:text-[14px] text-white font-medium">oussama.ettaqui@example.com</p>
+                                                        <p class="text-[11px] md:text-[13px] xl:text-[14px] text-white font-medium">${this.user?.email}</p>
                                                         <p class="text-[10px] md:text-[11px] xl:text-[12px] text-green-400">Verified</p>
                                                     </div>
                                                 </div>
@@ -266,12 +272,12 @@ export class SettingsView extends View{
                                             </div>
                                         </div>
 
-                                        <div class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
+                                        <div id="not-verified-email" class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
                                             <div class="flex items-center !gap-3 md:!gap-4">
                                                 <div class="flex items-center !gap-3 md:!gap-4">
                                                     <div class="w-2 md:w-3 h-2 md:h-3 bg-orange-500 rounded-full animate-pulse"></div>
                                                     <div>
-                                                        <p class="text-[11px] md:text-[13px] xl:text-[14px] text-white font-medium">oussama.ettaqui@example.com</p>
+                                                        <p class="text-[11px] md:text-[13px] xl:text-[14px] text-white font-medium">${this.user?.email}</p>
                                                         <p class="text-[10px] md:text-[11px] xl:text-[12px] text-orange-400">Not Verified</p>
                                                     </div>
                                                 </div>
@@ -300,7 +306,7 @@ export class SettingsView extends View{
                                     <div class="!space-y-3 md:!space-y-4">
                                         <div class="flex flex-col !gap-3 md:!gap-4 xl:!gap-5">
                                             <!-- 2FA Status -->
-                                            <div class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
+                                            <div id="Two-Factor-Active" class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
                                                 <div class="flex items-center !gap-3 md:!gap-4">
                                                     <div class="flex items-center !gap-2 md:!gap-3">
                                                         <div class="w-2 md:w-3 h-2 md:h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -320,7 +326,7 @@ export class SettingsView extends View{
                                                 </div>
                                             </div>
 
-                                            <div class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
+                                            <div id="Two-Factor-Disabled" class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
                                                 <div class="flex items-center !gap-3 md:!gap-4">
                                                     <div class="flex items-center !gap-2 md:!gap-3">
                                                         <div class="w-2 md:w-3 h-2 md:h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -432,6 +438,7 @@ export class SettingsView extends View{
         }
         this.setupInputEffects();
         this.setupTabToggle();
+        this.VerificationStatus();
         this.setupBoardColorSettings();
     }
 
@@ -481,6 +488,25 @@ export class SettingsView extends View{
           input.addEventListener('focus', handleFocus);
           input.addEventListener('blur', handleBlur);
         });
+    }
+
+    protected VerificationStatus() {
+        // console.log(this.user.)
+        const notVerifiedEmail = document.querySelector('#not-verified-email');
+        const verifiedEmail = document.querySelector('#verified-email');
+        const twoFactorDisabled = document.querySelector('#Two-Factor-Disabled');
+        const twoFactorActive = document.querySelector('#Two-Factor-Active');
+        if(this.user)
+        {
+            if(this.user.emailVerified)
+               notVerifiedEmail?.classList.add('hidden');
+            else
+                verifiedEmail?.classList.add('hidden');
+            if(this.user.twoFactorEnabled)
+                twoFactorDisabled?.classList.add('hidden');
+            else
+                twoFactorActive?.classList.add('hidden');
+        }
     }
 
     protected setupTabToggle() {

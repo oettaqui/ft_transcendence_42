@@ -1,4 +1,7 @@
 import {View} from "../app/View"
+import { router } from "../app/router-instance.ts";
+import { User } from "../types/User";
+import { ApiService } from "../utils/ApiService";
 
 interface ApiResponse {
     data?: any;
@@ -7,7 +10,9 @@ interface ApiResponse {
 
 export class EmailVerificationView extends View {
     private API_BASE = 'http://localhost:3001/api';
+    private apiService = new ApiService(this.API_BASE);
     private email: string;
+    public user: User | null = null;
 
     constructor(email?: string) {
         super();
@@ -86,6 +91,7 @@ export class EmailVerificationView extends View {
     }
 
     protected onMount(): void {
+        this.check_is_verifacate();
         this.setupEventHandlers();
     }
 
@@ -129,6 +135,18 @@ export class EmailVerificationView extends View {
             resendBtn.disabled = false;
             resendBtn.innerHTML = originalText;
         }
+    }
+
+    private async check_is_verifacate(): Promise<void> {
+        this.user = await this.fetchUser();
+        if(this.user)
+        {
+            if(this.user.emailVerified)
+                router.navigateTo('/login');
+        }
+        else
+            router.navigateTo('/login');
+
     }
 
     private showVerificationMessage(message: string, type: 'success' | 'error'): void {
@@ -175,6 +193,15 @@ export class EmailVerificationView extends View {
         }
     }
 
+    async fetchUser(): Promise<User | null>{
+        try {
+            const response = await this.apiService.get<User>("/auth/me");
+            this.user = response.data.user;
+            return this.user;
+        } catch (err) {
+            return null;
+        }
+    }
     private logout(): void {
         localStorage.removeItem('token');
         localStorage.removeItem('pending-verification-email');
