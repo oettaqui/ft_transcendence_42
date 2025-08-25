@@ -3,13 +3,13 @@
 
 
 import { View } from "../app/View";
-
+import { User } from "../types/User";
 export class SettingsView extends View{
     constructor(){
         super()
     }
 
-    render() : HTMLElement{
+    render(user: User | null): HTMLElement {
         const element = document.createElement('section');
         element.classList.add('bg-[var(--primary)]');
         element.classList.add('w-[100%]');

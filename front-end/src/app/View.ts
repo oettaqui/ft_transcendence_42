@@ -9,7 +9,7 @@ export abstract class View {
         handler: EventListener;
     }> = [];
 
-    abstract render(user: User | null): HTMLElement;
+    abstract render(user: User | null):  HTMLElement | null | Promise<HTMLElement | null>;
 
     protected onMount(): void {
     }
