@@ -1,0 +1,26 @@
+services:
+  fastify-app:
+    build: 
+      context: ../
+      dockerfile: Dockerfile
+    container_name: fastify-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - fastify-app-data:/app/src
+      # - sqlite-data:/app/data
+    networks:
+      - transcendence-net
+  
+volumes:
+  fastify-app-data:
+    name: fastify-app-data
+    driver: local
+    driver_opts:
+        type: none
+        o: bind
+        device: ../src
+
+networks:
+  transcendence-net:
+    driver: bridge
