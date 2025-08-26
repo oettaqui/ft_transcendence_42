@@ -1,14 +1,32 @@
 
-
+import { toast } from "./ToastNotification";
 import { View } from "../app/View";
 import { router } from "../app/router-instance.ts";
 import { User } from "../types/User";
 import { ApiService } from "../utils/ApiService";
 
+interface twoFactorormData {
+    password: string;
+}
+
+interface ApiResponse {
+    success?: boolean;
+    requiresTwoFactor?: boolean;
+    data?: {
+        token: string;
+        user?: any;
+        authUrl?: string;
+        state?: string;
+    };
+    message?: string;
+    error?: string;
+}
+
 export class SettingsView extends View{
-    private API_BASE = 'http://localhost:3001/api';
+    private API_BASE = 'http://localhost:3000/api';
     private apiService = new ApiService(this.API_BASE);
-    private user: User | null = null;
+    protected user: User | null = null;
+    private currentLoadingToastId: string | null = null;
     constructor(){
         super()
     }
@@ -320,12 +338,28 @@ export class SettingsView extends View{
                                                     <svg class="w-4 md:w-5 h-4 md:h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                     </svg>
-                                                    <button class="!px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg hover:bg-red-900/30 transition-all duration-300 font-medium text-sm">
+                                                    <button id="btn-disable" class="!cursor-pointer !px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg hover:bg-red-950/30  transition-all duration-300 font-medium text-sm ">
                                                         Disable
                                                     </button>
                                                 </div>
+                                                </div>
+                                            <div id="form-disable-2fa" class="hidden">
+                                                <p class="text-red-400"> Enter your password to disable 2FA. This will make your account less secure.</p>
+                                                <form id="2fForm">
+                                                    <div class="flex flex-col gap-1"> 
+                                                        <span class="text-[13px] font-medium">Password:*</span> 
+                                                        <input id="disable-2fa-password" type="password" name="password" required class="bg-[var(--secondary)] text-[var(--text)] !p-[10px] focus:outline-none rounded-lg border border-transparent focus:border-[var(--accent)] transition-colors" />
+                                                    </div>
+                                                    <div class="flex justify-end !gap-3 md:!gap-4 !pt-4 md:!pt-5 xl:!pt-6 border-t border-white/10">
+                                                        <button type="button" id="cancel-disable-2fa" class="!px-4 md:!px-5 xl:!px-6 !py-2 md:!py-3 text-[11px] md:text-[12px] xl:text-[14px] cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
+                                                            Cancel
+                                                        </button>
+                                                        <button type="button" id="disable-btn-2fa" class="!px-6 md:!px-7 xl:!px-8 !py-2 md:!py-3 bg-[var(--accent)] cursor-pointer text-[11px] md:text-[12px] xl:text-[14px] text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg hover:bg-red-950/30  transition-all duration-300 font-medium text-sm">
+                                                            Disable
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </div>
-
                                             <div id="Two-Factor-Disabled" class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
                                                 <div class="flex items-center !gap-3 md:!gap-4">
                                                     <div class="flex items-center !gap-2 md:!gap-3">
@@ -340,7 +374,7 @@ export class SettingsView extends View{
                                                     <svg class="w-4 md:w-5 h-4 md:h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                                     </svg>
-                                                    <button class="!px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-green-400 bg-green-900/20 border border-green-500/30 rounded-lg hover:bg-green-900/30 transition-all duration-300 font-medium">
+                                                    <button id="btn-enable" class="!px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-green-400 bg-green-900/20 border border-green-500/30 rounded-lg hover:bg-green-950/30 transition-all duration-300 font-medium !cursor-pointer">
                                                         Enable
                                                     </button>
                                                 </div>
@@ -440,8 +474,193 @@ export class SettingsView extends View{
         this.setupTabToggle();
         this.VerificationStatus();
         this.setupBoardColorSettings();
+        this.setup2fclick();
     }
 
+    private setup2fclick(): void {
+        const enableButton = document.getElementById('btn-enable');
+        const disableButton = document.getElementById('btn-disable');
+        const cancelDisable2fa = document.getElementById('cancel-disable-2fa');
+        if (enableButton)
+        {
+            enableButton.addEventListener('click', () => {
+                this.handleEnable2f();
+            });
+        }
+        if(disableButton)
+        {
+            disableButton.addEventListener('click', () => {
+                this.display2faprocess();
+            });  
+        }
+        if(cancelDisable2fa && disableButton)
+        {
+            cancelDisable2fa.addEventListener('click', () => {
+                this.hide2faprocess();
+            }); 
+        }
+    }
+    private display2faprocess(): void {
+        const disableButton = document.getElementById('btn-disable');
+        if(disableButton)
+        {
+            disableButton.classList.add('pointer-events-none');
+            disableButton.classList.add('disabled');
+            disableButton.classList.add('bg-white/50');
+            disableButton.classList.add('text-white');
+            const formDisable2FA = document.querySelector('#form-disable-2fa');
+            formDisable2FA?.classList.remove('hidden');
+            formDisable2FA?.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'end' 
+            });
+            const disableBtn2fa = document.getElementById('disable-btn-2fa');
+            if (disableBtn2fa)
+            {
+                disableBtn2fa.addEventListener('click', () => {
+                    this.handleDisable2f();
+                });
+            }
+        }
+    }
+    private hide2faprocess(): void {
+        const disableButton = document.getElementById('btn-disable');
+        if(disableButton)
+        {
+            disableButton.classList.remove('pointer-events-none');
+            disableButton.classList.remove('disabled');
+            disableButton.classList.remove('bg-white/50');
+            disableButton.classList.remove('text-white');
+            const formDisable2FA = document.querySelector('#form-disable-2fa');
+            formDisable2FA?.classList.add('hidden');
+        }
+    }
+    private async handleEnable2f(): Promise<void> {
+        toast.dismiss(this.currentLoadingToastId!);
+        try {
+            this.currentLoadingToastId = toast.show('Enabling 2FA...', {
+                type: 'loading',
+                duration: 0,
+                dismissible: true
+            });
+            const response = await this.apiCall('/auth/2fa/enable', {
+                method: 'POST',
+                body: JSON.stringify({ method: 'email' })
+            });
+            
+            if (response) {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show('2FA enabled successfully!', {
+                    type: 'success',
+                    duration: 3000
+                });
+                if(this.user)
+                    this.user.twoFactorEnabled = true;
+                this.VerificationStatus();
+                // Show backup codes if provided
+                // if (response.data.backupCodes) {
+                //     showBackupCodes(response.data.backupCodes);
+                // }
+                
+                // Refresh 2FA status
+                // setTimeout(() => {
+                //     cancel2FASetup();
+                //     load2FAStatus();
+                // }, 2000);
+            }
+        } catch (error) {
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show(`Enabling 2FA failed: ${error}`, {
+                type: 'error',
+                duration: 4000
+            });
+            // messageDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        }
+
+    }
+
+    private getFormData(): twoFactorormData {
+        const form = document.getElementById('2fForm') as HTMLFormElement;
+        const formData = new FormData(form);
+        
+        return {
+            password: formData.get('password') as string,
+        };
+    }
+    private async handleDisable2f(): Promise<void> {
+        toast.dismiss(this.currentLoadingToastId!);
+        const formData = this.getFormData();
+        const password = formData.password;
+        console.log(`password : ${password}`);
+        try {
+            // messageDiv.innerHTML = '<div class="loading">Disabling 2FA...</div>';
+            this.currentLoadingToastId = toast.show('Disabling 2FA...', {
+                type: 'loading',
+                duration: 0,
+                dismissible: true
+            });
+            const response = await this.apiCall('/auth/2fa/disable', {
+                method: 'POST',
+                body: JSON.stringify({ password })
+            });
+            
+            if (response) {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show('2FA disabled successfully!', {
+                    type: 'success',
+                    duration: 3000
+                });
+                if(this.user)
+                    this.user.twoFactorEnabled = false;
+                this.hide2faprocess();
+                this.VerificationStatus();
+                // messageDiv.innerHTML = '<div class="success">2FA disabled successfully</div>';
+                
+                // // Refresh 2FA status
+                // setTimeout(() => {
+                //     cancel2FADisable();
+                //     load2FAStatus();
+                // }, 2000);
+            }
+        } catch (error) {
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show(`Disabling 2FA failed: ${error}`, {
+                type: 'error',
+                duration: 4000
+            });
+            // messageDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+        }
+
+    }
+
+    private async apiCall(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {
+        const token = localStorage.getItem('token');
+        const config: RequestInit = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            },
+            ...options
+        };
+
+        try {
+            const response = await fetch(`${this.API_BASE}${endpoint}`, config);
+
+            if (response.status === 401) {
+                throw new Error('Invalid data');
+            }
+
+            const data = await response.json();
+
+            if (!response.ok && !data.requiresTwoFactor) {
+                throw new Error(data.error || 'Something went wrong');
+            }
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
     protected handleClickProfile(){
         document?.querySelector('.profile-image-container')?.addEventListener('click', function() {
             const profileImageInput = document?.getElementById('profileImage') as HTMLInputElement | null;
@@ -491,7 +710,8 @@ export class SettingsView extends View{
     }
 
     protected VerificationStatus() {
-        // console.log(this.user.)
+        if(this.user)
+            console.log(`this.user.twoFactorEnabled = ${this.user.twoFactorEnabled}`)
         const notVerifiedEmail = document.querySelector('#not-verified-email');
         const verifiedEmail = document.querySelector('#verified-email');
         const twoFactorDisabled = document.querySelector('#Two-Factor-Disabled');
@@ -499,13 +719,25 @@ export class SettingsView extends View{
         if(this.user)
         {
             if(this.user.emailVerified)
-               notVerifiedEmail?.classList.add('hidden');
+            {
+                notVerifiedEmail?.classList.add('hidden');
+                verifiedEmail?.classList.remove('hidden');
+            }
             else
+            {
                 verifiedEmail?.classList.add('hidden');
+                notVerifiedEmail?.classList.remove('hidden');
+            }
             if(this.user.twoFactorEnabled)
+            {
                 twoFactorDisabled?.classList.add('hidden');
+                twoFactorActive?.classList.remove('hidden');
+            }
             else
+            {
                 twoFactorActive?.classList.add('hidden');
+                twoFactorDisabled?.classList.remove('hidden');
+            }
         }
     }
 
