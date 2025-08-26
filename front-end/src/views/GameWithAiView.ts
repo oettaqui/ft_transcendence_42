@@ -23,6 +23,9 @@ export class GameWithAiView extends View
 	textWiner: HTMLElement;
 	startFlag: boolean;
 	winnerFlag: boolean;
+	startCountFlag: boolean;
+	private countdownElements: HTMLElement[] = [];
+	private countdownInterval: number | null = null;
 
 	constructor(){
         super();
@@ -41,6 +44,7 @@ export class GameWithAiView extends View
 		this.score = [0, 0];
 		this.startFlag = false;
 		this.winnerFlag = false;
+		this.startCountFlag = false;
 
 		// // paddle 
 		// this.xPaddleLeft = 0;
@@ -85,7 +89,7 @@ export class GameWithAiView extends View
 			</div>
 			<canvas id="canvas" class="border-2 border-white/20 rounded-xl" style="background: rgb(243, 156, 18);"></canvas>
 			<div id="goal-msg" class="absolute hidden text-4xl font-bold" >goaal!</div>
-			<button type="button" id="play" class="w-[30%] h-[20%] absolute animate-border" ><span id="text-play-id"> play </span></button>
+			<button type="button" id="play" class="w-[30%] h-[20%] hidden animate-border" ><span id="text-play-id"> play </span></button>
 			<div id="end-game" class="absolute hidden text-4xl border-white"></div>
 		</div>`
 		this.canvas = element.querySelector('#canvas') as HTMLCanvasElement;
@@ -147,7 +151,6 @@ export class GameWithAiView extends View
 		setTimeout(()=> {
 			goalmsg.classList.add("hidden");
 			goalmsg.classList.remove('animate-ping');
-			this.resetBall(false);
 		}, 1000);
 	}
 
@@ -200,10 +203,8 @@ export class GameWithAiView extends View
 	private Timer()
 	{
 		let max: number = 30;
-
 		this.TimerElement.textContent = this.FormatTime(max);
 		
-		console.log(this.FormatTime(max));
 		const countdown = setInterval(()=>{
 			if(this.startFlag)
 			{
@@ -221,7 +222,6 @@ export class GameWithAiView extends View
 		}, 1000);
 	}
 
-
 	private moveBall(){
 		if(this.y - this.rayon <= 0 || this.y + this.rayon >= 500)
 			this.dy *= -1;
@@ -238,13 +238,13 @@ export class GameWithAiView extends View
 			this.score[1]++;
 			this.resetBall(false);
 			this.UpdateScore();
-			// this.AnimationGoal();
+			this.AnimationGoal();
 		}
 		if(this.x + this.rayon > this.canvas.width){
 			this.score[0]++;
 			this.resetBall(false);
 			this.UpdateScore();
-			// this.AnimationGoal(); 
+			this.AnimationGoal(); 
 		}
 
 		this.x += this.dx;
@@ -252,32 +252,97 @@ export class GameWithAiView extends View
 	}
 
 	private  DisplayButtonPlay(){
+		// const playElement = document.getElementById("play");
+		// const textPlayElement = document.getElementById("text-play-id");
+		// if(!playElement) return ;
+
+		// playElement.style.left = `${this.canvas.width/2 - 100}px`;
+		// playElement.style.top = `${this.canvas.height/2 + 100}px`;
+
+		// playElement.style.left = `${this.canvas.width/2 - 100}px`;
+		// playElement.style.top = `${this.canvas.height/2 + 100}px`;
+		// playElement.style.width = '200px';
+		// playElement.style.height = '60px';
+		// playElement.style.border = '2px solid white';
+		// playElement.style.borderRadius = '30px';
+		// playElement.style.fontSize = '1.5rem';
+		// playElement.style.fontWeight = 'bold';
+		// playElement.style.color = 'white';
+		// playElement.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)';
+		// playElement.style.padding = '10px';
+		// playElement.style.backgroundColor = 'rgba(243, 156, 18, 0.9)';
+		// playElement.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+		// playElement.style.cursor = 'pointer';
+		// playElement.style.transition = 'all 0.3s ease';
+		// playElement.style.display = 'flex';
+		// playElement.style.alignItems = 'center';
+		// playElement.style.justifyContent = 'center';
+		// playElement.style.gap = '10px';
+		// if(this.startFlag){
+		// 	playElement.classList.add("hidden");
+		// 	this.canvas.style.backgroundColor = "rgba(243, 156, 18)"
+		// 	this.canvas.classList.remove("animate-pulse");
+		// }
+		// else{
+		// 	if(!this.winnerFlag){
+		// 		playElement.classList.remove("hidden");
+		// 	}
+		// 	this.canvas.style.backgroundColor = "rgba(243, 156, 18, 0.5)"
+		// 	this.canvas.classList.add("animate-pulse");
+		// }
+
 		const playElement = document.getElementById("play");
 		const textPlayElement = document.getElementById("text-play-id");
-		if(!playElement) return ;
+		if (!playElement) return;
 
-		playElement.style.left = `${this.canvas.width/2 - 100}px`;
-		playElement.style.top = `${this.canvas.height/2 + 100}px`;
+		playElement.style.left = `${this.canvas.width/2 - 40}px`;
+		playElement.style.top = `${this.canvas.height/2 + 120}px`;
+		playElement.style.width = '200px';
+		playElement.style.height = '60px';
+		playElement.style.border = '2px solid white';
+		playElement.style.borderRadius = '30px';
+		playElement.style.fontSize = '1.5rem';
+		playElement.style.fontWeight = 'bold';
+		playElement.style.color = 'white';
+		playElement.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)';
+		playElement.style.padding = '10px';
+		playElement.style.backgroundColor = 'rgba(243, 156, 18, 0.9)';
+		playElement.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+		playElement.style.cursor = 'pointer';
+		playElement.style.transition = 'all 0.3s ease';
+		playElement.style.display = 'flex';
+		playElement.style.alignItems = 'center';
+		playElement.style.justifyContent = 'center';
+		playElement.style.gap = '10px';
 
-		playElement.classList.add("border");
-		playElement.classList.add('rounded-xl');
-		playElement.style.fontSize = "2rem";
-		playElement.style.fontWeight = "bold";
-		playElement.style.color = "white";
-		playElement.style.textShadow = "2px 2px 4px black";
-		playElement.style.padding = "10px";
-		playElement.style.backgroundColor = "rgba(243, 156, 18)";
-		if(this.startFlag){
+
+		
+		// playElement.onmouseenter = () => {
+		// 	if (!this.startFlag && !this.winnerFlag) {
+		// 		playElement.style.transform = 'scale(1.05)';
+		// 		playElement.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+		// 		playElement.style.backgroundColor = 'rgba(243, 156, 18, 1)';
+		// 	}
+		// };
+		
+		// playElement.onmouseleave = () => {
+		// 	if (!this.startFlag && !this.winnerFlag) {
+		// 		playElement.style.transform = 'scale(1)';
+		// 		playElement.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+		// 		playElement.style.backgroundColor = 'rgba(243, 156, 18, 0.9)';
+		// 	}
+		// };
+
+		if (this.startFlag)// || this.startCountFlag)
+		{
 			playElement.classList.add("hidden");
-			this.canvas.style.backgroundColor = "rgba(243, 156, 18)"
+			this.canvas.style.backgroundColor = "rgba(243, 156, 18)";
 			this.canvas.classList.remove("animate-pulse");
-		}
-		else{
-			if(!this.winnerFlag){
+		} 
+		else {
+			if (!this.winnerFlag) {
 				playElement.classList.remove("hidden");
 			}
-			this.canvas.style.backgroundColor = "rgba(243, 156, 18, 0.5)"
-			this.canvas.classList.add("animate-pulse");
 		}
 	}
 
@@ -289,16 +354,25 @@ export class GameWithAiView extends View
 		this.x += this.dx;
 	}
 	draw(): void {
-		// if(!this.startFlag)
 		this.DisplayButtonPlay();
 		
-
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		this.ctx.beginPath();
+		// shadow settings
+		this.ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+		this.ctx.shadowBlur = 15;
+		this.ctx.shadowOffsetX = -this.dx * 2;
+		this.ctx.shadowOffsetY = -this.dy * 2; 
+
 		this.ctx.arc(this.x, this.y, this.rayon, 0, Math.PI * 2);
 		this.ctx.fillStyle = "white";
 		this.ctx.fill();
+
+		this.ctx.shadowColor = "rgba(0, 0, 0, 0.5)";;
+		this.ctx.shadowBlur = 10;
+		this.ctx.shadowOffsetX = 5;
+		this.ctx.shadowOffsetY = 5;
 		
 		if(this.startFlag){
 			this.moveBall();
@@ -326,11 +400,111 @@ export class GameWithAiView extends View
 
 		requestAnimationFrame(() => this.draw());
 	}
+
+	private createCountdownElements() {
+		const container = this.canvas.parentElement;
+		if (!container) return;
+		
+		this.countdownElements.forEach(el => el.remove());
+		this.countdownElements = [];
+		
+		for (let i = 1; i <= 3; i++) {
+			const countEl = document.createElement('div');
+			countEl.className = 'countdown-number';
+			countEl.textContent = i.toString();
+			countEl.style.position = 'absolute';
+			countEl.style.left = `${this.canvas.width/2 + 40}px`;
+			countEl.style.top = `${this.canvas.height/2 + 125}px`;
+			countEl.style.width = '50px';
+			countEl.style.height = '50px';
+			countEl.style.fontSize = '40px';
+			countEl.style.fontWeight = 'bold';
+			countEl.style.color = 'white';
+			countEl.style.backgroundColor = 'rgba(243, 156, 18, 0.8)';
+			countEl.style.borderRadius = '50%';
+			countEl.style.display = 'flex';
+			countEl.style.alignItems = 'center';
+			countEl.style.justifyContent = 'center';
+			countEl.style.zIndex = '100';
+			countEl.style.opacity = '0';
+			countEl.style.transform = 'scale(0)';
+			countEl.style.transition = 'all 0.3s ease-out';
+			
+			container.appendChild(countEl);
+			this.countdownElements.push(countEl);
+		}
+	}
+
+	private startCountdown(){
+		const playButton = document.getElementById("play");
+		if(!playButton) return;
+		this.createCountdownElements();
+
+		let count = 3;
+		this.countdownInterval = window.setInterval(() => {
+			if (count > 0) {
+				this.showCountdownNumber(count);
+				count--;
+			} else {
+				this.hideCountdown();
+				if (this.countdownInterval) {
+					clearInterval(this.countdownInterval);
+					this.countdownInterval = null;
+				}
+				this.startFlag = true;
+				// this.startCountFlag = true;
+				playButton.textContent = "PLAY";
+				playButton.classList.add("hidden");
+			}
+		}, 1000);
+	}
+	private showCountdownNumber(num: number) {
+		const el = this.countdownElements[num - 1];
+		if (!el) return;
+		
+		el.style.opacity = '1';
+		el.style.transform = 'scale(1)';
+		
+		setTimeout(() => {
+			el.style.opacity = '0';
+			el.style.transform = 'scale(2)';
+		}, 800);
+	}
+
+	private hideCountdown() {
+		this.countdownElements.forEach(el => {
+			el.style.opacity = '0';
+			el.style.transform = 'scale(0)';
+		});
+	}
+	// Add this CSS to your global styles or create dynamically
+	// private addPulseAnimation() {
+	// const style = document.createElement('style');
+	// style.textContent = `
+	// 	@keyframes pulse-orange {
+	// 	0% { box-shadow: 0 0 5px rgba(243, 156, 18, 0.5); }
+	// 	50% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.8); }
+	// 	100% { box-shadow: 0 0 5px rgba(243, 156, 18, 0.5); }
+	// 	}
+		
+	// 	.pulse-orange {
+	// 	animation: pulse-orange 2s infinite;
+	// 	}
+	// `;
+	// document.head.appendChild(style);
+	
+	// // Apply to canvas when not started
+	// if (!this.startFlag && !this.winnerFlag) {
+	// 	this.canvas.classList.add('pulse-orange');
+	// } else {
+	// 	this.canvas.classList.remove('pulse-orange');
+	// }
+	// }
 	onMount(): void {
+		// this.addPulseAnimation();
 		document.addEventListener('keydown', (event : KeyboardEvent) => {
 			switch(event.key)
 			{
-				
 				case 'ArrowUp':
 					if(this.yPaddleRight > 0)
 					{
@@ -345,21 +519,20 @@ export class GameWithAiView extends View
 					break;
 			}
 		});
-		// console.log("1");
 		const playButton = document.getElementById("play");
 		if (playButton) {
 			playButton.addEventListener("click", () => {
-				let x:number = 4;
-				const ll = setInterval(()=>{
-					x--;
-					playButton.textContent = x.toString();
-					// playButton.classList.add("animate-bounce");
-					if(x < 0){
-						clearInterval(ll);
-						playButton.textContent = "play";
-						this.startFlag = true;
-					}
-				},1000);
+				// let x:number = 4;
+				// const ll = setInterval(()=>{
+				// 	x--;
+				// 	playButton.textContent = x.toString();
+				// 	if(x < 0){
+				// 		clearInterval(ll);
+				// 		playButton.textContent = "play";
+				// 		this.startFlag = true;
+				// 	}
+				// },1000);
+				this.startCountdown();
 			});
 		}
 		this.draw();
