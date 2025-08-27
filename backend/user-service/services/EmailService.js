@@ -131,11 +131,7 @@ class EmailService {
     }
   }
 
-  async send2FAEnabledNotification(email, username, backupCodes) {
-    const backupCodesHtml = backupCodes.map(code => 
-      `<code style="background: #f1f5f9; padding: 5px 10px; border-radius: 4px; font-family: monospace;">${code}</code>`
-    ).join(' ');
-
+  async send2FAEnabledNotification(email, username) {
     const mailOptions = {
       from: `"Transcendence Pong" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -152,21 +148,6 @@ class EmailService {
               Great news, ${username}! Two-factor authentication has been successfully enabled on your account. 
               Your account is now more secure.
             </p>
-            
-            <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 6px; padding: 20px; margin: 20px 0;">
-              <h3 style="color: #92400e; margin-top: 0;">⚠️ Important: Save Your Backup Codes</h3>
-              <p style="color: #92400e; margin-bottom: 15px;">
-                Please save these backup codes in a secure location. You can use them to access your account 
-                if you can't receive email verification codes:
-              </p>
-              <div style="background: white; padding: 15px; border-radius: 4px; text-align: center;">
-                ${backupCodesHtml}
-              </div>
-              <p style="color: #92400e; font-size: 14px; margin-bottom: 0;">
-                Each backup code can only be used once. Store them safely!
-              </p>
-            </div>
-            
             <div style="background: #ecfdf5; border: 1px solid #22c55e; border-radius: 6px; padding: 15px;">
               <h4 style="color: #166534; margin-top: 0;">What happens next?</h4>
               <ul style="color: #166534; margin: 0;">

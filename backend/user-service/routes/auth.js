@@ -34,10 +34,6 @@ async function authRoutes(fastify, options) {
   fastify.post('/2fa/disable', { 
     preHandler: authenticate 
   }, AuthController.disable2FA);
-  
-  fastify.post('/2fa/backup-codes', { 
-    preHandler: authenticate 
-  }, AuthController.generateNewBackupCodes);
 
   fastify.get('/me', { 
     preHandler: authenticate 

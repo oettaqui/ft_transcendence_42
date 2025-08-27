@@ -304,7 +304,7 @@ export class SettingsView extends View{
                                                 <svg class="w-4 md:w-5 h-4 md:h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                                                 </svg>
-                                                <button class="!px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-orange-400 bg-orange-900/20 border border-orange-500/30 rounded-lg hover:bg-orange-900/30 transition-all duration-300 font-medium">
+                                                <button id="verify-email-btn" class="hover:cursor-pointer !px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-orange-400 bg-orange-900/20 border border-orange-500/30 rounded-lg hover:bg-orange-950/30 transition-all duration-300 font-medium">
                                                     Verify Email
                                                 </button>
                                             </div>
@@ -475,8 +475,52 @@ export class SettingsView extends View{
         this.VerificationStatus();
         this.setupBoardColorSettings();
         this.setup2fclick();
+        this.setupVerifyEmailbtn();
     }
 
+    private setupVerifyEmailbtn(): void {
+        const verifyEmailBtn = document.getElementById('verify-email-btn');
+        if (verifyEmailBtn)
+        {
+            verifyEmailBtn.addEventListener('click', () => {
+                this.handleVerifyEmail();
+            });
+        }
+
+    }
+
+    private async handleVerifyEmail(): Promise<void> {
+        try {
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                const response = await this.apiCall('/auth/resend-verification', {
+                    method: 'POST',
+                    body: JSON.stringify({ email: this.user?.email })
+                });
+                
+                if (response) {
+                    toast.dismiss(this.currentLoadingToastId!);
+                    toast.show('Verification email sent! Please check your inbox.', {
+                        type: 'info',
+                        duration: 3000
+                    });
+                }
+            } else {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show(`Please log in first, then try to resend verification from your dashboard.`, {
+                    type: 'error',
+                    duration: 4000
+                });
+            }
+        } catch (error) {
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show(`Error1: ${error}`, {
+                type: 'error',
+                duration: 4000
+            });
+        }
+    }
     private setup2fclick(): void {
         const enableButton = document.getElementById('btn-enable');
         const disableButton = document.getElementById('btn-disable');
@@ -557,24 +601,13 @@ export class SettingsView extends View{
                 if(this.user)
                     this.user.twoFactorEnabled = true;
                 this.VerificationStatus();
-                // Show backup codes if provided
-                // if (response.data.backupCodes) {
-                //     showBackupCodes(response.data.backupCodes);
-                // }
-                
-                // Refresh 2FA status
-                // setTimeout(() => {
-                //     cancel2FASetup();
-                //     load2FAStatus();
-                // }, 2000);
             }
         } catch (error) {
             toast.dismiss(this.currentLoadingToastId!);
-            toast.show(`Enabling 2FA failed: ${error}`, {
+            toast.show(`Enabling 2FA failed ${error}`, {
                 type: 'error',
                 duration: 4000
             });
-            // messageDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
         }
 
     }
@@ -593,7 +626,6 @@ export class SettingsView extends View{
         const password = formData.password;
         console.log(`password : ${password}`);
         try {
-            // messageDiv.innerHTML = '<div class="loading">Disabling 2FA...</div>';
             this.currentLoadingToastId = toast.show('Disabling 2FA...', {
                 type: 'loading',
                 duration: 0,
@@ -614,13 +646,6 @@ export class SettingsView extends View{
                     this.user.twoFactorEnabled = false;
                 this.hide2faprocess();
                 this.VerificationStatus();
-                // messageDiv.innerHTML = '<div class="success">2FA disabled successfully</div>';
-                
-                // // Refresh 2FA status
-                // setTimeout(() => {
-                //     cancel2FADisable();
-                //     load2FAStatus();
-                // }, 2000);
             }
         } catch (error) {
             toast.dismiss(this.currentLoadingToastId!);
@@ -628,7 +653,6 @@ export class SettingsView extends View{
                 type: 'error',
                 duration: 4000
             });
-            // messageDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
         }
 
     }

@@ -27,7 +27,6 @@ class User {
     this.twoFactorEnabled = data.two_factor_enabled || data.twoFactorEnabled || false;
     this.twoFactorMethod = data.two_factor_method || data.twoFactorMethod;
     this.twoFactorSecret = data.two_factor_secret || data.twoFactorSecret;
-    this.backupCodes = data.backup_codes || data.backupCodes;
     this.twoFactorCode = data.two_factor_code || data.twoFactorCode;
     this.twoFactorCodeExpires = data.two_factor_code_expires || data.twoFactorCodeExpires;
   }
@@ -193,7 +192,7 @@ class User {
     });
   }
 
-  async enable2FA(method = 'email', backupCodes = []) {
+  async enable2FA(method = 'email') {
     return new Promise((resolve, reject) => {
       db.run(
         `UPDATE users 
@@ -202,12 +201,11 @@ class User {
              backup_codes = ?,
              updated_at = CURRENT_TIMESTAMP
          WHERE id = ?`,
-        [method, JSON.stringify(backupCodes), this.id],
+        [method, JSON.stringify(), this.id],
         function(err) {
           if (err) return reject(err);
           this.twoFactorEnabled = true;
           this.twoFactorMethod = method;
-          this.backupCodes = backupCodes;
           resolve(this.changes);
         }.bind(this)
       );
@@ -230,50 +228,18 @@ class User {
           this.twoFactorEnabled = false;
           this.twoFactorMethod = null;
           this.twoFactorSecret = null;
-          this.backupCodes = null;
           resolve(this.changes);
         }.bind(this)
       );
     });
   }
 
-  static generateBackupCodes(count = 10) {
-    const codes = [];
-    for (let i = 0; i < count; i++) {
-      codes.push(crypto.randomBytes(4).toString('hex').toUpperCase());
-    }
-    return codes;
-  }
-
-  async verifyBackupCode(code) {
-    if (!this.backupCodes) return false;
-    
-    const codes = JSON.parse(this.backupCodes);
-    const codeIndex = codes.indexOf(code.toUpperCase());
-    
-    if (codeIndex === -1) return false;
-    
-    codes.splice(codeIndex, 1);
-    
-    return new Promise((resolve, reject) => {
-      db.run(
-        `UPDATE users SET backup_codes = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-        [JSON.stringify(codes), this.id],
-        function(err) {
-          if (err) return reject(err);
-          this.backupCodes = codes;
-          resolve(true);
-        }.bind(this)
-      );
-    });
-  }
 
   get2FAStatus() {
     return {
       twoFactorEnabled: this.twoFactorEnabled,
       method: this.twoFactorMethod,
       emailVerified: this.emailVerified,
-      backupCodesRemaining: this.backupCodes ? JSON.parse(this.backupCodes).length : 0
     };
   }
 
@@ -443,7 +409,7 @@ class User {
   }
 
   toJSON() {
-    const { password, emailVerificationToken, twoFactorSecret, twoFactorCode, backupCodes, ...userWithoutSensitiveData } = this;
+    const { password, emailVerificationToken, twoFactorSecret, twoFactorCode, ...userWithoutSensitiveData } = this;
     return {
       id: this.id,
       username: this.username,
