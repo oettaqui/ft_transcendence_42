@@ -3,17 +3,21 @@ import { View } from "./View";
 import { ApiService } from "../utils/ApiService";
 import { toast } from "../views/ToastNotification";
 import { User } from "../types/User";
+import { UserSearch } from "../types/UserSearch";
 
 export class DashboardLayout {
-  private view: View;
-  private router: Router;
-  private element: HTMLElement | null = null;
-  private sectionContainer: HTMLElement | null = null;
-  private isDropdownOpen = false;
-  private readonly API_BASE = "http://localhost:3000/api";
-  private apiService = new ApiService(this.API_BASE);
-  public user: User | null = null;
-  private currentLoadingToastId: string | null = null;
+    private view: View;
+    private router: Router;
+    private element: HTMLElement | null = null;
+    private sectionContainer: HTMLElement | null = null;
+    private isDropdownOpen = false;
+    private readonly API_BASE = "http://localhost:3000/api";
+    private apiService = new ApiService(this.API_BASE);
+    public user: User | null = null;
+    private currentLoadingToastId: string | null = null;
+    //search
+    private searchResultsContainer: HTMLElement | null = null;
+    private searchTimeout: number | null = null;
 
   protected eventListeners: Array<{
     element: HTMLElement | Document;
@@ -110,9 +114,9 @@ export class DashboardLayout {
 
             <!-- Search Bar - Hidden on mobile -->
             <div class="relative hidden md:flex items-center !gap-7">
-              <input type="text" class="bg-[var(--secondary)] w-[300px] lg:w-[400px] h-[36px] lg:h-[42px] border border-[var(--accent)] rounded-[8px] !pl-2 !pr-12 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all" placeholder="Search..." aria-label="Search" />
-              <div class="rounded-full w-[40px] h-[40px] lg:w-[45px] lg:h-[45px] flex justify-center items-center absolute right-[5px] top-[-2px] hover:bg-[var(--accent)] hover:text-black transition-all cursor-pointer">
-                <i class="ti ti-search text-lg lg:text-[22px]"></i>
+              <input type="text" class="bg-[var(--secondary)] w-[300px] lg:w-[400px] h-[36px] lg:h-[42px] border border-[var(--accent)] rounded-[8px] !pl-6 !pr-12 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Search..." aria-label="Search" />
+              <div class="rounded-full w-[38px] h-[38px] lg:w-[38px] lg:h-[38px] flex justify-center items-center absolute right-[5px] top-[2px] hover:bg-[var(--accent)] hover:text-white transition-all cursor-pointer">
+                <i class="ti ti-search text-lg lg:text-[18px]"></i>
               </div>
             </div>
 
@@ -139,7 +143,7 @@ export class DashboardLayout {
                   </div>
                   <div id="dropdownMenu" class="absolute right-0 top-full !mt-2 w-56 lg:w-64 bg-[var(--secondary)] border border-gray-700 rounded-lg shadow-2xl opacity-0 invisible transform translate-y-2 transition-all duration-200 ease-out z-50">
                     <div class="!py-2">
-                      <a href="#" class="flex items-center !px-3 lg:!px-4 !py-2 lg:!py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
+                      <a href="/dashboard/profile/${this.user?.id}" class="flex items-center !px-3 lg:!px-4 !py-2 lg:!py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
                         <i class="ti ti-user w-4 h-4 lg:w-5 lg:h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
                         <span>Profile</span>
                       </a>
@@ -223,7 +227,7 @@ export class DashboardLayout {
           </aside>
 
           <!-- Main Content Section -->
-          <div class="new-section w-full h-full lg:w-[80%] !p-4 lg:!p-0"></div>
+          <div class="new-section w-full h-[100%] lg:w-[80%] !p-4 lg:!p-0"></div>
         </main>
       </div>
     `;
@@ -234,7 +238,7 @@ export class DashboardLayout {
   private async fetchUser(): Promise<User | null> {
     try {
       const response = await this.apiService.get<User>("/auth/me");
-      const user = response.data.user;
+      const user = response.data?.user;
       if (user && user.avatar == null) user.avatar = "../../public/assets/default.jpg";
       this.user = user;
       return user;
@@ -243,7 +247,60 @@ export class DashboardLayout {
       return null;
     }
   }
+  private async fetchUsersSearch(query: string): Promise<void> {
+    console.log("Searching for users with query:", query);
+    try {
+      const response = await this.apiService.get<void>(`/friends/search?search_value=${encodeURIComponent(query)}`);
+      const users: UserSearch[] = response.data?.users || [];
+        console.log("Search results:", users);
+        this.renderSearchResults(users);
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+    }
+  }
 
+  private renderSearchResults(users: UserSearch[]): void {
+    if (!this.searchResultsContainer) return;
+
+    if (users.length === 0) {
+        this.searchResultsContainer.innerHTML = `<div class="!py-4 !px-6 text-gray-400 text-sm">No users found</div>`;
+        this.searchResultsContainer.style.display = "block";
+        return;
+    }
+
+    this.searchResultsContainer.innerHTML = users.map(user => `
+        <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between cursor-pointer">
+    
+        <a class="flex items-center gap-3 w-full  !transform-none !transition-none" href="/dashboard/profile/${user.id}">
+            <div class="relative">
+            <img src="${user.avatar || "../../public/assets/default.jpg"}" 
+                class="w-10 h-10 rounded-full object-cover"/>
+            ${user.isOnline 
+                ? `<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-800 rounded-full"></span>` 
+                : ""
+            }
+            </div>
+            <div class="flex flex-col  ">
+                <span class="!text-white font-semibold  hover:!text-white ">${user.username}</span>
+            </div>
+        </a>
+
+            <!-- the check will be on the fild isFriend not on the isOnline -->
+        <div>
+            ${user.isOnline 
+            ? `<button class="!px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer">
+                <i class="ti ti-message text-xl lg:text-2xl text-white"></i>
+            </button>` 
+            : `<button class="!px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer">
+                <i class="ti ti-users-plus text-xl lg:text-2xl text-white"></i>
+            </button>`}
+        </div>
+
+    </div>
+    `).join("");
+
+    this.searchResultsContainer.style.display = "block";
+    }
   private checkVerificationEmail(): void {
     const path = window.location.pathname;
     if (path.startsWith("/verify-email/")) {
@@ -353,6 +410,7 @@ export class DashboardLayout {
 
   private setupEventListeners(): void {
     this.setupDropdownEventListeners();
+    this.setupSearchBarEvent();
   }
 
   updateSidebarActiveStates(path: string): void {
@@ -423,4 +481,39 @@ export class DashboardLayout {
   protected onUnmount(): void {
     this.removeAllEventListeners();
   }
+
+  private setupSearchBarEvent(): void {
+    if (!this.element) return;
+
+    const searchInput = this.element.querySelector<HTMLInputElement>('input[placeholder="Search..."]');
+    if (!searchInput) return;
+
+    this.searchResultsContainer = document.createElement("div");
+    this.searchResultsContainer.className = `
+        absolute top-full left-0 !mt-2 w-full bg-[var(--secondary)] border border-gray-700 z-50 max-h-[280px] overflow-y-auto
+    `;
+    this.searchResultsContainer.style.display = "none";
+    searchInput.parentElement?.appendChild(this.searchResultsContainer);
+
+    const inputHandler = (e: Event) => {
+        const value = (e.target as HTMLInputElement).value.trim();
+
+        if (this.searchTimeout) clearTimeout(this.searchTimeout);
+
+        if (value.length >= 2) {
+        this.searchTimeout = window.setTimeout(() => {
+            this.fetchUsersSearch(value);
+        }, 300);
+        } else {
+        if (this.searchResultsContainer) {
+            this.searchResultsContainer.innerHTML = "";
+            this.searchResultsContainer.style.display = "none";
+        }
+        }
+    };
+
+    this.addEventListener(searchInput, "input", inputHandler);
+}
+
+
 }
