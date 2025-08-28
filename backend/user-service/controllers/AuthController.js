@@ -504,7 +504,7 @@ class AuthController {
 
   static async disable2FA(request, reply) {
     const user = request.user;
-    const { password, backupCode } = request.body;
+    const { password } = request.body;
     
     console.log("============ disable2FA process begin ==========");
     
@@ -520,8 +520,6 @@ class AuthController {
       
       if (password) {
         verified = await user.verifyPassword(password);
-      } else if (backupCode) {
-        verified = await user.verifyBackupCode(backupCode);
       }
       
       if (!verified) {

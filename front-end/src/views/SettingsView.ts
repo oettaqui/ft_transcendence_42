@@ -5,8 +5,15 @@ import { router } from "../app/router-instance.ts";
 import { User } from "../types/User";
 import { ApiService } from "../utils/ApiService";
 
-interface twoFactorormData {
+interface twoFactorformData {
     password: string;
+}
+
+
+interface passwordformData {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
 }
 
 interface ApiResponse {
@@ -215,7 +222,7 @@ export class SettingsView extends View{
                                         </svg>
                                         Change Password
                                     </h3>
-                                    <form class="!space-y-4 md:!space-y-5 xl:!space-y-6">
+                                    <form id="form-update-password" class="!space-y-4 md:!space-y-5 xl:!space-y-6">
                                         <!-- First two inputs in one row -->
                                         <div class="grid grid-cols-1 md:grid-cols-2 !gap-3 md:!gap-4">
                                             <!-- Current Password -->
@@ -223,9 +230,9 @@ export class SettingsView extends View{
                                                 <label for="currentPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
                                                     Current Password
                                                 </label>
-                                                <input type="password" id="currentPassword" name="currentPassword"
+                                                <input type="password" id="currentPassword" name="currentPassword" required
                                                     class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
-                                                    placeholder="Enter current password">
+                                                    placeholder="Enter current password" >
                                             </div>
 
                                             <!-- New Password -->
@@ -233,7 +240,7 @@ export class SettingsView extends View{
                                                 <label for="newPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
                                                     New Password
                                                 </label>
-                                                <input type="password" id="newPassword" name="newPassword"
+                                                <input type="password" id="newPassword" name="newPassword" required
                                                     class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
                                                     placeholder="Enter new password">
                                             </div>
@@ -244,9 +251,9 @@ export class SettingsView extends View{
                                             <label for="confirmPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
                                                 Confirm Password
                                             </label>
-                                            <input type="password" id="confirmPassword" name="confirmPassword"
+                                            <input type="password" id="confirmPassword" name="confirmPassword" required
                                                 class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
-                                                placeholder="Confirm new password">
+                                                placeholder="Confirm new password" >
                                         </div>
 
                                         <!-- Action Buttons -->
@@ -255,7 +262,7 @@ export class SettingsView extends View{
                                                 class="!px-4 md:!px-5 xl:!px-6 !py-2 md:!py-3 text-[11px] md:text-[12px] xl:text-[14px] cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
                                                 Cancel
                                             </button>
-                                            <button type="button" id="save-board-btn"
+                                            <button id="update-password" type="button" id="save-board-btn"
                                                 class="!px-6 md:!px-7 xl:!px-8 !py-2 md:!py-3 bg-[var(--accent)] cursor-pointer text-[11px] md:text-[12px] xl:text-[14px] text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                                                 Save Changes
                                             </button>
@@ -475,7 +482,42 @@ export class SettingsView extends View{
         this.VerificationStatus();
         this.setupBoardColorSettings();
         this.setup2fclick();
+        this.updatePasswordclick();
         this.setupVerifyEmailbtn();
+    }
+    private getFormData<T>(formId: string, fields: (keyof T)[]): T {
+        const form = document.getElementById(formId) as HTMLFormElement;
+        const formData = new FormData(form);
+        
+        const result = {} as T;
+        
+        fields.forEach(field => {
+            result[field] = formData.get(field as string) as any;
+        });
+        
+        return result;
+    }
+
+    private clearFormInputs(formId: string, fieldNames: string[]): void {
+        const form = document.getElementById(formId) as HTMLFormElement;
+        
+        fieldNames.forEach(fieldName => {
+            const input = form.querySelector(`[name="${fieldName}"]`) as HTMLInputElement;
+            if (input) {
+                input.value = '';
+            }
+    });
+}
+    
+    private updatePasswordclick(): void {
+        const updatePassword = document.getElementById('update-password');
+        if (updatePassword)
+        {
+            updatePassword.addEventListener('click', () => {
+                this.handleUpdatePassword();
+            });
+        }
+
     }
 
     private setupVerifyEmailbtn(): void {
@@ -487,6 +529,64 @@ export class SettingsView extends View{
             });
         }
 
+    }
+
+    private async handleUpdatePassword(): Promise<void> {
+        toast.dismiss(this.currentLoadingToastId!);
+        const formData = this.getFormData<passwordformData>('form-update-password', ['currentPassword','newPassword','confirmPassword']);
+        const currentPassword = formData.currentPassword;
+        const newPassword = formData.newPassword;
+        const confirmPassword = formData.confirmPassword;
+        console.log(`currentPassword : ${currentPassword}`);
+        console.log(`newPassword : ${newPassword}`);
+        console.log(`confirmPassword : ${confirmPassword}`);
+        if(newPassword !== confirmPassword)
+        {
+            toast.dismiss(this.currentLoadingToastId!);
+            if(confirmPassword)
+            {
+                toast.show(`new Password and confirm Password are not matching`, {
+                    type: 'error',
+                    duration: 4000
+                });
+            }
+            else
+            {
+                toast.show(`confirm Password is necessary`, {
+                    type: 'error',
+                    duration: 4000
+                });
+            }
+            this.clearFormInputs('form-update-password', ['newPassword', 'confirmPassword']);
+            return ;
+        }
+        try {
+            this.currentLoadingToastId = toast.show('Updating Password...', {
+                type: 'loading',
+                duration: 0,
+                dismissible: true
+            });
+            const response = await this.apiCall('/auth/password', {
+                method: 'PUT',
+                body: JSON.stringify({ currentPassword,newPassword })
+            });
+            
+            if (response) {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show('Password Updated successfully!', {
+                    type: 'success',
+                    duration: 3000
+                });
+                this.clearFormInputs('form-update-password', ['currentPassword', 'newPassword', 'confirmPassword']);
+            }
+        } catch (error) {
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show(`Updating Password: ${error}`, {
+                type: 'error',
+                duration: 4000
+            });
+            this.clearFormInputs('form-update-password', ['currentPassword', 'newPassword', 'confirmPassword']);
+        }
     }
 
     private async handleVerifyEmail(): Promise<void> {
@@ -612,17 +712,10 @@ export class SettingsView extends View{
 
     }
 
-    private getFormData(): twoFactorormData {
-        const form = document.getElementById('2fForm') as HTMLFormElement;
-        const formData = new FormData(form);
-        
-        return {
-            password: formData.get('password') as string,
-        };
-    }
+
     private async handleDisable2f(): Promise<void> {
         toast.dismiss(this.currentLoadingToastId!);
-        const formData = this.getFormData();
+        const formData = this.getFormData<twoFactorformData>('2fForm', ['password']);
         const password = formData.password;
         console.log(`password : ${password}`);
         try {
