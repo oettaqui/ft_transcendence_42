@@ -135,7 +135,7 @@ class EmailService {
     const mailOptions = {
       from: `"Transcendence Pong" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: '2FA Enabled - Your Backup Codes - Transcendence Pong',
+      subject: '2FA Enabled - Transcendence Pong',
       html: `
         <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
           <div style="text-align: center; margin-bottom: 30px;">
