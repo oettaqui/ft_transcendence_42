@@ -478,11 +478,10 @@ class AuthController {
     }
     
     try {
-      const backupCodes = User.generateBackupCodes();
       
-      await user.enable2FA(method, backupCodes);
+      await user.enable2FA(method);
       
-      await EmailService.send2FAEnabledNotification(user.email, user.username, backupCodes);
+      await EmailService.send2FAEnabledNotification(user.email, user.username);
       
       console.log(`✅ 2FA enabled for user: ${user.username}`);
       
@@ -490,7 +489,6 @@ class AuthController {
         success: true,
         message: '2FA enabled successfully!',
         data: {
-          backupCodes: backupCodes,
           twoFactorEnabled: true,
           method: method
         }
@@ -506,7 +504,7 @@ class AuthController {
 
   static async disable2FA(request, reply) {
     const user = request.user;
-    const { password, backupCode } = request.body;
+    const { password } = request.body;
     
     console.log("============ disable2FA process begin ==========");
     
@@ -522,8 +520,6 @@ class AuthController {
       
       if (password) {
         verified = await user.verifyPassword(password);
-      } else if (backupCode) {
-        verified = await user.verifyBackupCode(backupCode);
       }
       
       if (!verified) {
@@ -566,48 +562,6 @@ class AuthController {
     };
   }
 
-  static async generateNewBackupCodes(request, reply) {
-    const user = request.user;
-    const { password } = request.body;
-    
-    console.log("============ generateNewBackupCodes process begin ==========");
-    
-    if (!user.twoFactorEnabled) {
-      return reply.code(400).send({
-        success: false,
-        error: '2FA is not enabled'
-      });
-    }
-    
-    try {
-      const isValidPassword = await user.verifyPassword(password);
-      if (!isValidPassword) {
-        return reply.code(401).send({
-          success: false,
-          error: 'Invalid password'
-        });
-      }
-      
-      const newBackupCodes = User.generateBackupCodes();
-      await user.enable2FA(user.twoFactorMethod, newBackupCodes);
-      
-      console.log(`✅ New backup codes generated for user: ${user.username}`);
-      
-      return {
-        success: true,
-        message: 'New backup codes generated successfully',
-        data: {
-          backupCodes: newBackupCodes
-        }
-      };
-    } catch (error) {
-      console.error('Generate backup codes error:', error);
-      return reply.code(500).send({ 
-        success: false, 
-        error: 'Failed to generate new backup codes' 
-      });
-    }
-  }
 
   static async googleVerify(request, reply) {
     const { token } = request.body;
