@@ -692,5 +692,15 @@ header a:hover {
     backdrop-filter: blur(24px);
 }
 
-
-
+.vs-pseudo::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0.75rem;   /* offset */
+    top: 0.9rem;
+    z-index: -1;
+    color: rgba(0,0,0,0.85);
+    filter: blur(9px);
+    transform: skewX(-6deg) scale(1.02);
+    letter-spacing: -0.08em;
+    pointer-events: none;
+  }

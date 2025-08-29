@@ -23,7 +23,6 @@ export class GameWithAiView extends View
 	textWiner: HTMLElement;
 	startFlag: boolean;
 	winnerFlag: boolean;
-	startCountFlag: boolean;
 	private countdownElements: HTMLElement[] = [];
 	private countdownInterval: number | null = null;
 
@@ -44,7 +43,6 @@ export class GameWithAiView extends View
 		this.score = [0, 0];
 		this.startFlag = false;
 		this.winnerFlag = false;
-		this.startCountFlag = false;
 
 		// // paddle 
 		// this.xPaddleLeft = 0;
@@ -81,15 +79,15 @@ export class GameWithAiView extends View
 		);
 		element.innerHTML = `<div class="flex flex-col items-center justify-center gap-4 w-[90%] h-full !m-auto ">
 			<div class="border-2 border-white w-full h-[80px] !mb-4 flex items-center gap-4 rounded-xl">
-				<div class="w-full text-center">user1</div>
+				<div class="w-full text-center">AI</div>
 				<div id="score-left" class="w-full text-center">${this.score[0]}</div>
 				<div id="timer" class="w-full text-center">${this.TimerElement}</div>
 				<div id="score-right" class="w-full text-center">${this.score[1]}</div>
-				<div class="w-full text-center">user2</div>
+				<div class="w-full text-center">ME</div>
 			</div>
 			<canvas id="canvas" class="border-2 border-white/20 rounded-xl" style="background: rgb(243, 156, 18);"></canvas>
 			<div id="goal-msg" class="absolute hidden text-4xl font-bold" >goaal!</div>
-			<button type="button" id="play" class="w-[30%] h-[20%] hidden animate-border" ><span id="text-play-id"> play </span></button>
+			<button type="button" id="play" class="w-[30%] h-[20%] absolute " ><span id="text-play-id"> play </span></button>
 			<div id="end-game" class="absolute hidden text-4xl border-white"></div>
 		</div>`
 		this.canvas = element.querySelector('#canvas') as HTMLCanvasElement;
@@ -159,6 +157,7 @@ export class GameWithAiView extends View
 		const play = document.getElementById("play");
 
 		if(!winermsg) return;
+		if(!play) return;
 
 		winermsg.style.left = `${this.canvas.width/2}px`;
 		winermsg.style.top = `${this.canvas.height/2 + 100}px`;
@@ -187,10 +186,9 @@ export class GameWithAiView extends View
 			this.Timer();
 			winermsg.classList.add("hidden");
 			this.winnerFlag = false;
+			play.classList.remove("!hidden");
 		}, 3000);
 	}
-
-
 
 	private FormatTime(second: number): string{
 		const minutes = Math.floor(second / 60);
@@ -333,7 +331,7 @@ export class GameWithAiView extends View
 		// 	}
 		// };
 
-		if (this.startFlag)// || this.startCountFlag)
+		if (this.startFlag)
 		{
 			playElement.classList.add("hidden");
 			this.canvas.style.backgroundColor = "rgba(243, 156, 18)";
@@ -420,7 +418,7 @@ export class GameWithAiView extends View
 			countEl.style.fontSize = '40px';
 			countEl.style.fontWeight = 'bold';
 			countEl.style.color = 'white';
-			countEl.style.backgroundColor = 'rgba(243, 156, 18, 0.8)';
+			countEl.style.backgroundColor = 'rgba(220, 202, 171, 0.8)';
 			countEl.style.borderRadius = '50%';
 			countEl.style.display = 'flex';
 			countEl.style.alignItems = 'center';
@@ -442,6 +440,7 @@ export class GameWithAiView extends View
 
 		let count = 3;
 		this.countdownInterval = window.setInterval(() => {
+			playButton.classList.add("!hidden");
 			if (count > 0) {
 				this.showCountdownNumber(count);
 				count--;
@@ -452,9 +451,8 @@ export class GameWithAiView extends View
 					this.countdownInterval = null;
 				}
 				this.startFlag = true;
-				// this.startCountFlag = true;
+				this.resetBall(true);
 				playButton.textContent = "PLAY";
-				playButton.classList.add("hidden");
 			}
 		}, 1000);
 	}
@@ -477,29 +475,6 @@ export class GameWithAiView extends View
 			el.style.transform = 'scale(0)';
 		});
 	}
-	// Add this CSS to your global styles or create dynamically
-	// private addPulseAnimation() {
-	// const style = document.createElement('style');
-	// style.textContent = `
-	// 	@keyframes pulse-orange {
-	// 	0% { box-shadow: 0 0 5px rgba(243, 156, 18, 0.5); }
-	// 	50% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.8); }
-	// 	100% { box-shadow: 0 0 5px rgba(243, 156, 18, 0.5); }
-	// 	}
-		
-	// 	.pulse-orange {
-	// 	animation: pulse-orange 2s infinite;
-	// 	}
-	// `;
-	// document.head.appendChild(style);
-	
-	// // Apply to canvas when not started
-	// if (!this.startFlag && !this.winnerFlag) {
-	// 	this.canvas.classList.add('pulse-orange');
-	// } else {
-	// 	this.canvas.classList.remove('pulse-orange');
-	// }
-	// }
 	onMount(): void {
 		// this.addPulseAnimation();
 		document.addEventListener('keydown', (event : KeyboardEvent) => {
