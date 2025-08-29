@@ -1,8 +1,10 @@
 export interface Friend {
     id: number;
-    name: string;
+    firstName: string;
+    lastName: string;
+    username: string;
     avatar: string;
-    lastSeen?: string;
+    lastLogin?: string;
     status?: string;
 }
 
