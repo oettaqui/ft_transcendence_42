@@ -1,12 +1,12 @@
 import { View } from "../app/View";
-
+import { User } from "../types/User";
 export class GameView extends View{
     
     constructor(){
         super()
     }
     
-   render(): HTMLElement {
+render(user: User | null): Promise<HTMLElement | null> {
     const element = document.createElement('section');
     element.classList.add(
         'bg-[rgba(220,219,219,0.08)]',

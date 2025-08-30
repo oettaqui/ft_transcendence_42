@@ -8,16 +8,26 @@ import { User } from "../types/User";
 export class HomeView extends View{
     private API_BASE = 'http://localhost:3000/api';
     private currentTab: string = 'all';
-    private friendsData: FriendsData;
+    private friendsData: Promise<FriendsData>;
+    // private friendsData: FriendsData = { all: [], online: [], requests: [], pending: [] };
     private apiService = new ApiService(this.API_BASE);
     private user: User | null = null;
 
     constructor(){
         super();
         this.friendsData = this.getStaticFriendsData();
+        // this.initFriendsData();
         
     }
-    render(user: User | null): HTMLElement {
+
+    // private async initFriendsData(): Promise<void> {
+    //     this.friendsData = await this.getStaticFriendsData();
+    // }
+
+    
+
+    render(user: User | null): HTMLElement { 
+        console.log("===========> ",this.friendsData);
         const element = document.createElement('section');
         element.classList.add('bg-[var(--primary)]');
         element.classList.add('w-full');
@@ -159,6 +169,7 @@ export class HomeView extends View{
 
     public onMount(): void {
         if (this.user){
+
             this.animateProgress();
             this.chatWinLose();
             this.animateNumber('balanceValue', this.user?.stats.coins, 1000);
@@ -167,11 +178,15 @@ export class HomeView extends View{
             this.animateNumber('friendsCount', 5, 1000);
             this.animateNumber('globalRank', this.user?.stats.userRank, 1000);
             this.animateNumber('winRate', this.user?.stats.winRate, 1000, 1);
+    
+           
             this.setupTabFiltering();
             this.loadFriendsData('all');
         }
        
     }
+
+    
 
     private setupTabFiltering(): void {
         const buttons = document.querySelectorAll('.tab-btn');
@@ -187,7 +202,7 @@ export class HomeView extends View{
             });
         });
     }
-    
+
     private switchTab(category: string): void {
         
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -200,35 +215,66 @@ export class HomeView extends View{
         this.loadFriendsData(category);
     }
 
+    // private async loadFriendsData(category: string): Promise<void> {
+    //     this.showFriendsLoading();
+
+    //     try {
+    //         let data: Friend[] = [];
+            
+            
+    //         switch(category) {
+    //             case 'all':
+                    
+    //                 data = this.friendsData.all;
+    //                 console.log(data);
+    //                 break;
+    //             case 'online':
+                    
+    //                 data = this.friendsData.online;
+    //                 break;
+    //             case 'requests':
+                   
+    //                 data = this.friendsData.requests;
+    //                 break;
+    //             case 'pending':
+                    
+    //                 data = this.friendsData.pending;
+    //                 break;
+    //         }
+
+            
+    //         await new Promise(resolve => setTimeout(resolve, 300));
+            
+    //         this.renderFriends(data, category);
+    //     } catch (error) {
+    //         console.error('Error loading friends data:', error);
+    //         this.showFriendsNoData();
+    //     }
+    // }
+
     private async loadFriendsData(category: string): Promise<void> {
         this.showFriendsLoading();
 
         try {
+            const resolvedData = await this.friendsData;
             let data: Friend[] = [];
-            
-            
-            switch(category) {
-                case 'all':
-                    
-                    data = this.friendsData.all;
-                    break;
-                case 'online':
-                    
-                    data = this.friendsData.online;
-                    break;
-                case 'requests':
-                   
-                    data = this.friendsData.requests;
-                    break;
-                case 'pending':
-                    
-                    data = this.friendsData.pending;
-                    break;
+
+            switch (category) {
+            case 'all':
+                data = resolvedData.all;
+                break;
+            case 'online':
+                data = resolvedData.online;
+                break;
+            case 'requests':
+                data = resolvedData.requests;
+                break;
+            case 'pending':
+                data = resolvedData.pending;
+                break;
             }
 
-            
             await new Promise(resolve => setTimeout(resolve, 300));
-            
             this.renderFriends(data, category);
         } catch (error) {
             console.error('Error loading friends data:', error);
@@ -257,6 +303,10 @@ export class HomeView extends View{
     }
 
     private renderFriendItem(friend: Friend, category: string): string {
+        if (!friend) return '';
+        if (!friend.avatar){
+            friend.avatar = "../../public/assets/default.jpg";
+        }
         switch(category) {
             case 'requests':
                 return this.renderRequestItem(friend);
@@ -275,7 +325,7 @@ export class HomeView extends View{
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover" />
                     <div class="flex flex-col">
-                        <span class="text-sm font-medium">${friend.name}</span>
+                        <span class="text-sm font-medium">${friend.username} </span>
                         <span class="text-xs text-[var(--text-secondary)]">Sent you a request</span>
                     </div>
                 </div>
@@ -297,7 +347,7 @@ export class HomeView extends View{
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover" />
                     <div class="flex flex-col">
-                        <span class="text-sm font-medium">${friend.name}</span>
+                        <span class="text-sm font-medium">${friend.username}</span>
                         <span class="flex items-center justify-start gap-3">
                             <span class="block w-[8px] h-[8px] rounded-full bg-[var(--success)]"></span>
                             <span class="block text-xs text-[var(--text-secondary)] !pt-1">Online</span>
@@ -317,7 +367,7 @@ export class HomeView extends View{
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <div class="font-medium text-sm">${friend.name}</div>
+                        <div class="font-medium text-sm">${friend.username}</div>
                         <div class="text-xs text-[var(--text-secondary)]">Request sent</div>
                     </div>
                 </div>
@@ -334,11 +384,11 @@ export class HomeView extends View{
     private renderAllItem(friend: Friend): string {
         return `
             <div class="flex items-center justify-between bg-[var(--primary)] rounded-xl !py-3 !mt-3">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 !px-2">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
                     <div>
-                        <div class="font-medium text-sm">${friend.name}</div>
-                        <div class="text-xs text-[var(--text-secondary)]">${friend.lastSeen}</div>
+                        <div class="font-medium text-sm">${friend.username}</div>
+                        <!-- <div class="text-xs text-[var(--text-secondary)]">${friend.lastLogin}</div> -->
                     </div>
                 </div>
                 <button class="message-btn !mr-4 flex items-center" data-id="${friend.id}">
@@ -422,47 +472,62 @@ export class HomeView extends View{
     }
 
 
-    private getStaticFriendsData(): FriendsData {
+    private async getStaticFriendsData(): Promise<FriendsData> {
         return {
-            all: [
-                {
-                    id: 1,
-                    name: "Oussama Ettaqui",
-                    avatar: "/public/assets/oettaqui.jpeg",
-                    lastSeen: "Last seen 2h ago"
-                },
-                {
-                    id: 2,
-                    name: "Ahmed Hassan",
-                    avatar: "/public/assets/bchokri.jpeg",
-                    lastSeen: "Last seen 1d ago"
-                }
-            ],
-            online: [
-                {
-                    id: 1,
-                    name: "Oussama Ettaqui",
-                    avatar: "/public/assets/oettaqui.jpeg",
-                    status: "online"
-                }
-            ],
-            requests: [
-                {
-                    id: 5,
-                    name: "Badr Chokri",
-                    avatar: "/public/assets/bchokri.jpeg"
-                }
-            ],
-            pending: [
-                {
-                    id: 7,
-                    name: "New Friend",
-                    avatar: "/public/assets/yakhay.jpeg"
-                }
-            ]
+            all: await this.getAllFriends(),
+            online: await this.getAllFriends(),
+            requests: await this.getAllFriends(),
+            pending: await this.getAllFriends(),
+            // all: [
+            //     {
+            //         id: 1,
+            //         name: "Oussama Ettaqui",
+            //         avatar: "/public/assets/oettaqui.jpeg",
+            //         lastSeen: "Last seen 2h ago"
+            //     },
+            //     {
+            //         id: 2,
+            //         name: "Ahmed Hassan",
+            //         avatar: "/public/assets/bchokri.jpeg",
+            //         lastSeen: "Last seen 1d ago"
+            //     }
+            // ],
+            // online: [
+            //     {
+            //         id: 1,
+            //         name: "Oussama Ettaqui",
+            //         avatar: "/public/assets/oettaqui.jpeg",
+            //         status: "online"
+            //     }
+            // ],
+            // requests: [
+            //     {
+            //         id: 5,
+            //         name: "Badr Chokri",
+            //         avatar: "/public/assets/bchokri.jpeg"
+            //     }
+            // ],
+            // pending: [
+            //     {
+            //         id: 7,
+            //         name: "New Friend",
+            //         avatar: "/public/assets/yakhay.jpeg"
+            //     }
+            // ]
         };
     }
-
+    private async getAllFriends(): Promise<Friend[]> {
+        try {
+            const response = await this.apiService.get<Friend[]>('/users');
+            // const response = await this.apiService.get<Friend[]>('/');
+            // this just a test to display users from the api
+            console.log('Fetched friends:', response.data?.users || []);
+            return response.data?.users || [];
+        } catch (error) {
+            console.error('Error fetching friends:', error);
+            return [];
+        }
+    }
    
     
     

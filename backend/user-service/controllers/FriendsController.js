@@ -15,6 +15,7 @@ class FriendsController {
     
     try {
       const users = await User.search(query, request.user.id, parseInt(limit));
+      const friends = await Friendship.getUserFriends(request.user.id);
       
       const formattedUsers = users.map(user => ({
         id: user.id,
@@ -23,7 +24,8 @@ class FriendsController {
         lastName: user.lastName,
         avatar: user.avatar,
         isOnline: user.isOnline,
-        lastLogin: user.lastLogin
+        lastLogin: user.lastLogin,
+        is_friend:friends.some(friend => friend.id === user.id)
       }));
       
       return { 
