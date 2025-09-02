@@ -287,7 +287,7 @@ export class DashboardLayout {
 
             <!-- the check will be on the fild isFriend not on the isOnline -->
         <div>
-            ${user.isOnline 
+            ${user.is_friend 
             ? `<button class="!px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer">
                 <i class="ti ti-message text-xl lg:text-2xl text-white"></i>
             </button>` 

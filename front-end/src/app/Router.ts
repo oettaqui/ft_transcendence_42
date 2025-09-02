@@ -70,6 +70,7 @@ export class Router {
       const allowedDashboardRoutes = [
         "/dashboard",
         "/dashboard/game",
+        "/dashboard/game/localgame",
         "/dashboard/chat",
         "/dashboard/settings",
         "/dashboard/profile",

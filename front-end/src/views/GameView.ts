@@ -64,12 +64,12 @@ render(user: User | null): Promise<HTMLElement | null> {
                                     </div>
                                 </div>
                                 <div class="flex !gap-3">
-                                    <button class="flex-1 bg-[var(--text)] hover:bg-[var(--accent)] text-[var(--secondary)] hover:text-white !py-3 !px-6 rounded-lg font-semibold text-sm transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center !gap-2">
+                                    <a href="/dashboard/game/localgame" class="flex-1 bg-[var(--text)] hover:bg-[var(--accent)] text-[var(--secondary)] hover:text-white !py-3 !px-6 rounded-lg font-semibold text-sm transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center !gap-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M8 5v10l8-5-8-5z"/>
                                         </svg>
                                         Play Now
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

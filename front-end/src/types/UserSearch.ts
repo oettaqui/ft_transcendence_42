@@ -6,4 +6,5 @@ export interface UserSearch {
   avatar: string;
   isOnline: number; 
   lastLogin: string;
+  is_friend: number; 
 }
