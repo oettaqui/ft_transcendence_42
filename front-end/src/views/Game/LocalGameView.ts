@@ -265,14 +265,13 @@ private ensureRoundStyles() {
 			</div>
 
 			<!-- Timer & Round -->
-			<div class="flex flex-col items-center w-[20%]">
-				<div class="flex items-center gap-2">
-					
+			<div class="flex flex-col items-center w-[20%] gap-2">
+				<div class="flex items-center">
 					<div class="flex flex-col items-center">
 						<span id="timer" class="text-2xl font-mono text-green-400 drop-shadow-md">00:00</span>
 					</div>
 				</div>
-				<button id="pause-btn" aria-label="Pause" class="opacity-0 !px-2 !mb-1 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center ">
+				<button id="pause-btn" aria-label="Pause" class="opacity-0 !px-2 !py-1 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center ">
 					<i id="pause-icon" class="ti ti-player-pause-filled text-2xl"></i>
 				</button>
 			</div>
@@ -285,11 +284,11 @@ private ensureRoundStyles() {
 			</div>
 
 
-			<canvas id="canvas" class="border-2 border-white/20 rounded-xl !mb-1" style="background: rgb(243, 156, 18);"></canvas>
+			<canvas id="canvas" class="border-2 border-white/20 rounded-xl !mb-1" style="background: rgb(243, 156, 18); "></canvas>
 			<div id="goal-msg" class="absolute  hidden text-4xl font-bold" >goaal!</div>
 			<div id="end-game" class="absolute hidden text-4xl border-white"></div>
-			<div id="pause-game-icon" class="absolute hidden border-white !mt-16">
-				<i class="ti ti-player-pause-filled text-8xl text-white/70 drop-shadow-2xl"></i>
+			<div id="pause-game-icon" class="absolute hidden border-white bg-white/20 rounded-xl !mt-24">
+				<i class="ti ti-player-pause-filled text-8xl text-white/80 drop-shadow-2xl"></i>
 			</div>
 			<!-- <div id="play" class="absolute flex flex-col !p-6 gap-4 items-center border rounded-2xl " style="background: rgb(123, 96, 53)" >
 				<div class="flex items-center  gap-3">
@@ -788,6 +787,11 @@ private AnimationGoal() {
 		
 		const pauseOverlay = document.getElementById('pause-game-icon');
 		if (pauseOverlay) pauseOverlay.classList.remove('hidden');
+		const canvasParent = this.canvas;
+		if (!canvasParent) return;
+		canvasParent.classList.add('opacity-60');
+		canvasParent.classList.remove('opacity-100');
+		
 		
 
 	}
@@ -809,6 +813,11 @@ private AnimationGoal() {
 		if (icon) icon.className = 'ti ti-player-pause text-2xl';
 		const pauseOverlay = document.getElementById('pause-game-icon');
 		if (pauseOverlay) pauseOverlay.classList.add('hidden');
+		const canvasParent = this.canvas;
+		if (!canvasParent) return;
+		canvasParent.classList.remove('opacity-60');
+		canvasParent.classList.add('opacity-100');
+		
 	}
 
 	private togglePause() {
