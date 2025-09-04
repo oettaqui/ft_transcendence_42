@@ -1,1 +1,0 @@
-Put global types or interfaces here for organization
