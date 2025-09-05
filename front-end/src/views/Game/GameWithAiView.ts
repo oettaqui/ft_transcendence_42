@@ -717,7 +717,7 @@ export class GameWithAiView extends View {
         if (!this.canvas || this.x === null || this.y === null || this.yPaddleLeft === null) return;
 
         // On hard, AI reacts as soon as the ball crosses the center.
-        const detectionRange = this.level === 'hard' ? this.canvas.width : this.canvas.width / 3;
+        const detectionRange = this.level === 'hard' ? 300 : 200;
         
         // AI only moves if the ball is coming towards it and is in its detection range
         if (this.dx < 0 && this.x < detectionRange) {
@@ -816,8 +816,7 @@ export class GameWithAiView extends View {
         const items = ['3', '2', '1', 'GO!'];
         items.forEach((text) => {
             const countEl = document.createElement('div');
-            // countEl.textContent = text;
-            // Object.assign(countEl.style, { position: 'absolute', transform: 'translate(-50%, -50%) scale(0)', top: '55.4%' , left: '', fontSize: '90px', fontWeight: '900', color: '#fff', textShadow: '0 4px 10px rgba(0,0,0,0.5)', zIndex: '100', opacity: '0', transition: 'all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)' });
+          
             if (text === 'GO!') {
 				countEl.textContent = 'GO!';
 				countEl.style.position = 'absolute';
