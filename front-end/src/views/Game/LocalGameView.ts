@@ -247,7 +247,7 @@ private ensureRoundStyles() {
 			'overflow-hidden'
 		);
 		element.innerHTML = `
-		<div id="game-view" class="flex hidden flex-col items-center justify-center gap-2 w-[88%] h-full !m-auto">
+		<div id="game-view" class="flex hidden flex-col items-center justify-between gap-2 w-[88%] h-full !m-auto">
 			<div class="relative">
 				<div class="w-[100px] h-[100px] absolute top-[-18px] right-[415px] !m-2 flex flex-col items-center bg-[var(--accent)] !pr-4 !pt-3  shadow-lg backdrop-blur-md" style="clip-path: polygon(99% 0, 50% 51%, 0 100%,0 0%);">
 					<span class="text-[10px] font-black text-[var(--secondary)] !ml-2 tracking-widest uppercase">Round</span>
@@ -256,53 +256,40 @@ private ensureRoundStyles() {
 			</div>
 				
 			<!-- Scoreboard & Timer -->
-			<div class="w-full h-full flex items-center justify-between !px-6 rounded-2xl  border border-white/20 shadow-lg backdrop-blur-md ">
+			<div class="w-full h-[15%] flex items-center justify-between !px-6 rounded-2xl  border border-white/20 shadow-lg backdrop-blur-md !mt-5">
 			
-			<!-- Player 1 -->
-			<div class="flex flex-col items-center text-white w-[20%]">
-				<span id="user1" class="text-lg font-semibold tracking-wide">User 1</span>
-				<span id="score-left" class="text-3xl font-black text-amber-400 drop-shadow-lg">${this.score[0]}</span>
-			</div>
-
-			<!-- Timer & Round -->
-			<div class="flex flex-col items-center w-[20%] gap-2">
-				<div class="flex items-center">
-					<div class="flex flex-col items-center">
-						<span id="timer" class="text-2xl font-mono text-green-400 drop-shadow-md">00:00</span>
-					</div>
+				<!-- Player 1 -->
+				<div class="flex flex-col items-center text-white w-[20%]">
+					<span id="user1" class="text-lg font-semibold tracking-wide">User 1</span>
+					<span id="score-left" class="text-3xl font-black text-amber-400 drop-shadow-lg">${this.score[0]}</span>
 				</div>
-				<button id="pause-btn" aria-label="Pause" class="opacity-0 !px-2 !py-1 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center ">
-					<i id="pause-icon" class="ti ti-player-pause-filled text-2xl"></i>
-				</button>
+
+				<!-- Timer & Round -->
+				<div class="flex flex-col items-center w-[20%] gap-2">
+					<div class="flex items-center">
+						<div class="flex flex-col items-center">
+							<span id="timer" class="text-2xl font-mono text-green-400 drop-shadow-md">00:00</span>
+						</div>
+					</div>
+					<button id="pause-btn" aria-label="Pause" class="opacity-0 !px-2 !py-1 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center ">
+						<i id="pause-icon" class="ti ti-player-pause-filled text-2xl"></i>
+					</button>
+				</div>
+
+				<!-- Player 2 -->
+				<div class="flex flex-col items-center text-white w-[20%]">
+					<span id="user2" class="text-lg font-semibold tracking-wide">User 2</span>
+					<span id="score-right" class="text-3xl font-black text-amber-400 drop-shadow-lg">${this.score[1]}</span>
+				</div>
 			</div>
 
-			<!-- Player 2 -->
-			<div class="flex flex-col items-center text-white w-[20%]">
-				<span id="user2" class="text-lg font-semibold tracking-wide">User 2</span>
-				<span id="score-right" class="text-3xl font-black text-amber-400 drop-shadow-lg">${this.score[1]}</span>
-			</div>
-			</div>
 
-
-			<canvas id="canvas" class="border-2 border-white/20 rounded-xl !mb-1" style="background: rgb(243, 156, 18); "></canvas>
+			<canvas id="canvas" class="border-2 border-white/20 rounded-xl !mb-10 h-[70%] w-full" style="background: rgb(243, 156, 18); "></canvas>
 			<div id="goal-msg" class="absolute  hidden text-4xl font-bold" >goaal!</div>
 			<div id="end-game" class="absolute hidden text-4xl border-white"></div>
-			<div id="pause-game-icon" class="absolute hidden border-white bg-white/20 rounded-xl !mt-24">
+			<div id="pause-game-icon" class="absolute hidden border-white bg-white/20 rounded-xl top-[54%] !m-auto">
 				<i class="ti ti-player-pause-filled text-8xl text-white/80 drop-shadow-2xl"></i>
 			</div>
-			<!-- <div id="play" class="absolute flex flex-col !p-6 gap-4 items-center border rounded-2xl " style="background: rgb(123, 96, 53)" >
-				<div class="flex items-center  gap-3">
-					<span class="w-20">user 1:</span>
-					<input class="border border-white flex-1 rounded-lg" type="text" id="user1text" minlength="4" maxlength="8">
-				</div>
-				<div class="flex items-center  gap-3">
-					<span class="w-20">user 2:</span>
-					<input class="border border-white flex-1 rounded-lg" type="text" id="user2text" minlength="4" maxlength="8">
-				</div>
-				<div>
-					<button type="button" id="playbutton-" class="class="w-[30%] h-[20%]">play</button>
-				</div>
-			</div> -->
 		</div>
 
 		<!-- form for names -->
@@ -973,12 +960,12 @@ private AnimationGoal() {
 		const cy = this.canvas.height / 2;
 		this.ctx.beginPath();
 		this.ctx.fillStyle = "white";
-		this.ctx.arc(cx, cy, this.canvas.height / 3, 0, Math.PI * 2);
+		this.ctx.arc(cx, cy, this.canvas.height / 4, 0, Math.PI * 2);
 		this.ctx.fill();
 
 		this.ctx.beginPath();
 		this.ctx.fillStyle = 'rgb(243, 156, 18)';
-		this.ctx.arc(cx, cy, this.canvas.height / 3 - 2, 0, Math.PI * 2);
+		this.ctx.arc(cx, cy, this.canvas.height / 4 - 3, 0, Math.PI * 2);
 		this.ctx.fill();
 
 		
