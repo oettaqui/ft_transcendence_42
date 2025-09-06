@@ -25,5 +25,7 @@ export interface User {
   updatedAt: string;
   emailVerified: number; 
   twoFactorEnabled: boolean;
+  googleId:number,
+  intraId:number,
   stats: UserStats;
 }

@@ -16,7 +16,6 @@ fastify.register(require('@fastify/jwt'), {
   secret: JWT_SECRET
 });
 
-// Register routes
 fastify.register(require('./routes/auth'), { prefix: '/api/auth' });
 fastify.register(require('./routes/friends'), { prefix: '/api/friends' });
 fastify.register(require('./routes/users'), { prefix: '/api/users' });

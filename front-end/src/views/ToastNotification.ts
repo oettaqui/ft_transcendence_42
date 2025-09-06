@@ -37,8 +37,6 @@ export class ToastNotification {
             fixed top-4 right-1/4 z-[99999] flex flex-col gap-3 max-w-sm w-full
             pointer-events-none
         `.trim();
-        
-        // Add inline styles to ensure proper positioning
         container.style.position = 'fixed';
         container.style.top = '1rem';
         container.style.right = '20%';
@@ -49,8 +47,7 @@ export class ToastNotification {
         container.style.flexDirection = 'column';
         container.style.gap = '0.75rem';
         container.style.pointerEvents = 'none';
-        
-        // Add custom styles for animations
+
         const style = document.createElement('style');
         style.textContent = `
             #toast-container {
@@ -155,12 +152,10 @@ export class ToastNotification {
         const element = this.createToastElement(toast);
         this.container.appendChild(element);
 
-        // Trigger enter animation
         requestAnimationFrame(() => {
             element.classList.add('toast-enter');
         });
 
-        // Auto-dismiss if duration is set
         if (toast.duration > 0) {
             this.startProgressBar(element, toast.duration);
             toast.timeoutId = window.setTimeout(() => {
@@ -180,7 +175,6 @@ export class ToastNotification {
             ${this.getTypeClasses(toast.type)}
         `.trim();
 
-        // Add inline styles for extra security
         element.style.pointerEvents = 'auto';
         element.style.position = 'relative';
         element.style.width = '100%';
@@ -275,7 +269,6 @@ export class ToastNotification {
         const progressBar = element.querySelector('.toast-progress-bar') as HTMLElement;
         if (progressBar) {
             progressBar.style.width = '100%';
-            // Start the animation after a small delay
             setTimeout(() => {
                 progressBar.style.width = '0%';
                 progressBar.style.transition = `width ${duration}ms linear`;
@@ -291,43 +284,34 @@ export class ToastNotification {
         const element = document.getElementById(`toast-${id}`);
         if (!element) return;
 
-        // Clear timeout if exists
         if (toast.timeoutId) {
             clearTimeout(toast.timeoutId);
         }
-
-        // Add exit animation
         element.classList.remove('toast-enter');
         element.classList.add('toast-exit');
 
-        // Remove after animation
         setTimeout(() => {
             element.remove();
             this.toasts.delete(id);
         }, 300);
     }
 
-    // Update existing toast (useful for loading states)
+
     update(id: string, message: string, options: Partial<ToastOptions> = {}): void {
         const toast = this.toasts.get(id);
         if (!toast) return;
 
         const element = document.getElementById(`toast-${id}`);
         if (!element) return;
-
-        // Update toast data
         toast.message = message;
         if (options.type) toast.type = options.type;
         if (options.duration !== undefined) toast.duration = options.duration;
         if (options.dismissible !== undefined) toast.dismissible = options.dismissible;
 
-        // Clear existing timeout
         if (toast.timeoutId) {
             clearTimeout(toast.timeoutId);
             toast.timeoutId = undefined;
         }
-
-        // Update element
         element.className = `
             relative pointer-events-auto bg-opacity-95 backdrop-blur-sm 
             rounded-lg shadow-lg border !p-4 flex items-start gap-3 min-h-[60px]
@@ -349,13 +333,11 @@ export class ToastNotification {
             ${progressBar}
         `;
 
-        // Re-add event listener for dismiss button
         if (toast.dismissible) {
             const closeBtn = element.querySelector('.toast-dismiss');
             closeBtn?.addEventListener('click', () => this.dismiss(toast.id));
         }
 
-        // Set new timeout if duration is specified
         if (toast.duration > 0) {
             this.startProgressBar(element, toast.duration);
             toast.timeoutId = window.setTimeout(() => {
@@ -364,7 +346,6 @@ export class ToastNotification {
         }
     }
 
-    // Clear all toasts
     clearAll(): void {
         this.toasts.forEach((_, id) => this.dismiss(id));
     }
@@ -374,5 +355,4 @@ export class ToastNotification {
     }
 }
 
-// Export singleton instance for easy access
 export const toast = ToastNotification.getInstance();

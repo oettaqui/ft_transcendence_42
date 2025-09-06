@@ -473,6 +473,7 @@ export class HomeView extends View{
 
 
     private async getStaticFriendsData(): Promise<FriendsData> {
+        // if()
         return {
             all: await this.getAllFriends(),
             online: await this.getAllFriends(),

@@ -1,6 +1,7 @@
 import { View } from "../app/View";
 import { toast } from "./ToastNotification";
 import { router } from "../app/router-instance.ts";
+import { wsService } from "../utils/WebSocketService";
 
 interface LoginFormData {
     email: string;
@@ -191,6 +192,8 @@ export class LoginView extends View {
 
                         if (result.success) {
                             localStorage.setItem('token', result.data!.token);
+                            // 
+                            wsService.connect();
                             toast.dismiss(this.currentLoadingToastId!);
                             toast.show('Google authentication successful!', {
                                 type: 'success',
@@ -311,7 +314,8 @@ export class LoginView extends View {
 
             if (response.success) {
                 localStorage.setItem('token', response.data!.token);
-                
+                // 
+                wsService.connect();
                 if (this.currentLoadingToastId) {
                     setTimeout(() => {
                         toast.show('Login successful!', { 
@@ -435,7 +439,8 @@ private handleIntraAuthCallback = async (event: MessageEvent): Promise<void> => 
         if (response.success) {
             // Store token
             localStorage.setItem('token', response.data!.token);
-
+            // 
+            wsService.connect();
             console.log(`dimiss the completing notice : ${this.currentLoadingToastId}`);
             if (this.currentLoadingToastId) {
                 toast.dismiss(this.currentLoadingToastId);

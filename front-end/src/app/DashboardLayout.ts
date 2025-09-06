@@ -4,6 +4,7 @@ import { ApiService } from "../utils/ApiService";
 import { toast } from "../views/ToastNotification";
 import { User } from "../types/User";
 import { UserSearch } from "../types/UserSearch";
+import { wsService } from "../utils/WebSocketService";
 
 export class DashboardLayout {
     private view: View;
@@ -402,6 +403,7 @@ export class DashboardLayout {
   }
 
   private handleLogout(): void {
+    wsService.disconnect();
     this.closeDropdown();
     this.logout();
     if (localStorage.getItem('token')) localStorage.removeItem('token');

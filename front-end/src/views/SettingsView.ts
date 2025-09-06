@@ -4,6 +4,7 @@ import { View } from "../app/View";
 import { router } from "../app/router-instance.ts";
 import { User } from "../types/User";
 import { ApiService } from "../utils/ApiService";
+import { wsService } from "../utils/WebSocketService";
 
 interface twoFactorformData {
     password: string;
@@ -34,8 +35,10 @@ export class SettingsView extends View{
     private apiService = new ApiService(this.API_BASE);
     protected user: User | null = null;
     private currentLoadingToastId: string | null = null;
+    private wsListeners: (() => void)[] = [];
     constructor(){
-        super()
+        super();
+        // this.setupWebSocketListeners();
     }
 
     render(user: User | null) : HTMLElement{
@@ -316,6 +319,25 @@ export class SettingsView extends View{
                                                 </button>
                                             </div>
                                         </div>
+                                    <div id="provider-authenticated" class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
+                                        <div class="flex items-center !gap-3 md:!gap-4">
+                                            <div class="flex items-center !gap-3 md:!gap-4">
+                                                <div class="w-2 md:w-3 h-2 md:h-3 bg-green-500 rounded-full"></div>
+                                                <div>
+                                                    <p class="text-[11px] md:text-[13px] xl:text-[14px] text-white font-medium">Provider Authentication</p>
+                                                    <p class="text-[10px] md:text-[11px] xl:text-[12px] text-green-400">No Email Verification Required</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center !gap-2 md:!gap-3">
+                                            <svg class="w-4 md:w-5 h-4 md:h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                            </svg>
+                                            <span class="!px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-green-400 bg-green-900/20 border border-green-500/30 rounded-lg font-medium">
+                                                Authenticated
+                                            </span>
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
 
@@ -386,6 +408,25 @@ export class SettingsView extends View{
                                                     </button>
                                                 </div>
                                             </div>
+                                        <div id="Two-Factor-Provider" class="flex items-center justify-between !p-3 md:!p-4 bg-white/5 rounded-xl border border-white/10">
+                                            <div class="flex items-center !gap-3 md:!gap-4">
+                                                <div class="flex items-center !gap-2 md:!gap-3">
+                                                    <div class="w-2 md:w-3 h-2 md:h-3 bg-blue-500 rounded-full"></div>
+                                                    <div>
+                                                        <p class="text-white text-[11px] md:text-[13px] xl:text-[14px] font-medium">Two-Factor Authentication</p>
+                                                        <p class="text-[10px] md:text-[11px] xl:text-[12px] text-blue-400">Handled by Provider</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center !gap-2 md:!gap-3">
+                                                <svg class="w-4 md:w-5 h-4 md:h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                                </svg>
+                                                <span class="!px-3 md:!px-4 !py-1 md:!py-2 text-[10px] md:text-[11px] xl:text-[12px] text-blue-400 bg-blue-900/20 border border-blue-500/30 rounded-lg font-medium">
+                                                    Protected
+                                                </span>
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -510,12 +551,27 @@ export class SettingsView extends View{
 }
     
     private updatePasswordclick(): void {
-        const updatePassword = document.getElementById('update-password');
-        if (updatePassword)
+        if(this.user)
         {
-            updatePassword.addEventListener('click', () => {
-                this.handleUpdatePassword();
-            });
+            if(this.user.googleId || this.user.intraId)
+            {
+                const form = document.getElementById('form-update-password') as HTMLFormElement;
+                if (form) {
+                    Array.from(form.elements).forEach((element: Element) => {
+                        (element as HTMLInputElement).disabled = true;
+                    });
+                }
+            }
+            else
+            {
+                const updatePassword = document.getElementById('update-password');
+                if (updatePassword)
+                {
+                    updatePassword.addEventListener('click', () => {
+                        this.handleUpdatePassword();
+                    });
+                }
+            }
         }
 
     }
@@ -827,33 +883,47 @@ export class SettingsView extends View{
     }
 
     protected VerificationStatus() {
-        if(this.user)
-            console.log(`this.user.twoFactorEnabled = ${this.user.twoFactorEnabled}`)
+        const twoFactorProvider = document.querySelector('#Two-Factor-Provider');
+        const providerAuthenticated = document.querySelector('#provider-authenticated');
         const notVerifiedEmail = document.querySelector('#not-verified-email');
         const verifiedEmail = document.querySelector('#verified-email');
         const twoFactorDisabled = document.querySelector('#Two-Factor-Disabled');
         const twoFactorActive = document.querySelector('#Two-Factor-Active');
         if(this.user)
         {
-            if(this.user.emailVerified)
+            if(this.user.googleId || this.user.intraId)
             {
                 notVerifiedEmail?.classList.add('hidden');
-                verifiedEmail?.classList.remove('hidden');
-            }
-            else
-            {
                 verifiedEmail?.classList.add('hidden');
-                notVerifiedEmail?.classList.remove('hidden');
-            }
-            if(this.user.twoFactorEnabled)
-            {
                 twoFactorDisabled?.classList.add('hidden');
-                twoFactorActive?.classList.remove('hidden');
+                twoFactorActive?.classList.add('hidden');
+                providerAuthenticated?.classList.remove('hidden');
+                twoFactorProvider?.classList.remove('hidden');
             }
             else
             {
-                twoFactorActive?.classList.add('hidden');
-                twoFactorDisabled?.classList.remove('hidden');
+                providerAuthenticated?.classList.add('hidden');
+                twoFactorProvider?.classList.add('hidden');
+                if(this.user.emailVerified)
+                {
+                    notVerifiedEmail?.classList.add('hidden');
+                    verifiedEmail?.classList.remove('hidden');
+                }
+                else
+                {
+                    verifiedEmail?.classList.add('hidden');
+                    notVerifiedEmail?.classList.remove('hidden');
+                }
+                if(this.user.twoFactorEnabled)
+                {
+                    twoFactorDisabled?.classList.add('hidden');
+                    twoFactorActive?.classList.remove('hidden');
+                }
+                else
+                {
+                    twoFactorActive?.classList.add('hidden');
+                    twoFactorDisabled?.classList.remove('hidden');
+                }
             }
         }
     }
@@ -937,4 +1007,17 @@ export class SettingsView extends View{
         if (!boardPreview) return;
         boardPreview.style.background = color;
     }
+
+    // private setupWebSocketListeners(): void {
+    //     // Profile updates - refresh user data display
+    //     const profileListener = (data: any) => {
+    //         if (this.user && data.userId === this.user.id) {
+    //             toast.show('password_updated!', { type: 'success' });
+    //             // Update user profile display if needed
+    //             // this.refreshUserDisplay();
+    //         }
+    //     };
+    //     wsService.on('password_updated', profileListener);
+    //     this.wsListeners.push(() => wsService.off('profile_updated', profileListener));
+    // }
 }

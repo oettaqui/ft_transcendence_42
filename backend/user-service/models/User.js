@@ -425,7 +425,9 @@ class User {
       updatedAt: this.updatedAt,
       emailVerified: this.emailVerified,
       twoFactorEnabled: this.twoFactorEnabled,
-      twoFactorMethod: this.twoFactorMethod
+      twoFactorMethod: this.twoFactorMethod,
+      googleId:this.googleId,
+      intraId:this.intraId,
     };
   }
 }
