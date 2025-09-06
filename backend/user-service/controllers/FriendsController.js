@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Friendship = require('../models/Friendship');
+const webSocketService = require('../services/WebSocketService');
 
 class FriendsController {
   static async searchUsers(request, reply) {
@@ -16,6 +17,7 @@ class FriendsController {
     try {
       const users = await User.search(query, request.user.id, parseInt(limit));
       const friends = await Friendship.getUserFriends(request.user.id);
+      
       const formattedUsers = users.map(user => ({
         id: user.id,
         username: user.username,
@@ -65,6 +67,14 @@ class FriendsController {
       }
       
       const requestId = await Friendship.sendRequest(request.user.id, friendId);
+      //
+      await webSocketService.notifyFriendRequest(request.user.id, friendId, {
+        id: request.user.id,
+        username: request.user.username,
+        firstName: request.user.firstName,
+        lastName: request.user.lastName,
+        avatar: request.user.avatar
+      });
       console.log(`Friend request sent: ${request.user.username} -> ${friendUser.username}`);
       
       return { 
@@ -100,7 +110,13 @@ class FriendsController {
       const friendUser = await User.findById(friendId);
       
       console.log(`Friend request accepted: ${request.user.username} accepted ${friendUser.username}`);
-      
+      await webSocketService.notifyFriendRequestAccepted(friendId, request.user.id, {
+        id: request.user.id,
+        username: request.user.username,
+        firstName: request.user.firstName,
+        lastName: request.user.lastName,
+        avatar: request.user.avatar
+      });
       return { 
         success: true, 
         data: { 
@@ -144,7 +160,14 @@ class FriendsController {
           error: 'Friend request not found' 
         });
       }
-      
+      const friendUser = await User.findById(friendId);
+      await webSocketService.notifyFriendRequestRejected(friendId, request.user.id, {
+        id: request.user.id,
+        username: request.user.username,
+        firstName: request.user.firstName,
+        lastName: request.user.lastName,
+        avatar: request.user.avatar
+      });
       console.log(`Friend request declined: ${request.user.username} declined request`);
       
       return { 
@@ -214,7 +237,7 @@ class FriendsController {
       }
       
       console.log(`Friendship removed: ${request.user.username} unfriended ${friendUser.username}`);
-      
+      await webSocketService.notifyFriendRemoved(request.user.id, parseInt(friendId));
       return { 
         success: true, 
         data: { message: `Removed ${friendUser.username} from friends` }
@@ -341,8 +364,10 @@ class FriendsController {
     try {
       const changes = await request.user.updateOnlineStatus(isOnline);
       
+      const friends = await Friendship.getUserFriends(request.user.id);
+      const friendIds = friends.map(friend => friend.id);
+      await webSocketService.notifyFriendStatusChange(request.user.id, friendIds, isOnline ? 'online' : 'offline');
       console.log(`User ${request.user.username} is now ${isOnline ? 'online' : 'offline'}`);
-      
       return { 
         success: true, 
         data: { 

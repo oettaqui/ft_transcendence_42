@@ -38,6 +38,9 @@ export class GameWithAiView extends View {
     private user: User | null = null;
     private level: 'medium' | 'hard' | null = null;
 
+    private colorTheme: string = '';
+	private computedColor: string = '';
+
     constructor() {
         super();
         this.dx = 2;
@@ -200,6 +203,13 @@ export class GameWithAiView extends View {
         if (this.user && !this.user.avatar) {
             this.user.avatar = "../../../public/assets/default.jpg";
         }
+         const colorClasses = {
+            'Bios': 'var(--bios)',
+            'Freax': 'var(--freax)',
+            'Commodore': 'var(--commodore)',
+            'Pandora': 'var(--pandora)',
+        };
+        this.colorTheme = colorClasses[this.user?.coalition] || 'var(--accent)'; 
 
         const element = document.createElement('section');
         element.className = 'bg-[var(--secondary)] rounded-4xl border border-white/10 w-full h-[80%] !mt-16 flex flex-col lg:flex-row items-center lg:items-stretch justify-between lg:!gap-0 !p-2 overflow-hidden';
@@ -213,10 +223,10 @@ export class GameWithAiView extends View {
                 <p class="text-xl text-white/60 font-medium">Choose Your Difficulty</p>
             </div>
             <div class="flex flex-col sm:flex-row items-center gap-6">
-                <button id="level-medium" class="enhanced-btn secondary-btn !cursor-pointer w-60">
+                <button id="level-medium" style="border: 2px solid ${this.colorTheme}" class="enhanced-btn !cursor-pointer w-60">
                     <span class="flex items-center justify-center !mt-1 text-xl">MEDIUM</span>
                 </button>
-                <button id="level-hard" class="enhanced-btn secondary-btn !cursor-pointer w-60">
+                <button id="level-hard" style="border: 2px solid ${this.colorTheme}" class="enhanced-btn !cursor-pointer w-60">
                     <span class="flex items-center justify-center !mt-1 text-xl">HARD</span>
                 </button>
             </div>
@@ -226,7 +236,7 @@ export class GameWithAiView extends View {
             <div class="relative z-10 flex flex-col items-center w-full h-full justify-center !mt-8">
                 <div class="flex flex-col lg:flex-row items-center gap-12 !mt-4">
                     <div class="relative group w-[350px] !p-6 flex flex-col justify-center items-center">
-                        <img src="../../public/assets/ai.jpg" alt="AI" class="w-32 h-32 !mb-4 rounded-full border-4 border-[var(--accent)] object-cover shadow-lg">
+                        <img style="border: 3px solid ${this.colorTheme}" src="../../public/assets/ai.jpg" alt="AI" class="w-32 h-32 !mb-4 rounded-full  object-cover shadow-lg">
                         <div class="text-3xl font-bold text-white/80">AI Bot</div>
                     </div>
                     <div class="relative flex flex-col items-center">
@@ -235,12 +245,12 @@ export class GameWithAiView extends View {
                         </div>
                     </div>
                     <div class="relative group w-[350px] !p-6 flex flex-col justify-center items-center">
-                        <img src="${this.user?.avatar}" alt="Player" class="w-32 h-32 !mb-4 rounded-full border-4 border-[var(--accent)] object-cover shadow-lg">
+                        <img style="border: 3px solid ${this.colorTheme}" src="${this.user?.avatar}" alt="Player" class="w-32 h-32 !mb-4 rounded-full  object-cover shadow-lg">
                         <div class="text-3xl font-bold text-white/80">${this.user?.username}</div>
                     </div>
                 </div>
                 <div role="status" class="flex justify-center items-center !mt-10">
-                    <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin fill-amber-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg aria-hidden="true" style="fill: ${this.colorTheme}" class="w-12 h-12 text-gray-200 animate-spin " viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
                 </div>
             </div>
@@ -248,21 +258,21 @@ export class GameWithAiView extends View {
 
         <div id="game-view" class="hidden flex-col items-center justify-between gap-2 w-[88%] h-full !m-auto ">
             <div class="relative">
-                 <div class="w-[100px] h-[100px] absolute top-[-18px] right-[415px] !m-2 flex flex-col items-center bg-[var(--accent)] !pr-4 !pt-3  shadow-lg backdrop-blur-md" style="clip-path: polygon(99% 0, 50% 51%, 0 100%,0 0%);">
+                 <div class="w-[100px] h-[100px] absolute top-[-18px] right-[415px] !m-2 flex flex-col items-center !pr-4 !pt-3  shadow-lg backdrop-blur-md" style="clip-path: polygon(99% 0, 50% 51%, 0 100%,0 0%); background: ${this.colorTheme}">
                     <span class="text-[10px] font-black text-[var(--secondary)] !ml-2 tracking-widest uppercase">Round</span>
                     <span id="round-display" class="text-xl font-bold text-[var(--secondary)] drop-shadow-md ">1</span>
                 </div>
             </div>
             <div class="w-full h-[15%] flex items-center justify-between !px-6 rounded-2xl border border-white/20 shadow-lg backdrop-blur-md !mt-5">
                 <div class="flex flex-col items-center text-white w-[20%]">
-                    <div class="flex items-center gap-2">
-                        <img src="../../public/assets/ai.jpg" alt="AI" class="w-8 h-8 rounded-full border-2 border-[var(--accent)] object-cover">
+                    <div class="flex items-center gap-2 !pr-24">
+                        <img src="../../public/assets/ai.jpg" alt="AI" style="border: 2px solid ${this.colorTheme}" class="w-8 h-8 rounded-full object-cover">
                         <span class="text-lg font-semibold tracking-wide">AI</span>
                     </div>
-                    <span id="score-left" class="text-3xl font-black text-amber-400 drop-shadow-lg">${this.score[0]}</span>
+                    <span id="score-left" style="color: ${this.colorTheme}" class="text-3xl font-black  drop-shadow-lg">${this.score[0]}</span>
                 </div>
                 <div class="flex flex-col items-center w-[20%] gap-2">
-                    <span id="timer" class="text-2xl font-mono text-green-400 drop-shadow-md">00:00</span>
+                    <span id="timer" class="text-2xl font-mono text-white drop-shadow-md">00:00</span>
                     <button id="pause-btn" aria-label="Pause" class="opacity-0 !px-2 !py-1 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center">
                         <i id="pause-icon" class="ti ti-player-pause-filled text-2xl"></i>
                     </button>
@@ -270,16 +280,16 @@ export class GameWithAiView extends View {
                 <div class="flex flex-col items-center text-white w-[20%]">
                     <div class="flex items-center gap-2">
                          <span class="text-lg font-semibold tracking-wide">${this.user?.username}</span>
-                        <img src="${this.user?.avatar}" alt="Player" class="w-8 h-8 rounded-full border-2 border-[var(--accent)] object-cover">
+                        <img src="${this.user?.avatar}" style="border: 2px solid ${this.colorTheme}" alt="Player" class="w-8 h-8 rounded-full object-cover">
                     </div>
-                    <span id="score-right" class="text-3xl font-black text-amber-400 drop-shadow-lg">${this.score[1]}</span>
+                    <span id="score-right" style="color: ${this.colorTheme}" class="text-3xl font-black  drop-shadow-lg">${this.score[1]}</span>
                 </div>
             </div>
             
             <div id="game" class="relative w-full h-[70%] flex items-center justify-center !mb-10">
-                <canvas id="canvas" class="border-2 border-white/20 rounded-xl  h-full w-full opacity-50" style="background: rgb(243, 156, 18);"></canvas>
+                <canvas id="canvas" class="border-2 border-white/20 rounded-xl  h-full w-full opacity-50" style="background: ${this.colorTheme}"></canvas>
                 <div id="play-button-container" class="absolute inset-0 flex items-center justify-center">
-                    <button id="play-button" class="enhanced-btn secondary-btn !cursor-pointer">
+                    <button id="play-button" class="enhanced-btn !cursor-pointer" style="border: 2px solid ${this.colorTheme}">
                          <span class="flex items-center justify-center !mt-1 text-2xl"> PLAY <i class="ti ti-player-play-filled !pb-1 !pl-4 text-3xl"></i></span>
                     </button>
                 </div>
@@ -770,7 +780,7 @@ export class GameWithAiView extends View {
         this.ctx.arc(cx, cy, this.canvas.height / 4, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.beginPath();
-        this.ctx.fillStyle = 'rgb(243, 156, 18)';
+        this.ctx.fillStyle = this.computedColor;
         this.ctx.arc(cx, cy, this.canvas.height / 4 - 3, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.beginPath();
@@ -899,6 +909,10 @@ export class GameWithAiView extends View {
         const gameView = document.getElementById("game-view");
         const playButton = document.getElementById("play-button");
         const pauseBtn = document.getElementById("pause-btn");
+        if (this.colorTheme) {
+            const varName = this.colorTheme.slice(4, -1); 
+            this.computedColor = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+        }
         const handleLevelSelect = (selectedLevel: 'medium' | 'hard') => {
             this.level = selectedLevel;
             levelSelection?.classList.add("hidden");

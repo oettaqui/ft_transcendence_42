@@ -476,8 +476,8 @@ export class HomeView extends View{
         return {
             all: await this.getAllFriends(),
             online: await this.getAllFriends(),
-            requests: await this.getAllFriends(),
-            pending: await this.getAllFriends(),
+            requests: await this.getRequests(),
+            pending: await this.getPanding()
             // all: [
             //     {
             //         id: 1,
@@ -521,10 +521,35 @@ export class HomeView extends View{
             const response = await this.apiService.get<Friend[]>('/users');
             // const response = await this.apiService.get<Friend[]>('/');
             // this just a test to display users from the api
-            console.log('Fetched friends:', response.data?.users || []);
+            console.log('Fetched all friends:', response.data?.users || []);
             return response.data?.users || [];
         } catch (error) {
             console.error('Error fetching friends:', error);
+            return [];
+        }
+    }
+
+    private async getPanding(): Promise<Friend[]> {
+        try {
+            const response = await this.apiService.get<Friend[]>('/friends/requests/sent');
+            // const response = await this.apiService.get<Friend[]>('/');
+            // this just a test to display users from the api
+            console.log('Fetched friends Panding:', response.data?.requests || []);
+            return response.data?.requests || [];
+        } catch (error) {
+            console.error('Error fetching friends:', error);
+            return [];
+        }
+    }
+    private async getRequests(): Promise<Friend[]> {
+        try {
+            const response = await this.apiService.get<Friend[]>('/friends/requests/pending');
+            // const response = await this.apiService.get<Friend[]>('/');
+            // this just a test to display users from the api
+            console.log('Fetched friends request:', response.data?.requests || []);
+            return response.data?.requests || [];
+        } catch (error) {
+            console.error('Error fetching request:', error);
             return [];
         }
     }

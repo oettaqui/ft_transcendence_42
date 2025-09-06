@@ -26,9 +26,13 @@ export class ApiService {
 
         const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method: 'POST',
+        // headers: {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': `Bearer ${token}`
+        // },
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
         },
         body: JSON.stringify(body)
         });

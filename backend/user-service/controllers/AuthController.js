@@ -3,6 +3,8 @@ const UserStats = require('../models/UserStats');
 const { OAuth2Client } = require('google-auth-library');
 const EmailService = require('../services/EmailService');
 const axios = require('axios');
+const webSocketService = require('../services/WebSocketService');
+const { handleUserLogin, handleUserLogout } = require('../middleware/userStatus');
 
 
 const COALITIONS = {
@@ -25,7 +27,7 @@ function getRandomCoalition() {
 const googleClient = new OAuth2Client('394069384301-1b8bqmnv35qkfgk9icofqc5gthofupvk.apps.googleusercontent.com');
 const INTRA_CONFIG = {
   clientId: process.env.INTRA_CLIENT_ID || 'u-s4t2ud-1fd9ab391aacad4bdf8b9e1b81bae0f5d4c31d0b591d66249aa50a9ac852d727',
-  clientSecret: process.env.INTRA_CLIENT_SECRET || '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',
+  clientSecret: process.env.INTRA_CLIENT_SECRET || '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',
   redirectUri: process.env.INTRA_REDIRECT_URI || 'http://localhost:8080/oauth-callback.html',
   authUrl: 'https://api.intra.42.fr/oauth/authorize',
   tokenUrl: 'https://api.intra.42.fr/oauth/token',
@@ -57,7 +59,6 @@ class AuthController {
         error: 'Username must be at least 3 characters long' 
       });
     }
-    
     try {
       const existingUser = await User.findByEmail(email);
       if (existingUser) {
@@ -179,8 +180,13 @@ class AuthController {
         }
       }
       
-      await user.updateOnlineStatus(true);
+
+
+
       
+      await user.updateOnlineStatus(true);
+      //
+      await handleUserLogin(user.id, user.toJSON());
       const token = request.server.jwt.sign(
         { userId: user.id, email: user.email, username: user.username }, 
         { expiresIn: '7d' }
@@ -223,6 +229,7 @@ class AuthController {
   }
 
   static async intraCallback(request, reply) {
+    console.log("========== its heeeeeeerrrrrr =============");
     const { code } = request.body;
 
     if (!INTRA_CONFIG.clientId || !INTRA_CONFIG.clientSecret || !INTRA_CONFIG.redirectUri) {
@@ -312,15 +319,6 @@ class AuthController {
       //  timeout: 20500
       // });
       const intraUser_coalitions = userResponse_coalition.data;
-      // const intraUser_email = userResponse_email.data;
-      // console.log("=-=-=-=-=-=-==-=-=-=-=-=-=");
-      // console.log(intraUser_coalitions);
-      // console.log("=-=-=-=-=-=-==-=-=-=-=-=-=");
-      // console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+");
-      // // console.log(intraUser_email);
-      // console.log( intraUser_coalitions[0].name);
-      // console.log( intraUser_coalitions[0].color);
-      // console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+");
       console.log("Received Intra user data:", {
         id: intraUser.id,
         login: intraUser.login,
@@ -357,7 +355,8 @@ class AuthController {
       }
 
       await user.updateOnlineStatus(true);
-
+      //
+      await handleUserLogin(user.id, user.toJSON()); 
       const jwtToken = request.server.jwt.sign(
         {
           userId: user.id,
@@ -628,7 +627,9 @@ class AuthController {
       }
       
       await user.updateOnlineStatus(true);
-      
+      // 
+      console.log("=========== should now enter ============");
+      await handleUserLogin(user.id, user.toJSON());
       const jwtToken = request.server.jwt.sign(
         { 
           userId: user.id, 
@@ -704,7 +705,7 @@ class AuthController {
       if (changes === 0) {
         return reply.code(404).send({ success: false, error: 'User not found' });
       }
-      
+      await webSocketService.notifyProfileUpdate(request.user.id, { firstName, lastName, avatar });
       return { 
         success: true, 
         data: { 
@@ -752,7 +753,7 @@ class AuthController {
       if (changes === 0) {
         return reply.code(404).send({ success: false, error: 'User not found' });
       }
-      
+      await webSocketService.notifyPasswordupdate(request.user.id);
       return { 
         success: true, 
         data: { message: 'Password updated successfully' }
@@ -768,7 +769,8 @@ class AuthController {
 
     try {
       await request.user.updateOnlineStatus(false);
-      
+      // 
+      await handleUserLogout(request.user.id);
       console.log(`User ${request.user.username} logged out`);
       return { 
         success: true, 
