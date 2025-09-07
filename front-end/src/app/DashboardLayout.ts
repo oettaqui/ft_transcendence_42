@@ -114,7 +114,7 @@ export class DashboardLayout {
             </h1>
 
             <div class="relative hidden md:flex items-center !gap-7">
-              <input type="text" class="bg-[var(--secondary)] w-[300px] lg:w-[400px] h-[36px] lg:h-[42px] border border-[var(--accent)] rounded-[8px] !pl-6 !pr-12 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Search..." aria-label="Search" />
+              <input type="text" class="bg-[var(--secondary)] w-[300px] lg:w-[400px] h-[36px] lg:h-[42px] border border-[var(--accent)] rounded-[8px] !pl-6 !pr-12 focus:outline-none focus:ring-0 focus:ring-[var(--accent)] transition-transform focus:scale-97" placeholder="Search..." aria-label="Search" />
               <div class="rounded-full w-[38px] h-[38px] lg:w-[38px] lg:h-[38px] flex justify-center items-center absolute right-[5px] top-[2px] hover:bg-[var(--accent)] hover:text-white transition-all cursor-pointer">
                 <i class="ti ti-search text-lg lg:text-[18px]"></i>
               </div>
@@ -145,11 +145,11 @@ export class DashboardLayout {
                         <i class="ti ti-user w-4 h-4 lg:w-5 lg:h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
                         <span>Profile</span>
                       </a>
-                      <a href="#" class="flex items-center !px-3 lg:!px-4 !py-2 lg:!py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
+                      <a href="/dashboard" class="flex items-center !px-3 lg:!px-4 !py-2 lg:!py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
                         <i class="ti ti-chart-histogram w-4 h-4 lg:w-5 lg:h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
                         <span>Analytics</span>
                       </a>
-                      <a href="#" class="flex items-center !px-3 lg:!px-4 !py-2 lg:!py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
+                      <a href="/dashboard/settings" class="flex items-center !px-3 lg:!px-4 !py-2 lg:!py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors group">
                         <i class="ti ti-settings w-4 h-4 lg:w-5 lg:h-5 !mr-3 text-gray-400 group-hover:text-[var(--accent)]"></i>
                         <span>Settings</span>
                       </a>
@@ -256,49 +256,59 @@ export class DashboardLayout {
         }
     }
 
-    private renderSearchResults(users: UserSearch[]): void {
-        if (!this.searchResultsContainer) return;
 
-        if (users.length === 0) {
-            this.searchResultsContainer.innerHTML = `<div class="!py-4 !px-6 text-gray-400 text-sm">No users found</div>`;
-            this.searchResultsContainer.style.display = "block";
-            return;
-        }
 
-        this.searchResultsContainer.innerHTML = users.map(user => `
-          <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between cursor-pointer">
-          
-          <a class="flex items-center gap-3 w-full  !transform-none !transition-none" href="/dashboard/profile/${user.id}">
-          <div class="relative">
+private renderSearchResults(users: UserSearch[]): void {
+    if (!this.searchResultsContainer) return;
+
+    if (users.length === 0) {
+        this.searchResultsContainer.innerHTML = `<div class="!py-4 !px-6 text-gray-400 text-sm">No users found</div>`;
+        this.searchResultsContainer.style.display = "block";
+        return;
+    }
+
+    this.searchResultsContainer.innerHTML = users.map(user => `
+      <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between cursor-pointer">
+      
+      <a class="flex items-center gap-3 w-full !transform-none !transition-none" href="/dashboard/profile/${user.id}">
+        <div class="relative">
           <img src="${user.avatar || "../../public/assets/default.jpg"}" 
-          class="w-10 h-10 rounded-full object-cover"/>
+               class="w-10 h-10 rounded-full object-cover"/>
           ${user.isOnline
             ? `<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-800 rounded-full"></span>`
             : ""
           }
-          </div>
-          <div class="flex flex-col  ">
-          <span class="!text-white font-semibold  hover:!text-white ">${user.username}</span>
-          </div>
-          </a>
-          
-          <div>
-          ${user.is_friend
-            ? `<button class="!px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer">
-            <i class="ti ti-message text-xl lg:text-2xl text-white"></i>
-            </button>`
-            :
-             `<button id="sendFriendReq" class="add-friend-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
-                <i class="ti ti-users-plus text-xl lg:text-2xl text-white"></i>
-            </button>`}
         </div>
+        <div class="flex flex-col">
+          <span class="!text-white font-semibold hover:!text-white">${user.username}</span>
+        </div>
+      </a>
+      
+      <div>
+        ${user.is_friend
+          
+          ? `<button class="message-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
+                <i class="ti ti-message text-xl lg:text-2xl"></i>
+            </button>`
+          
+          : user.pending_flag || user.sent_flag
+             
+              ? `<button class="pending-btn !px-3 !py-1 text-xs rounded-md border border-yellow-600 text-gray-400 font-semibold cursor-not-allowed" disabled>
+                    <i class="ti ti-hourglass-empty text-xl lg:text-2xl"></i>
+                </button>`
+      
+              : `<button class="add-friend-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
+                    <i class="ti ti-users-plus text-xl lg:text-2xl"></i>
+                </button>`
+        }
+      </div>
 
     </div>
     `).join("");
 
-        this.searchResultsContainer.style.display = "block";
-        this.setupFriendRequestButtons();
-    }
+    this.searchResultsContainer.style.display = "block";
+    this.setupFriendRequestButtons();
+}
 
 // --- START: SEARCH & FRIEND REQUEST LOGIC ---
 private setupFriendRequestButtons(): void {
@@ -323,6 +333,7 @@ private setupFriendRequestButtons(): void {
 }
 
 private async sendFriendRequest(userId: string, buttonElement: HTMLButtonElement): Promise<void> {
+  buttonElement.disabled = true; 
   console.log(`My ID: ${this.user?.id}, Sending request to ID: ${userId}`);
     try {
         const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });

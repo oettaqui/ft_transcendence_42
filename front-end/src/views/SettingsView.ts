@@ -53,6 +53,21 @@ export class SettingsView extends View{
         element.classList.add('justify-center');
         if (user)
             this.user = user;
+        const bgClasses = {
+                'Bios': 'bg-[url(/public/assets/BiosBG.jpg)]',
+                'Freax': 'bg-[url(/public/assets/Freax_BG.jpg)]',
+                'Commodore': 'bg-[url(/public/assets/Commodore_BG.jpg)]',
+                'Pandora': 'bg-[url(/public/assets/Pandora_BG.jpg)]'
+            };
+
+            const bgUrl = bgClasses[user?.coalition] || '';
+            const colorClasses ={
+                'Bios': 'var(--bios)',
+                'Freax': 'var(--freax)',
+                'Commodore': 'var(--commodore)',
+                'Pandora': 'var(--pandora)',
+            }
+            const colorTheme = colorClasses[user?.coalition] || ''; 
         element.innerHTML = `
             <div class="overflow-y-hidden w-[100%] h-[100%] !gap-2 !m-auto bg-[rgba(220,219,219,0.08)] backdrop-blur-3xl rounded-4xl border border-white/10">
                 <div class="flex justify-center items-center w-[95%] h-[100%] !gap-1 xl:!gap-2 !m-auto">
@@ -62,9 +77,9 @@ export class SettingsView extends View{
                         <div class="flex flex-col !gap-4 md:!gap-6 xl:!gap-8 sticky">
                             <!-- Profile Card -->
                             <div class="flex items-center !gap-2 md:!gap-3 !pl-2 md:!pl-4 !py-3 md:!py-4 w-[90%] md:w-[80%] rounded-2xl md:rounded-4xl border border-white/10 bg-[rgba(220,219,219,0.05)]">
-                                <img class="w-[35px] md:w-[45px] xl:w-[50px] h-[35px] md:h-[45px] xl:h-[50px] rounded-full" src="../../public/assets/oettaqui.jpeg"/>
+                                <img class="w-[35px] md:w-[45px] xl:w-[50px] h-[35px] md:h-[45px] xl:h-[50px] rounded-full" src="${this.user?.avatar}"/>
                                 <div class="flex flex-col justify-between">
-                                    <div class="text-[11px] md:text-[13px] xl:text-[14px]">Oussama Ettaqui</div>
+                                    <div class="text-[11px] md:text-[13px] xl:text-[14px]">${this.user?.firstName} ${this.user?.lastName}</div>
                                     <div class="text-[9px] md:text-[11px] xl:text-[12px] opacity-50">Account settings</div>
                                 </div>
                             </div>
@@ -91,12 +106,12 @@ export class SettingsView extends View{
                         <div class="sticky flex flex-col !gap-12 md:!gap-16 xl:!gap-20">
                             <!-- Header with Background and Profile -->
                             <header class="relative w-full">
-                                <img class="w-full h-[100px] md:h-[130px] xl:h-[150px] object-cover rounded-t-2xl" src="../../public/assets/Freax_BG.jpg" alt="Background"/>
+                                <div class="w-full h-[100px] md:h-[130px] xl:h-[150px] ${bgUrl} bg-cover object-cover rounded-t-2xl"> </div>
                                 
                                 <div class="absolute left-1/2 top-12 md:top-15 xl:top-17 transform -translate-x-1/2 cursor-pointer profile-image-container">
                                     <div class="relative">
-                                        <img class="w-[100px] md:w-[120px] xl:w-[140px] h-[100px] md:h-[120px] xl:h-[140px] rounded-full object-cover border-3 md:border-4 border-[var(--accent)] shadow-xl" 
-                                            src="../../public/assets/oettaqui.jpeg" 
+                                        <img style="border: 3px solid ${colorTheme}" class="w-[100px] md:w-[120px] xl:w-[140px] h-[100px] md:h-[120px] xl:h-[140px] rounded-full object-cover  shadow-xl" 
+                                            src="${this.user?.avatar}" 
                                             alt="Profile"/>
                                         <div class="upload-overlay absolute inset-0 rounded-full flex items-center justify-center">
                                             <svg class="w-6 md:w-7 xl:w-8 h-6 md:h-7 xl:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +190,7 @@ export class SettingsView extends View{
                                             <div class="flex items-center !space-x-3 md:!space-x-4">
                                                 <div class="flex-shrink-0">
                                                     <img class="w-12 md:w-14 xl:w-16 h-12 md:h-14 xl:h-16 rounded-full object-cover border-2 border-white/20" 
-                                                        src="../../public/assets/oettaqui.jpeg" 
+                                                        src="${this.user?.avatar}" 
                                                         alt="Current profile" 
                                                         id="previewImage">
                                                 </div>
@@ -439,7 +454,7 @@ export class SettingsView extends View{
                                 <!-- Board Preview Section -->
                                 <div class="glass-effect rounded-2xl border border-white/10 !p-4 md:!p-5 xl:!p-6 !mb-4 md:!mb-5 xl:!mb-6">
                                     <h3 class="text-[13px] md:text-[15px] xl:text-[16px] font-semibold text-white !mb-3 md:!mb-4">Board Preview</h3>
-                                    <div id="board-preview" class="w-full h-24 md:h-28 xl:h-32 rounded-xl border-2 border-white/20 relative overflow-hidden bg-[var(--accent)]">
+                                    <div style="background: ${colorTheme}" id="board-preview" class="w-full h-24 md:h-28 xl:h-32 rounded-xl border-2 border-white/20 relative overflow-hidden ">
                                         <!-- Simple game elements to show context -->
                                         <div class="absolute left-2 md:left-3 xl:left-4 top-1/2 transform -translate-y-1/2 w-1 md:w-2 h-12 md:h-14 xl:h-16 bg-white rounded-sm"></div>
                                         <div class="absolute right-2 md:right-3 xl:right-4 top-1/2 transform -translate-y-1/2 w-1 md:w-2 h-12 md:h-14 xl:h-16 bg-white rounded-sm"></div>
@@ -456,8 +471,8 @@ export class SettingsView extends View{
                                     <div class="!mb-4 md:!mb-5 xl:!mb-6">
                                         <p class="text-[11px] md:text-[12px] xl:text-sm text-gray-300 !mb-2 md:!mb-3">Default Color</p>
                                         <div class="flex flex-wrap !gap-2 md:!gap-3">
-                                            <div class="color-option w-8 md:w-10 xl:w-12 h-8 md:h-10 xl:h-12 rounded-lg md:rounded-xl border-2 border-white/20 bg-[var(--accent)] ring-white/20 selected cursor-pointer" 
-                                                data-color="#16a34a" data-name="Default Green"></div>
+                                            <div style="background: ${colorTheme}" class="color-option w-8 md:w-10 xl:w-12 h-8 md:h-10 xl:h-12 rounded-lg md:rounded-xl border-2 border-white/20 ring-white/20 selected cursor-pointer" 
+                                                data-color="${colorTheme}" data-name="Default"></div>
                                         </div>
                                     </div>
                                     
@@ -965,7 +980,7 @@ export class SettingsView extends View{
         const resetBtn = document.getElementById('reset-board-btn');
         const saveBtn = document.getElementById('save-board-btn');
 
-        let currentColor = '#f39c12';
+        let currentColor = '${colorTheme}';
 
         colorOptions.forEach(option => {
             option.addEventListener('click', () => {

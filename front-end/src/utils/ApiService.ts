@@ -17,6 +17,7 @@ export class ApiService {
             }
         });
         if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+        console.log("Response Get => ", response);
         return response.json() as Promise<T>;
     }
 
@@ -41,10 +42,26 @@ export class ApiService {
        
         throw new Error(`HTTP error: ${response.status}`);
         }
-        console.log("Responce => ", response);
+        console.log("Response Post => ", response);
         return response;
   }
+  async delete(endpoint: string): Promise<Response> {
+        const token = localStorage.getItem('token');
 
+        const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        console.log("Response Delete => ", response);
+        return response;
+    }
 
 
 

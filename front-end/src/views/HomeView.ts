@@ -4,6 +4,7 @@ import { FriendsData } from "../types/FriendData";
 import { Friend } from "../types/FriendData";
 import { ApiService } from "../utils/ApiService";
 import { User } from "../types/User";
+import { toast } from "../views/ToastNotification";
 
 export class HomeView extends View{
     private API_BASE = 'http://localhost:3000/api';
@@ -333,7 +334,7 @@ export class HomeView extends View{
                     <button class="accept-btn text-[var(--success)] w-[30px] h-[30px] rounded-full transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
                         <i class="ti ti-circle-check text-3xl"></i>
                     </button>
-                    <button class="reject-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
+                    <button class="decline-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
                         <i class="ti ti-x text-3xl"></i>
                     </button>
                 </div>
@@ -363,7 +364,7 @@ export class HomeView extends View{
 
     private renderPendingItem(friend: Friend): string {
         return `
-            <div class="flex items-center justify-between !py-3 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
+            <div class="flex items-center justify-between !py-3 !px-2 rounded-xl hover:bg-[var(--light-hover)] transition !mt-3">
                 <div class="flex items-center gap-3">
                     <img src="${friend.avatar}" class="w-10 h-10 rounded-full object-cover">
                     <div>
@@ -373,8 +374,8 @@ export class HomeView extends View{
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-xs text-[var(--text-secondary)] opacity-70">Pending</span>
-                    <button class="cancel-btn text-[var(--danger)] w-[30px] h-[30px] hover:bg-red-600 hover:bg-opacity-20 rounded-full transition" data-id="${friend.id}">
-                        <i class="ti ti-x text-2xl"></i>
+                    <button class="cancel-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-id="${friend.id}">
+                        <i class="ti ti-x text-3xl"></i>
                     </button>
                 </div>
             </div>
@@ -398,43 +399,77 @@ export class HomeView extends View{
         `;
     }
 
+    
+
+
     private bindFriendActionEvents(category: string): void {
-        
+    
         document.querySelectorAll('.accept-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
                 const friendId = target.dataset.id;
-                console.log('Accept friend request:', friendId);
-                
-                
-                
-                
-                this.loadFriendsData(this.currentTab);
+                if (!friendId) return;
+
+                try {
+                    const response = await this.apiService.post('/friends/accept', { friendId: parseInt(friendId, 10) });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        toast.show(result.data.message, { type: 'success' });
+                        this.loadFriendsData("all");
+                    } else {
+                        toast.show(result.error || 'Could not accept request.', { type: 'error' });
+                    }
+                } catch (error) {
+                    console.error('Failed to accept friend request:', error);
+                    toast.show('An unexpected network error occurred.', { type: 'error' });
+                }
             });
         });
 
-        
-        document.querySelectorAll('.reject-btn').forEach(btn => {
+        document.querySelectorAll('.decline-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
                 const friendId = target.dataset.id;
-                console.log('Reject friend request:', friendId);
-                
-                
-                
-                
-                this.loadFriendsData(this.currentTab);
+                if (!friendId) return;
+
+                try {
+                    const response = await this.apiService.post('/friends/decline', { friendId: parseInt(friendId, 10) });
+                    
+                    if (response.ok) {
+                        toast.show('Request declined.', { type: 'success' });
+                        this.loadFriendsData("requests");
+                    } else {
+                        const errorData = await response.json();
+                        toast.show(errorData.error || 'Could not decline request.', { type: 'error' });
+                    }
+                } catch (error) {
+                    console.error('Failed to decline friend request:', error);
+                    toast.show('An unexpected network error occurred.', { type: 'error' });
+                }
             });
         });
 
-       
-        document.querySelectorAll('.add-btn').forEach(btn => {
+        document.querySelectorAll('.cancel-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const target = e.currentTarget as HTMLButtonElement;
                 const friendId = target.dataset.id;
-                console.log('Add friend:', friendId);
-                
-                
+                if (!friendId) return;
+
+                try {
+                    const response = await this.apiService.delete(`/friends/request/${friendId}`);
+                    
+                    if (response.ok) {
+                        toast.show('Request cancelled.', { type: 'success' });
+                        this.loadFriendsData("pending");
+                    } else {
+                        const errorData = await response.json();
+                        toast.show(errorData.error || 'Could not cancel request.', { type: 'error' });
+                    }
+                } catch (error) {
+                    console.error('Failed to cancel friend request:', error);
+                    toast.show('An unexpected network error occurred.', { type: 'error' });
+                }
             });
         });
 
@@ -444,7 +479,6 @@ export class HomeView extends View{
                 const target = e.currentTarget as HTMLButtonElement;
                 const friendId = target.dataset.id;
                 console.log('Message friend:', friendId);
-                
                 
             });
         });
@@ -475,7 +509,7 @@ export class HomeView extends View{
     private async getStaticFriendsData(): Promise<FriendsData> {
         return {
             all: await this.getAllFriends(),
-            online: await this.getAllFriends(),
+            online: await this.getOnlineFriends(),
             requests: await this.getRequests(),
             pending: await this.getPanding()
             // all: [
@@ -516,13 +550,24 @@ export class HomeView extends View{
             // ]
         };
     }
+    private async getOnlineFriends(): Promise<Friend[]> {
+    try {
+        const allFriends = await this.getAllFriends();
+        
+        const onlineFriends = allFriends.filter(friend => friend.isOnline === true);
+
+        console.log('Fetched online friends:', onlineFriends);
+        return onlineFriends;
+    } catch (error) {
+        console.error('Error fetching online friends:', error);
+        return [];
+    }
+}
     private async getAllFriends(): Promise<Friend[]> {
         try {
-            const response = await this.apiService.get<Friend[]>('/users');
-            // const response = await this.apiService.get<Friend[]>('/');
-            // this just a test to display users from the api
-            console.log('Fetched all friends:', response.data?.users || []);
-            return response.data?.users || [];
+            const response = await this.apiService.get<Friend[]>('/friends');
+            console.log('Fetched all friends:', response.data?.friends);
+            return response.data?.friends;
         } catch (error) {
             console.error('Error fetching friends:', error);
             return [];
@@ -532,10 +577,8 @@ export class HomeView extends View{
     private async getPanding(): Promise<Friend[]> {
         try {
             const response = await this.apiService.get<Friend[]>('/friends/requests/sent');
-            // const response = await this.apiService.get<Friend[]>('/');
-            // this just a test to display users from the api
             console.log('Fetched friends Panding:', response.data?.requests || []);
-            return response.data?.requests || [];
+            return response.data?.requests ;
         } catch (error) {
             console.error('Error fetching friends:', error);
             return [];
@@ -544,8 +587,6 @@ export class HomeView extends View{
     private async getRequests(): Promise<Friend[]> {
         try {
             const response = await this.apiService.get<Friend[]>('/friends/requests/pending');
-            // const response = await this.apiService.get<Friend[]>('/');
-            // this just a test to display users from the api
             console.log('Fetched friends request:', response.data?.requests || []);
             return response.data?.requests || [];
         } catch (error) {
