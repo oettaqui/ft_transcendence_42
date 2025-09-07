@@ -5,6 +5,7 @@ import { Friend } from "../types/FriendData";
 import { ApiService } from "../utils/ApiService";
 import { User } from "../types/User";
 import { toast } from "../views/ToastNotification";
+import { wsService } from "../utils/WebSocketService";
 
 export class HomeView extends View{
     private API_BASE = 'http://localhost:3000/api';
@@ -13,11 +14,13 @@ export class HomeView extends View{
     // private friendsData: FriendsData = { all: [], online: [], requests: [], pending: [] };
     private apiService = new ApiService(this.API_BASE);
     private user: User | null = null;
+    private wsListeners: (() => void)[] = [];
 
     constructor(){
         super();
         this.friendsData = this.getStaticFriendsData();
         // this.initFriendsData();
+        // this.setupWebSocketListeners();
         
     }
 

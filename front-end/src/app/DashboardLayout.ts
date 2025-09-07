@@ -258,6 +258,59 @@ export class DashboardLayout {
 
 
 
+// private renderSearchResults(users: UserSearch[]): void {
+//     if (!this.searchResultsContainer) return;
+
+//     if (users.length === 0) {
+//         this.searchResultsContainer.innerHTML = `<div class="!py-4 !px-6 text-gray-400 text-sm">No users found</div>`;
+//         this.searchResultsContainer.style.display = "block";
+//         return;
+//     }
+
+//     this.searchResultsContainer.innerHTML = users.map(user => `
+//       <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between cursor-pointer">
+      
+//       <a class="flex items-center gap-3 w-full !transform-none !transition-none" href="/dashboard/profile/${user.id}">
+//         <div class="relative">
+//           <img src="${user.avatar || "../../public/assets/default.jpg"}" 
+//                class="w-10 h-10 rounded-full object-cover"/>
+//           ${user.isOnline
+//             ? `<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-800 rounded-full"></span>`
+//             : ""
+//           }
+//         </div>
+//         <div class="flex flex-col">
+//           <span class="!text-white font-semibold hover:!text-white">${user.username}</span>
+//         </div>
+//       </a>
+      
+//       <div>
+//         ${user.is_friend
+          
+//           ? `<button class="message-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
+//                 <i class="ti ti-message text-xl lg:text-2xl"></i>
+//             </button>`
+          
+//           : user.pending_flag || user.sent_flag
+             
+//               ? `<button class="pending-btn !px-3 !py-1 text-xs rounded-md border border-yellow-600 text-gray-400 font-semibold cursor-not-allowed" disabled>
+//                     <i class="ti ti-hourglass-empty text-xl lg:text-2xl"></i>
+//                 </button>`
+      
+//               : `<button class="add-friend-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
+//                     <i class="ti ti-users-plus text-xl lg:text-2xl"></i>
+//                 </button>`
+//         }
+//       </div>
+
+//     </div>
+//     `).join("");
+
+//     this.searchResultsContainer.style.display = "block";
+//     this.setupFriendRequestButtons();
+// }
+
+
 private renderSearchResults(users: UserSearch[]): void {
     if (!this.searchResultsContainer) return;
 
@@ -268,90 +321,211 @@ private renderSearchResults(users: UserSearch[]): void {
     }
 
     this.searchResultsContainer.innerHTML = users.map(user => `
-      <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between cursor-pointer">
+      <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between">
       
-      <a class="flex items-center gap-3 w-full !transform-none !transition-none" href="/dashboard/profile/${user.id}">
-        <div class="relative">
-          <img src="${user.avatar || "../../public/assets/default.jpg"}" 
-               class="w-10 h-10 rounded-full object-cover"/>
-          ${user.isOnline
-            ? `<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-800 rounded-full"></span>`
-            : ""
-          }
+        <a class="flex items-center gap-3 w-full !transform-none !transition-none" href="/dashboard/profile/${user.id}">
+          <div class="relative">
+            <img src="${user.avatar || "../../public/assets/default.jpg"}" 
+                 class="w-10 h-10 rounded-full object-cover"/>
+            ${user.isOnline
+              ? `<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-800 rounded-full"></span>`
+              : ""
+            }
+          </div>
+          <div class="flex flex-col">
+            <span class="!text-white font-semibold hover:!text-white">${user.username}</span>
+          </div>
+        </a>
+      
+        <div class="flex items-center gap-2" data-container-id="${user.id}">
+          ${this.renderFriendActionButtons(user)}
         </div>
-        <div class="flex flex-col">
-          <span class="!text-white font-semibold hover:!text-white">${user.username}</span>
-        </div>
-      </a>
-      
-      <div>
-        ${user.is_friend
-          
-          ? `<button class="message-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
-                <i class="ti ti-message text-xl lg:text-2xl"></i>
-            </button>`
-          
-          : user.pending_flag || user.sent_flag
-             
-              ? `<button class="pending-btn !px-3 !py-1 text-xs rounded-md border border-yellow-600 text-gray-400 font-semibold cursor-not-allowed" disabled>
-                    <i class="ti ti-hourglass-empty text-xl lg:text-2xl"></i>
-                </button>`
-      
-              : `<button class="add-friend-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
-                    <i class="ti ti-users-plus text-xl lg:text-2xl"></i>
-                </button>`
-        }
-      </div>
 
-    </div>
+      </div>
     `).join("");
 
     this.searchResultsContainer.style.display = "block";
-    this.setupFriendRequestButtons();
+    this.setupFriendActionButtons();
 }
+
+
+private renderFriendActionButtons(user: UserSearch): string {
+    // 1. User is already a friend -> Show message button
+    if (user.is_friend) {
+        return `
+            <button class="message-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
+                <i class="ti ti-message text-xl lg:text-2xl"></i>
+            </button>
+        `;
+    }
+    else if (user.pending_flag) {
+        return `
+            <button class="accept-btn text-[var(--success)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-user-id="${user.id}">
+                <i class="ti ti-circle-check text-3xl"></i>
+            </button>
+            <button class="decline-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-user-id="${user.id}">
+                <i class="ti ti-x text-3xl"></i>
+            </button>
+        `;
+    }
+    else if (user.sent_flag) {
+        return `
+             <button class="cancel-btn text-[var(--danger)] w-[30px] h-[30px] transition-transform duration-300 hover:scale-115" data-user-id="${user.id}">
+                <i class="ti ti-x text-3xl"></i>
+            </button>
+        `;
+    }
+    else {
+        return `
+            <button class="add-friend-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
+                <i class="ti ti-users-plus text-xl lg:text-2xl"></i>
+            </button>
+        `;
+    }
+}
+
 
 // --- START: SEARCH & FRIEND REQUEST LOGIC ---
-private setupFriendRequestButtons(): void {
+// private setupFriendRequestButtons(): void {
+//     if (!this.searchResultsContainer) return;
+
+//     const addFriendButtons = this.searchResultsContainer.querySelectorAll<HTMLButtonElement>('.add-friend-btn');
+    
+//     addFriendButtons.forEach(button => {
+//         const handleClick = async (event: MouseEvent) => {
+//             event.stopPropagation();
+//             const userId = button.dataset.userId; 
+//             if (userId) {
+//                 console.log("Sending friend request to user ID:", userId);
+//                 button.disabled = true;
+//                 await this.sendFriendRequest(userId, button);
+//             }
+//         };
+        
+//         button.removeEventListener('click', handleClick); 
+//         button.addEventListener('click', handleClick);
+//     });
+// }
+
+// private async sendFriendRequest(userId: string, buttonElement: HTMLButtonElement): Promise<void> {
+//   buttonElement.disabled = true; 
+//   console.log(`My ID: ${this.user?.id}, Sending request to ID: ${userId}`);
+//     try {
+//         const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
+
+//         if (response.ok) {
+//             toast.show('Friend request sent!', { type: 'success' });
+//             buttonElement.innerHTML = `<i class="ti ti-check text-xl lg:text-2xl text-white"></i>`;
+//             buttonElement.classList.remove('hover:bg-[var(--accent)]');
+//         } else {
+//             const errorData = await response.json();
+//             toast.show(`Error: ${errorData.message || 'Could not send request.'}`, { type: 'error' });
+//             buttonElement.disabled = false;
+//         }
+//     } catch (error) {
+//         console.error("Failed to send friend request:", error);
+//         toast.show('An unexpected error occurred.', { type: 'error' });
+//         buttonElement.disabled = false;
+//     }
+// }
+
+
+private setupFriendActionButtons(): void {
     if (!this.searchResultsContainer) return;
 
-    const addFriendButtons = this.searchResultsContainer.querySelectorAll<HTMLButtonElement>('.add-friend-btn');
-    
-    addFriendButtons.forEach(button => {
-        const handleClick = async (event: MouseEvent) => {
-            event.stopPropagation();
-            const userId = button.dataset.userId; 
-            if (userId) {
-                console.log("Sending friend request to user ID:", userId);
-                button.disabled = true;
-                await this.sendFriendRequest(userId, button);
+    const attachListener = (selector: string, handler: (userId: string, button: HTMLButtonElement) => Promise<void>) => {
+        const buttons = this.searchResultsContainer!.querySelectorAll<HTMLButtonElement>(selector);
+        buttons.forEach(button => {
+            if (button.dataset.listenerAttached) return;
+            button.dataset.listenerAttached = 'true';
+
+            button.addEventListener('click', async (event) => {
+                event.stopPropagation();
+                const userId = button.dataset.userId;
+                if (userId) {
+                    button.disabled = true;
+                    await handler(userId, button);
+                }
+            });
+        });
+    };
+
+    attachListener('.add-friend-btn', async (userId, button) => {
+        try {
+            const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
+            if (response.ok) {
+                toast.show('Friend request sent!', { type: 'success' });
+                const container = document.querySelector(`[data-container-id="${userId}"]`);
+                if(container) container.innerHTML = this.renderFriendActionButtons({ sent_flag: true } as UserSearch);
+            } else {
+                const errorData = await response.json();
+                toast.show(`Error: ${errorData.message || 'Could not send request.'}`, { type: 'error' });
+                button.disabled = false;
             }
-        };
-        
-        button.removeEventListener('click', handleClick); 
-        button.addEventListener('click', handleClick);
-    });
-}
-
-private async sendFriendRequest(userId: string, buttonElement: HTMLButtonElement): Promise<void> {
-  buttonElement.disabled = true; 
-  console.log(`My ID: ${this.user?.id}, Sending request to ID: ${userId}`);
-    try {
-        const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
-
-        if (response.ok) {
-            toast.show('Friend request sent!', { type: 'success' });
-            buttonElement.innerHTML = `<i class="ti ti-check text-xl lg:text-2xl text-white"></i>`;
-            buttonElement.classList.remove('hover:bg-[var(--accent)]');
-        } else {
-            const errorData = await response.json();
-            toast.show(`Error: ${errorData.message || 'Could not send request.'}`, { type: 'error' });
-            buttonElement.disabled = false;
+        } catch (error) {
+            console.error("Failed to send friend request:", error);
+            toast.show('An unexpected error occurred.', { type: 'error' });
+            button.disabled = false;
         }
-    } catch (error) {
-        console.error("Failed to send friend request:", error);
-        toast.show('An unexpected error occurred.', { type: 'error' });
-        buttonElement.disabled = false;
-    }
+    });
+
+    attachListener('.accept-btn', async (userId, button) => {
+        try {
+            const response = await this.apiService.post('/friends/accept', { friendId: parseInt(userId, 10) });
+            if (response.ok) {
+                toast.show('Friend request accepted!', { type: 'success' });
+                const container = document.querySelector(`[data-container-id="${userId}"]`);
+                if(container) container.innerHTML = this.renderFriendActionButtons({ is_friend: true } as UserSearch);
+            } else {
+                const errorData = await response.json();
+                toast.show(errorData.error || 'Could not accept request.', { type: 'error' });
+                button.disabled = false;
+            }
+        } catch (error) {
+            console.error('Failed to accept friend request:', error);
+            toast.show('An unexpected network error occurred.', { type: 'error' });
+            button.disabled = false;
+        }
+    });
+
+    attachListener('.decline-btn', async (userId, button) => {
+        try {
+            const response = await this.apiService.post('/friends/decline', { friendId: parseInt(userId, 10) });
+            if (response.ok) {
+                toast.show('Request declined.', { type: 'success' });
+                const container = document.querySelector(`[data-container-id="${userId}"]`);
+                if(container) container.innerHTML = this.renderFriendActionButtons({} as UserSearch);
+            } else {
+                const errorData = await response.json();
+                toast.show(errorData.error || 'Could not decline request.', { type: 'error' });
+                button.disabled = false;
+            }
+        } catch (error) {
+            console.error('Failed to decline friend request:', error);
+            toast.show('An unexpected network error occurred.', { type: 'error' });
+            button.disabled = false;
+        }
+    });
+
+    
+    attachListener('.cancel-btn', async (userId, button) => {
+        try {
+            const response = await this.apiService.delete(`/friends/request/${userId}`);
+            if (response.ok) {
+                toast.show('Request cancelled.', { type: 'success' });
+                const container = document.querySelector(`[data-container-id="${userId}"]`);
+                if(container) container.innerHTML = this.renderFriendActionButtons({} as UserSearch);
+            } else {
+                const errorData = await response.json();
+                toast.show(errorData.error || 'Could not cancel request.', { type: 'error' });
+                button.disabled = false;
+            }
+        } catch (error) {
+            console.error('Failed to cancel friend request:', error);
+            toast.show('An unexpected network error occurred.', { type: 'error' });
+            button.disabled = false;
+        }
+    });
 }
 
     // --- END: SEARCH & FRIEND REQUEST LOGIC ---
