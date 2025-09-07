@@ -17,6 +17,8 @@ class FriendsController {
     try {
       const users = await User.search(query, request.user.id, parseInt(limit));
       const friends = await Friendship.getUserFriends(request.user.id);
+      const requests_sent = await Friendship.getSentRequests(request.user.id);
+      const requests_pending = await Friendship.getPendingRequests(request.user.id);
       
       const formattedUsers = users.map(user => ({
         id: user.id,
@@ -26,7 +28,9 @@ class FriendsController {
         avatar: user.avatar,
         isOnline: user.isOnline,
         lastLogin: user.lastLogin,
-        is_friend:friends.some(friend => friend.id === user.id)
+        is_friend:friends.some(friend => friend.id === user.id),
+        sent_flag:requests_sent.some(friend => friend.id === user.id),
+        peding_flag:requests_pending.some(friend => friend.id === user.id)
       }));
       
       return { 
