@@ -83,9 +83,8 @@ class Friendship {
   static async declineRequest(userId, friendId) {
     return new Promise((resolve, reject) => {
       db.run(
-        `UPDATE friend_requests 
-         SET status = 'declined', updated_at = CURRENT_TIMESTAMP 
-         WHERE from_user_id = ? AND to_user_id = ? AND status = 'pending'`,
+        `DELETE FROM friend_requests 
+        WHERE from_user_id = ? AND to_user_id = ? AND status = 'pending'`,
         [friendId, userId],
         function(err) {
           if (err) return reject(err);
@@ -95,20 +94,19 @@ class Friendship {
     });
   }
 
-  static async cancelRequest(userId, friendId) {
-    return new Promise((resolve, reject) => {
-      db.run(
-        `UPDATE friend_requests 
-         SET status = 'cancelled', updated_at = CURRENT_TIMESTAMP 
-         WHERE from_user_id = ? AND to_user_id = ? AND status = 'pending'`,
-        [userId, friendId],
-        function(err) {
-          if (err) return reject(err);
-          resolve(this.changes);
-        }
-      );
-    });
-  }
+static async cancelRequest(userId, friendId) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `DELETE FROM friend_requests 
+       WHERE from_user_id = ? AND to_user_id = ? AND status = 'pending'`,
+      [userId, friendId],
+      function(err) {
+        if (err) return reject(err);
+        resolve(this.changes);
+      }
+    );
+  });
+}
 
   static async remove(userId, friendId) {
     return new Promise((resolve, reject) => {
