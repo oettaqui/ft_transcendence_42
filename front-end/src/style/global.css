@@ -30,6 +30,10 @@
   --pandora : #B61182;
 }
 
+.dynamic-hover-bg:hover {
+  background-color: var(--hover-color);
+}
+
 html{
     scrollbar-width: thin; /* or 'auto' or 'none' */
     scrollbar-color: var(--accent) var(--secondary);

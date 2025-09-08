@@ -192,7 +192,6 @@ export class LoginView extends View {
 
                         if (result.success) {
                             localStorage.setItem('token', result.data!.token);
-                            // 
                             wsService.connect();
                             toast.dismiss(this.currentLoadingToastId!);
                             toast.show('Google authentication successful!', {
@@ -314,7 +313,6 @@ export class LoginView extends View {
 
             if (response.success) {
                 localStorage.setItem('token', response.data!.token);
-                // 
                 wsService.connect();
                 if (this.currentLoadingToastId) {
                     setTimeout(() => {
@@ -439,7 +437,6 @@ private handleIntraAuthCallback = async (event: MessageEvent): Promise<void> => 
         if (response.success) {
             // Store token
             localStorage.setItem('token', response.data!.token);
-            // 
             wsService.connect();
             console.log(`dimiss the completing notice : ${this.currentLoadingToastId}`);
             if (this.currentLoadingToastId) {

@@ -1,5 +1,4 @@
 import { View } from "../app/View";
-
 import { FriendsData } from "../types/FriendData";
 import { Friend } from "../types/FriendData";
 import { ApiService } from "../utils/ApiService";
@@ -18,9 +17,9 @@ export class HomeView extends View{
 
     constructor(){
         super();
+        this.setupWebSocketListeners();
         this.friendsData = this.getStaticFriendsData();
         // this.initFriendsData();
-        this.setupWebSocketListeners();
         
     }
 
@@ -190,19 +189,7 @@ export class HomeView extends View{
        
     }
 
-    private setupTabFilteringActive(): void {
-        const buttons = document.querySelectorAll('.tab-btn');
-
-        buttons.forEach(button => {
-            if (button.classList.contains('active')) {
-                const categoryName = button.getAttribute('data-category');
-                console.log("Active category: ", categoryName);
-                if (categoryName) {
-                    this.loadFriendsData(categoryName);
-                }
-            }
-        });
-    }
+    
 
     private setupTabFiltering(): void {
         const buttons = document.querySelectorAll('.tab-btn');
@@ -726,112 +713,45 @@ chatWinLose() {
 }
 
 
-    animateNumber(elementId: string, targetValue: number, duration: number = 1000, decimals: number = 0) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
+animateNumber(elementId: string, targetValue: number, duration: number = 1000, decimals: number = 0) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
 
-        const start = performance.now();
-        const initialValue = 0;
+    const start = performance.now();
+    const initialValue = 0;
 
-        const animate = (timestamp: number) => {
-            const elapsed = timestamp - start;
-            const progress = Math.min(elapsed / duration, 1);
-            const currentValue = initialValue + (targetValue - initialValue) * progress;
+    const animate = (timestamp: number) => {
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const currentValue = initialValue + (targetValue - initialValue) * progress;
 
-            el.textContent = currentValue.toFixed(decimals);
+        el.textContent = currentValue.toFixed(decimals);
 
-            if (progress < 1) {
-                requestAnimationFrame(animate);
-            }
-        };
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    };
 
-        requestAnimationFrame(animate);
-    }
+    requestAnimationFrame(animate);
+}
 
     private setupWebSocketListeners(): void {
-        //  for the incomming requests :
         const FriendRequestListiner = (data: any) => {
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            console.log(`fromUserId : ${data.fromUserId.id}`);
+            console.log(`fromUserId : ${data.fromUserId}`);
+            console.log(`fromUserId : ${data.message}`);
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             if (this.user && data.id === this.user.id) {
-                console.log("============== user with notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-            else
-            {
-                console.log("============== user with no notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
+                // Update user profile display if needed
+                console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbb");
+                alert(`${data.message}`);
+                // console.log(data);
+                // this.refreshUserDisplay();
             }
         };
         wsService.on('friend_request_received', FriendRequestListiner);
         this.wsListeners.push(() => wsService.off('friend_request_received', FriendRequestListiner));
-
-        // for the declining requests 
-        const FriendDeclineListiner = (data: any) => {
-            if (this.user && data.id === this.user.id) {
-                console.log("============== user with notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-            else
-            {
-                console.log("============== user with no notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-        };
-        wsService.on('friend_request_rejected', FriendDeclineListiner);
-        this.wsListeners.push(() => wsService.off('friend_request_rejected', FriendDeclineListiner));
-
-        // for the Accepting requests 
-        const FriendAcceptListiner = (data: any) => {
-            if (this.user && data.id === this.user.id) {
-                console.log("============== user with notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-            else
-            {
-                console.log("============== user with no notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-        };
-        wsService.on('friend_request_accepted', FriendAcceptListiner);
-        this.wsListeners.push(() => wsService.off('friend_request_accepted', FriendAcceptListiner));
-
-        // for the cancel requests 
-        const FriendCancelListiner = (data: any) => {
-            if (this.user && data.id === this.user.id) {
-                console.log("============== user with notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-            else
-            {
-                console.log("============== user with no notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.friendsData = this.getStaticFriendsData();
-                this.setupTabFilteringActive();
-            }
-        };
-        wsService.on('friend_request_canceled', FriendCancelListiner);
-        this.wsListeners.push(() => wsService.off('friend_request_canceled', FriendCancelListiner));
     }
 
 };

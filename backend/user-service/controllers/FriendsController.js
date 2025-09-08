@@ -30,7 +30,7 @@ class FriendsController {
         lastLogin: user.lastLogin,
         is_friend:friends.some(friend => friend.id === user.id),
         sent_flag:requests_sent.some(friend => friend.id === user.id),
-        peding_flag:requests_pending.some(friend => friend.id === user.id)
+        pending_flag:requests_pending.some(friend => friend.id === user.id)
       }));
       
       return { 
@@ -72,7 +72,8 @@ class FriendsController {
       
       const requestId = await Friendship.sendRequest(request.user.id, friendId);
       //
-      await webSocketService.notifyFriendRequest(request.user.id, friendId, {
+      const friendIds = [request.user.id,friendId];
+      await webSocketService.notifyFriendRequest(request.user.id, friendId,friendIds, {
         id: request.user.id,
         username: request.user.username,
         firstName: request.user.firstName,
@@ -112,9 +113,9 @@ class FriendsController {
     try {
       const changes = await Friendship.acceptRequest(request.user.id, friendId);
       const friendUser = await User.findById(friendId);
-      
+      const friendIds = [request.user.id,friendId];
       console.log(`Friend request accepted: ${request.user.username} accepted ${friendUser.username}`);
-      await webSocketService.notifyFriendRequestAccepted(friendId, request.user.id, {
+      await webSocketService.notifyFriendRequestAccepted(friendId, request.user.id,friendIds, {
         id: request.user.id,
         username: request.user.username,
         firstName: request.user.firstName,
@@ -165,7 +166,8 @@ class FriendsController {
         });
       }
       const friendUser = await User.findById(friendId);
-      await webSocketService.notifyFriendRequestRejected(friendId, request.user.id, {
+      const friendIds = [request.user.id,friendId];
+      await webSocketService.notifyFriendRequestRejected(friendId, request.user.id,friendIds, {
         id: request.user.id,
         username: request.user.username,
         firstName: request.user.firstName,
@@ -205,7 +207,17 @@ class FriendsController {
           error: 'Friend request not found or already processed' 
         });
       }
-      
+      console.log("/*/*/*/*/*/*/*/*/*//*/*/*/*/*//*********************************");
+      console.log(typeof friendId); 
+      console.log("/*/*/*/*/*/*/*/*/*//*/*/*/*/*//*********************************");
+      const friendIds = [request.user.id,parseInt(friendId)];
+      await webSocketService.notifyFriendRequestCanceled(parseInt(friendId), request.user.id,friendIds, {
+        id: request.user.id,
+        username: request.user.username,
+        firstName: request.user.firstName,
+        lastName: request.user.lastName,
+        avatar: request.user.avatar
+      });
       console.log(`Friend request cancelled: ${request.user.username} cancelled request to ${friendUser.username}`);
       
       return { 

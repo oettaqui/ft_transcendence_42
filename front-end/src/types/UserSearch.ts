@@ -4,7 +4,9 @@ export interface UserSearch {
   firstName: string;
   lastName: string;
   avatar: string;
-  isOnline: number; 
-  is_friend: number; 
+  isOnline: boolean; 
   lastLogin: string;
+  is_friend: boolean; 
+  pending_flag: boolean;
+  sent_flag: boolean;
 }

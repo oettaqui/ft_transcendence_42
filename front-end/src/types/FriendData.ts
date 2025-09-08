@@ -6,7 +6,6 @@ export interface Friend {
     avatar: string;
     lastLogin?: string;
     status?: string;
-    is_friend?:boolean
 }
 
 export interface FriendsData {

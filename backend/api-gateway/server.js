@@ -25,8 +25,25 @@ fastify.register(require('@fastify/jwt'), {
 });
 
 fastify.register(require('@fastify/rate-limit'), {
-  max: 100,
-  timeWindow: '1 minute'
+  max: 300, // 300 requests per minute per user
+  timeWindow: '1 minute',
+  keyGenerator: (request) => {
+    const token = request.headers.authorization?.replace('Bearer ', '');
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        return `user:${decoded.id || decoded.userId}`;
+      } catch {
+        return `ip:${request.ip}`;
+      }
+    }
+    return `ip:${request.ip}`;
+  },
+  addHeaders: {
+    'x-ratelimit-limit': true,
+    'x-ratelimit-remaining': true,
+    'x-ratelimit-reset': true
+  }
 });
 
 fastify.register(require('@fastify/http-proxy'), {
