@@ -831,7 +831,18 @@ chatWinLose() {
             }
         };
         wsService.on('friend_request_canceled', FriendCancelListiner);
-        this.wsListeners.push(() => wsService.off('friend_request_canceled', FriendCancelListiner));
+        this.wsListeners.push(() => wsService.off('friend_status_changed', FriendCancelListiner));
+        
+        // for the logout of a friend  
+        const FriendLogoutlListiner = (data: any) => {
+                console.log("============== user with notif ============");
+                console.log(`one of your friend is ${data.status}`);
+                console.log("==========================");
+                this.friendsData = this.getStaticFriendsData();
+                this.setupTabFilteringActive();
+        };
+        wsService.on('friend_status_changed', FriendLogoutlListiner);
+        this.wsListeners.push(() => wsService.off('friend_status_changed', FriendLogoutlListiner));
     }
 
 };

@@ -312,6 +312,7 @@ class User {
         params.push(firstName);
         this.firstName = firstName;
       }
+
       if (lastName !== undefined) {
         updates.push('last_name = ?');
         params.push(lastName);

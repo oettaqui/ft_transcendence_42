@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const UserStats = require('../models/UserStats');
+const Friendship = require('../models/Friendship');
 const { OAuth2Client } = require('google-auth-library');
 const EmailService = require('../services/EmailService');
 const axios = require('axios');
@@ -159,7 +160,6 @@ class AuthController {
         if (!twoFactorCode) {
           const code = await User.create2FACode(user.id, 'login');
           await EmailService.send2FACode(user.email, user.username, code);
-          
           return {
             success: false,
             requiresTwoFactor: true,
@@ -193,7 +193,9 @@ class AuthController {
       );
       
       console.log(`✅ User ${user.username} logged in successfully`);
-      
+      const friends = await Friendship.getUserFriends(user.id);
+      const friendIds = friends.map(friend => friend.id);
+      await webSocketService.notifyFriendStatusChange(user.id, friendIds,'logged in');
       return {
         success: true,
         data: {
@@ -367,7 +369,9 @@ class AuthController {
       );
 
       console.log(`✅ Successful authentication for user ${user.id}`);
-
+      const friends = await Friendship.getUserFriends(user.id);
+      const friendIds = friends.map(friend => friend.id);
+      await webSocketService.notifyFriendStatusChange(user.id, friendIds,'logged in');
       return {
         success: true,
         data: {
@@ -642,6 +646,9 @@ class AuthController {
       console.log(`User name : ${user.username}`);
       console.log(`User Email : ${user.email}`);
       console.log("-----------------------------------");
+      const friends = await Friendship.getUserFriends(user.id);
+      const friendIds = friends.map(friend => friend.id);
+      await webSocketService.notifyFriendStatusChange(user.id, friendIds,'logged in');
       return {
         success: true,
         data: {
@@ -771,6 +778,9 @@ class AuthController {
       await request.user.updateOnlineStatus(false);
       // 
       await handleUserLogout(request.user.id);
+      const friends = await Friendship.getUserFriends(request.user.id);
+      const friendIds = friends.map(friend => friend.id);
+      await webSocketService.notifyFriendStatusChange(request.user.id, friendIds,'logged out');
       console.log(`User ${request.user.username} logged out`);
       return { 
         success: true, 

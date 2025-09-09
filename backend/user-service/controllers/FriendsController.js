@@ -381,8 +381,8 @@ class FriendsController {
       const changes = await request.user.updateOnlineStatus(isOnline);
       
       const friends = await Friendship.getUserFriends(request.user.id);
-      const friendIds = friends.map(friend => friend.id);
-      await webSocketService.notifyFriendStatusChange(request.user.id, friendIds, isOnline ? 'online' : 'offline');
+      // const friendIds = friends.map(friend => friend.id);
+      // await webSocketService.notifyFriendStatusChange(request.user.id, friendIds, isOnline ? 'online' : 'offline');
       console.log(`User ${request.user.username} is now ${isOnline ? 'online' : 'offline'}`);
       return { 
         success: true, 

@@ -1,4 +1,8 @@
-const fastify = require('fastify')({ logger: true });
+const fastify = require('fastify')({ 
+  logger: true,
+  bodyLimit: 10 * 1024 * 1024,
+});
+
 const { initDatabase, closeDatabase } = require('./config/database');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'pingpong-secret-key-change-in-production';
