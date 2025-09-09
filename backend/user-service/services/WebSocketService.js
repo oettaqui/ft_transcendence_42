@@ -78,27 +78,39 @@ class WebSocketService {
     });
   }
 
-  async notifyFriendRequest(fromUserId, toUserId, fromUserData) {
-    return await this.broadcastToUser(toUserId, 'friend_request_received', {
+  async notifyFriendRequest(fromUserId, toUserId,friendIds, fromUserData) {
+    return await this.broadcastToUsers(friendIds, 'friend_request_received', {
       fromUserId: fromUserId,
       fromUser: fromUserData,
+      id:toUserId,
       message: `${fromUserData.username} sent you a friend request`
     });
   }
 
-  async notifyFriendRequestAccepted(fromUserId, toUserId, toUserData) {
-    return await this.broadcastToUser(fromUserId, 'friend_request_accepted', {
+  async notifyFriendRequestAccepted(fromUserId, toUserId,friendIds, toUserData) {
+    return await this.broadcastToUsers(friendIds, 'friend_request_accepted', {
       toUserId: toUserId,
       toUser: toUserData,
+      id:fromUserId,
       message: `${toUserData.username} accepted your friend request`
     });
   }
 
-  async notifyFriendRequestRejected(fromUserId, toUserId, toUserData) {
-    return await this.broadcastToUser(fromUserId, 'friend_request_rejected', {
+  async notifyFriendRequestRejected(fromUserId, toUserId,friendIds, toUserData) {
+    return await this.broadcastToUsers(friendIds, 'friend_request_rejected', {
       toUserId: toUserId,
       toUser: toUserData,
+      id:fromUserId,
       message: `${toUserData.username} rejected your friend request`
+    });
+  }
+
+  async notifyFriendRequestCanceled(fromUserId, toUserId,friendIds, toUserData) {
+    return await this.broadcastToUsers(friendIds, 'friend_request_canceled', {
+      toUserId: toUserId,
+      toUser: toUserData,
+      id:fromUserId,
+      message: `${toUserData.username} cancel his request`
     });
   }
 

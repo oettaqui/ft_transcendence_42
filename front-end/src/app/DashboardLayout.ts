@@ -386,147 +386,159 @@ private renderFriendActionButtons(user: UserSearch): string {
 
 
 // --- START: SEARCH & FRIEND REQUEST LOGIC ---
-// private setupFriendRequestButtons(): void {
-//     if (!this.searchResultsContainer) return;
 
-//     const addFriendButtons = this.searchResultsContainer.querySelectorAll<HTMLButtonElement>('.add-friend-btn');
-    
-//     addFriendButtons.forEach(button => {
-//         const handleClick = async (event: MouseEvent) => {
-//             event.stopPropagation();
-//             const userId = button.dataset.userId; 
-//             if (userId) {
-//                 console.log("Sending friend request to user ID:", userId);
-//                 button.disabled = true;
-//                 await this.sendFriendRequest(userId, button);
-//             }
-//         };
-        
-//         button.removeEventListener('click', handleClick); 
-//         button.addEventListener('click', handleClick);
-//     });
-// }
 
-// private async sendFriendRequest(userId: string, buttonElement: HTMLButtonElement): Promise<void> {
-//   buttonElement.disabled = true; 
-//   console.log(`My ID: ${this.user?.id}, Sending request to ID: ${userId}`);
-//     try {
-//         const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
-
-//         if (response.ok) {
-//             toast.show('Friend request sent!', { type: 'success' });
-//             buttonElement.innerHTML = `<i class="ti ti-check text-xl lg:text-2xl text-white"></i>`;
-//             buttonElement.classList.remove('hover:bg-[var(--accent)]');
-//         } else {
-//             const errorData = await response.json();
-//             toast.show(`Error: ${errorData.message || 'Could not send request.'}`, { type: 'error' });
-//             buttonElement.disabled = false;
-//         }
-//     } catch (error) {
-//         console.error("Failed to send friend request:", error);
-//         toast.show('An unexpected error occurred.', { type: 'error' });
-//         buttonElement.disabled = false;
-//     }
-// }
-
+private updateUserActionUI(userId: string, state: Partial<UserSearch>): void {
+    const container = this.searchResultsContainer?.querySelector(`[data-container-id="${userId}"]`);
+    if (container) {
+        container.innerHTML = this.renderFriendActionButtons({ id: parseInt(userId, 10), ...state } as UserSearch);
+    }
+}
 
 private setupFriendActionButtons(): void {
     if (!this.searchResultsContainer) return;
 
-    const attachListener = (selector: string, handler: (userId: string, button: HTMLButtonElement) => Promise<void>) => {
-        const buttons = this.searchResultsContainer!.querySelectorAll<HTMLButtonElement>(selector);
-        buttons.forEach(button => {
-            if (button.dataset.listenerAttached) return;
-            button.dataset.listenerAttached = 'true';
+    if (this.searchResultsContainer.dataset.listenerAttached === 'true') return;
+    this.searchResultsContainer.dataset.listenerAttached = 'true';
 
-            button.addEventListener('click', async (event) => {
-                event.stopPropagation();
-                const userId = button.dataset.userId;
-                if (userId) {
-                    button.disabled = true;
-                    await handler(userId, button);
-                }
-            });
-        });
-    };
+    this.searchResultsContainer.addEventListener('click', async (event) => {
+        const target = event.target as HTMLElement;
+        const button = target.closest('button[data-user-id]');
 
-    attachListener('.add-friend-btn', async (userId, button) => {
+        if (!button) return;
+
+        const userId = button.dataset.userId;
+        if (!userId) return;
+
+        button.disabled = true;
+
         try {
-            const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
-            if (response.ok) {
+            if (button.matches('.add-friend-btn')) {
+                await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
                 toast.show('Friend request sent!', { type: 'success' });
-                const container = document.querySelector(`[data-container-id="${userId}"]`);
-                if(container) container.innerHTML = this.renderFriendActionButtons({ sent_flag: true } as UserSearch);
-            } else {
-                const errorData = await response.json();
-                toast.show(`Error: ${errorData.message || 'Could not send request.'}`, { type: 'error' });
-                button.disabled = false;
-            }
-        } catch (error) {
-            console.error("Failed to send friend request:", error);
-            toast.show('An unexpected error occurred.', { type: 'error' });
-            button.disabled = false;
-        }
-    });
+                this.updateUserActionUI(userId, { sent_flag: true });
 
-    attachListener('.accept-btn', async (userId, button) => {
-        try {
-            const response = await this.apiService.post('/friends/accept', { friendId: parseInt(userId, 10) });
-            if (response.ok) {
-                toast.show('Friend request accepted!', { type: 'success' });
-                const container = document.querySelector(`[data-container-id="${userId}"]`);
-                if(container) container.innerHTML = this.renderFriendActionButtons({ is_friend: true } as UserSearch);
-            } else {
-                const errorData = await response.json();
-                toast.show(errorData.error || 'Could not accept request.', { type: 'error' });
-                button.disabled = false;
-            }
-        } catch (error) {
-            console.error('Failed to accept friend request:', error);
-            toast.show('An unexpected network error occurred.', { type: 'error' });
-            button.disabled = false;
-        }
-    });
-
-    attachListener('.decline-btn', async (userId, button) => {
-        try {
-            const response = await this.apiService.post('/friends/decline', { friendId: parseInt(userId, 10) });
-            if (response.ok) {
-                toast.show('Request declined.', { type: 'success' });
-                const container = document.querySelector(`[data-container-id="${userId}"]`);
-                if(container) container.innerHTML = this.renderFriendActionButtons({} as UserSearch);
-            } else {
-                const errorData = await response.json();
-                toast.show(errorData.error || 'Could not decline request.', { type: 'error' });
-                button.disabled = false;
-            }
-        } catch (error) {
-            console.error('Failed to decline friend request:', error);
-            toast.show('An unexpected network error occurred.', { type: 'error' });
-            button.disabled = false;
-        }
-    });
-
-    
-    attachListener('.cancel-btn', async (userId, button) => {
-        try {
-            const response = await this.apiService.delete(`/friends/request/${userId}`);
-            if (response.ok) {
+            } else if (button.matches('.cancel-btn')) {
+                await this.apiService.delete(`/friends/request/${userId}`);
                 toast.show('Request cancelled.', { type: 'success' });
-                const container = document.querySelector(`[data-container-id="${userId}"]`);
-                if(container) container.innerHTML = this.renderFriendActionButtons({} as UserSearch);
-            } else {
-                const errorData = await response.json();
-                toast.show(errorData.error || 'Could not cancel request.', { type: 'error' });
-                button.disabled = false;
+                this.updateUserActionUI(userId, {});
+
+            } else if (button.matches('.accept-btn')) {
+                await this.apiService.post('/friends/accept', { friendId: parseInt(userId, 10) });
+                toast.show('Friend request accepted!', { type: 'success' });
+                this.updateUserActionUI(userId, { is_friend: true });
+
+            } else if (button.matches('.decline-btn')) {
+                await this.apiService.post('/friends/decline', { friendId: parseInt(userId, 10) });
+                toast.show('Request declined.', { type: 'success' });
+                this.updateUserActionUI(userId, {});
             }
         } catch (error) {
-            console.error('Failed to cancel friend request:', error);
-            toast.show('An unexpected network error occurred.', { type: 'error' });
+            console.error('Friend action failed:', error);
+            toast.show(error.message || 'An unexpected error occurred.', { type: 'error' });
             button.disabled = false;
         }
     });
 }
+
+
+// private setupFriendActionButtons(): void {
+//     if (!this.searchResultsContainer) return;
+
+//     const attachListener = (selector: string, handler: (userId: string, button: HTMLButtonElement) => Promise<void>) => {
+//         const buttons = this.searchResultsContainer!.querySelectorAll<HTMLButtonElement>(selector);
+//         buttons.forEach(button => {
+//             if (button.dataset.listenerAttached) return;
+//             button.dataset.listenerAttached = 'true';
+
+//             button.addEventListener('click', async (event) => {
+//                 event.stopPropagation();
+//                 const userId = button.dataset.userId;
+//                 if (userId) {
+//                     button.disabled = true;
+//                     await handler(userId, button);
+//                 }
+//             });
+//         });
+//     };
+
+//     attachListener('.add-friend-btn', async (userId, button) => {
+//         try {
+//             const response = await this.apiService.post('/friends/request', { friendId: parseInt(userId, 10) });
+//             if (response.ok) {
+//                 toast.show('Friend request sent!', { type: 'success' });
+//                 const container = document.querySelector(`[data-container-id="${userId}"]`);
+//                 if(container) container.innerHTML = this.renderFriendActionButtons({ sent_flag: true } as UserSearch);
+//             } else {
+//                 const errorData = await response.json();
+//                 toast.show(`Error: ${errorData.message || 'Could not send request.'}`, { type: 'error' });
+//                 button.disabled = false;
+//             }
+//         } catch (error) {
+//             console.error("Failed to send friend request:", error);
+//             toast.show('An unexpected error occurred.', { type: 'error' });
+//             button.disabled = false;
+//         }
+//     });
+
+//     attachListener('.accept-btn', async (userId, button) => {
+//         try {
+//             const response = await this.apiService.post('/friends/accept', { friendId: parseInt(userId, 10) });
+//             if (response.ok) {
+//                 toast.show('Friend request accepted!', { type: 'success' });
+//                 const container = document.querySelector(`[data-container-id="${userId}"]`);
+//                 if(container) container.innerHTML = this.renderFriendActionButtons({ is_friend: true } as UserSearch);
+//             } else {
+//                 const errorData = await response.json();
+//                 toast.show(errorData.error || 'Could not accept request.', { type: 'error' });
+//                 button.disabled = false;
+//             }
+//         } catch (error) {
+//             console.error('Failed to accept friend request:', error);
+//             toast.show('An unexpected network error occurred.', { type: 'error' });
+//             button.disabled = false;
+//         }
+//     });
+
+//     attachListener('.decline-btn', async (userId, button) => {
+//         try {
+//             const response = await this.apiService.post('/friends/decline', { friendId: parseInt(userId, 10) });
+//             if (response.ok) {
+//                 toast.show('Request declined.', { type: 'success' });
+//                 const container = document.querySelector(`[data-container-id="${userId}"]`);
+//                 if(container) container.innerHTML = this.renderFriendActionButtons({} as UserSearch);
+//             } else {
+//                 const errorData = await response.json();
+//                 toast.show(errorData.error || 'Could not decline request.', { type: 'error' });
+//                 button.disabled = false;
+//             }
+//         } catch (error) {
+//             console.error('Failed to decline friend request:', error);
+//             toast.show('An unexpected network error occurred.', { type: 'error' });
+//             button.disabled = false;
+//         }
+//     });
+
+    
+//     attachListener('.cancel-btn', async (userId, button) => {
+//         try {
+//             const response = await this.apiService.delete(`/friends/request/${userId}`);
+//             if (response.ok) {
+//                 toast.show('Request cancelled.', { type: 'success' });
+//                 const container = document.querySelector(`[data-container-id="${userId}"]`);
+//                 if(container) container.innerHTML = this.renderFriendActionButtons({} as UserSearch);
+//             } else {
+//                 const errorData = await response.json();
+//                 toast.show(errorData.error || 'Could not cancel request.', { type: 'error' });
+//                 button.disabled = false;
+//             }
+//         } catch (error) {
+//             console.error('Failed to cancel friend request:', error);
+//             toast.show('An unexpected network error occurred.', { type: 'error' });
+//             button.disabled = false;
+//         }
+//     });
+// }
 
     // --- END: SEARCH & FRIEND REQUEST LOGIC ---
 

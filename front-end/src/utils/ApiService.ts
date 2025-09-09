@@ -64,5 +64,29 @@ export class ApiService {
     }
 
 
+    async put(endpoint: string, body: object): Promise<Response> {
+        const token = localStorage.getItem('token');
+
+        const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            // Try to parse the error message from the backend
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error: ${response.status}`);
+        }
+        
+        console.log("Response Put => ", response);
+        return response;
+    }
+
+
+
 
 }

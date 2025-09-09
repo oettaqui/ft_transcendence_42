@@ -700,7 +700,11 @@ class AuthController {
     console.log("============ updateProfile process begin ==========");
     
     try {
+
       const changes = await request.user.updateProfile({ firstName, lastName, avatar });
+      // console.log("==========2=========");
+      // console.log(avatar);
+      // console.log("===========2========");
       
       if (changes === 0) {
         return reply.code(404).send({ success: false, error: 'User not found' });

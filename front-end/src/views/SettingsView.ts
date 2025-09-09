@@ -108,18 +108,11 @@ export class SettingsView extends View{
                             <header class="relative w-full">
                                 <div class="w-full h-[100px] md:h-[130px] xl:h-[150px] ${bgUrl} bg-cover object-cover rounded-t-2xl"> </div>
                                 
-                                <div class="absolute left-1/2 top-12 md:top-15 xl:top-17 transform -translate-x-1/2 cursor-pointer profile-image-container">
+                                <div class="absolute left-1/2 top-12 md:top-15 xl:top-17 transform -translate-x-1/2 profile-image-container">
                                     <div class="relative">
                                         <img style="border: 3px solid ${colorTheme}" class="w-[100px] md:w-[120px] xl:w-[140px] h-[100px] md:h-[120px] xl:h-[140px] rounded-full object-cover  shadow-xl" 
                                             src="${this.user?.avatar}" 
                                             alt="Profile"/>
-                                        <div class="upload-overlay absolute inset-0 rounded-full flex items-center justify-center">
-                                            <svg class="w-6 md:w-7 xl:w-8 h-6 md:h-7 xl:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            </svg>
-                                        </div>
-                                        <input type="file" id="profileImage" class="hidden" accept="image/*">
                                     </div>
                                 </div>
                             </header>
@@ -135,24 +128,21 @@ export class SettingsView extends View{
                         </div>
 
                         <!-- Profile Form -->
+                        
+
                         <div id="profile-form" class="max-h-[300px] !px-4 md:!px-6 xl:!px-8 !pb-4 !mt-2 overflow-y-auto">
                             <div class="max-w-2xl !mx-auto">
                                 <div class="glass-effect rounded-2xl border border-white/10 !p-3 md:!p-4 xl:!p-5">
-                                    <form class="!space-y-4 md:!space-y-5 xl:!space-y-6">
-                                        <!-- First Name and Last Name -->
+                                    
+                                    <form id="profile-update-form" class="!space-y-4 md:!space-y-5 xl:!space-y-6">
+                                        
                                         <div class="grid grid-cols-1 md:grid-cols-2 !gap-3 md:!gap-4">
-                                            <!-- First Name -->
                                             <div class="group">
                                                 <label for="firstName" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2 transition-colors">
                                                     First Name
                                                 </label>
                                                 <div class="relative">
-                                                    <input type="text" 
-                                                        id="firstName" 
-                                                        name="firstName" 
-                                                        value="Oussama"
-                                                        class="text-[11px] md:text-[12px] xl:text-[13px] w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-white/30"
-                                                        placeholder="Enter your first name">
+                                                    <input type="text" id="firstName" name="firstName" value="${this.user?.firstName || ''}" class="text-[11px] md:text-[12px] xl:text-[13px] w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-white/30" placeholder="Enter your first name">
                                                     <div class="absolute inset-y-0 right-0 flex items-center !pr-2 md:!pr-3">
                                                         <svg class="w-4 md:w-5 h-4 md:h-5 text-gray-400 group-focus-within:text-[var(--accent)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -161,18 +151,12 @@ export class SettingsView extends View{
                                                 </div>
                                             </div>
 
-                                            <!-- Last Name -->
                                             <div class="group">
                                                 <label for="lastName" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2 transition-colors">
                                                     Last Name
                                                 </label>
                                                 <div class="relative">
-                                                    <input type="text" 
-                                                        id="lastName" 
-                                                        name="lastName" 
-                                                        value="Ettaqui"
-                                                        class="text-[11px] md:text-[12px] xl:text-[13px] w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-white/30"
-                                                        placeholder="Enter your last name">
+                                                    <input type="text" id="lastName" name="lastName" value="${this.user?.lastName || ''}" class="text-[11px] md:text-[12px] xl:text-[13px] w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-white/30" placeholder="Enter your last name">
                                                     <div class="absolute inset-y-0 right-0 flex items-center !pr-2 md:!pr-3">
                                                         <svg class="w-4 md:w-5 h-4 md:h-5 text-gray-400 group-focus-within:text-[var(--accent)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -182,17 +166,13 @@ export class SettingsView extends View{
                                             </div>
                                         </div>
 
-                                        <!-- Profile Image Upload -->
                                         <div class="group">
                                             <label class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
                                                 Profile Image
                                             </label>
                                             <div class="flex items-center !space-x-3 md:!space-x-4">
                                                 <div class="flex-shrink-0">
-                                                    <img class="w-12 md:w-14 xl:w-16 h-12 md:h-14 xl:h-16 rounded-full object-cover border-2 border-white/20" 
-                                                        src="${this.user?.avatar}" 
-                                                        alt="Current profile" 
-                                                        id="previewImage">
+                                                    <img class="w-12 md:w-14 xl:w-16 h-12 md:h-14 xl:h-16 rounded-full object-cover border-2 border-white/20" src="${this.user?.avatar}" alt="Current profile" id="previewImage">
                                                 </div>
                                                 <div class="flex-1">
                                                     <label for="imageUpload" class="cursor-pointer">
@@ -208,19 +188,16 @@ export class SettingsView extends View{
                                                             </div>
                                                         </div>
                                                     </label>
-                                                    <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                                                    <input type="file" id="imageUpload" name="avatar" class="hidden" accept="image/*">
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <!-- Action Buttons -->
-                                        <div class="flex items-center justify-end !space-x-3 md:!space-x-4 !pt-4 md:!pt-5 xl:!pt-6 border-t border-white/10 !gap-3 md:!gap-4 xl:!gap-5">
-                                            <button type="button" 
-                                                    class="text-[11px] md:text-[12px] xl:text-sm !px-4 md:!px-5 xl:!px-6 !py-2 md:!py-3 cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
+                                        <div class="flex items-center justify-end !space-x-3 md:!space-x-4 !pt-4 md:!pt-5 xl:!pt-6 border-t border-white/10">
+                                            <button type="button" class="text-[11px] md:text-[12px] xl:text-sm !px-4 md:!px-5 xl:!px-6 !py-2 md:!py-3 cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
                                                 Cancel
                                             </button>
-                                            <button type="submit" 
-                                                    class="text-[11px] md:text-[12px] xl:text-sm !px-6 md:!px-7 xl:!px-8 !py-2 md:!py-3 bg-[var(--accent)] cursor-pointer text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                            <button type="submit" id="save-profile-btn" class="text-[11px] md:text-[12px] xl:text-sm !px-6 md:!px-7 xl:!px-8 !py-2 md:!py-3 bg-[var(--accent)] cursor-pointer text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                                                 Save Changes
                                             </button>
                                         </div>
@@ -241,19 +218,17 @@ export class SettingsView extends View{
                                         Change Password
                                     </h3>
                                     <form id="form-update-password" class="!space-y-4 md:!space-y-5 xl:!space-y-6">
-                                        <!-- First two inputs in one row -->
-                                        <div class="grid grid-cols-1 md:grid-cols-2 !gap-3 md:!gap-4">
-                                            <!-- Current Password -->
-                                            <div class="group">
-                                                <label for="currentPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
-                                                    Current Password
-                                                </label>
-                                                <input type="password" id="currentPassword" name="currentPassword" required
-                                                    class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
-                                                    placeholder="Enter current password" >
-                                            </div>
 
-                                            <!-- New Password -->
+                                        <div class="group">
+                                            <label for="currentPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
+                                                Current Password
+                                            </label>
+                                            <input type="password" id="currentPassword" name="currentPassword" required
+                                                class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
+                                                placeholder="Enter current password" >
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 !gap-3 md:!gap-4">
                                             <div class="group">
                                                 <label for="newPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
                                                     New Password
@@ -262,25 +237,23 @@ export class SettingsView extends View{
                                                     class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
                                                     placeholder="Enter new password">
                                             </div>
+
+                                            <div class="group">
+                                                <label for="confirmPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
+                                                    Confirm Password
+                                                </label>
+                                                <input type="password" id="confirmPassword" name="confirmPassword" required
+                                                    class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
+                                                    placeholder="Confirm new password" >
+                                            </div>
                                         </div>
 
-                                        <!-- Confirm Password -->
-                                        <div class="group">
-                                            <label for="confirmPassword" class="block text-[11px] md:text-[12px] xl:text-sm font-medium text-gray-300 !mb-1 md:!mb-2">
-                                                Confirm Password
-                                            </label>
-                                            <input type="password" id="confirmPassword" name="confirmPassword" required
-                                                class="placeholder:text-[10px] md:placeholder:text-[11px] xl:placeholder:text-xs w-full !px-3 md:!px-4 !py-2 md:!py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[var(--accent)]"
-                                                placeholder="Confirm new password" >
-                                        </div>
-
-                                        <!-- Action Buttons -->
                                         <div class="flex justify-end !gap-3 md:!gap-4 !pt-4 md:!pt-5 xl:!pt-6 border-t border-white/10">
                                             <button type="button"
                                                 class="!px-4 md:!px-5 xl:!px-6 !py-2 md:!py-3 text-[11px] md:text-[12px] xl:text-[14px] cursor-pointer text-gray-300 bg-white/5 border border-white/20 rounded-xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 font-medium">
                                                 Cancel
                                             </button>
-                                            <button id="update-password" type="button" id="save-board-btn"
+                                            <button id="update-password" type="button"
                                                 class="!px-6 md:!px-7 xl:!px-8 !py-2 md:!py-3 bg-[var(--accent)] cursor-pointer text-[11px] md:text-[12px] xl:text-[14px] text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                                                 Save Changes
                                             </button>
@@ -386,7 +359,7 @@ export class SettingsView extends View{
                                                         Disable
                                                     </button>
                                                 </div>
-                                                </div>
+                                            </div>
                                             <div id="form-disable-2fa" class="hidden">
                                                 <p class="text-red-400"> Enter your password to disable 2FA. This will make your account less secure.</p>
                                                 <form id="2fForm">
@@ -524,14 +497,12 @@ export class SettingsView extends View{
 
     protected onMount(): void {
         this.handleClickProfile();
-        const profileImageInput = document.querySelector<HTMLInputElement>('#profileImage');
         const imageUploadInput = document.querySelector<HTMLInputElement>('#imageUpload');
 
-        if (profileImageInput && imageUploadInput) {
-            this.handleImageUpload(profileImageInput, 'previewImage');
+        if (imageUploadInput) {
             this.handleImageUpload(imageUploadInput, 'previewImage');
         } else {
-            console.error("One or more input elements were not found!");
+            console.log("One or more input elements were not found!");
         }
         this.setupInputEffects();
         this.setupTabToggle();
@@ -540,7 +511,76 @@ export class SettingsView extends View{
         this.setup2fclick();
         this.updatePasswordclick();
         this.setupVerifyEmailbtn();
+
+        this.setupProfileFormSubmit();
     }
+
+    private setupProfileFormSubmit(): void {
+        const profileForm = document.getElementById('profile-update-form') as HTMLFormElement;
+        if (profileForm) {
+            profileForm.addEventListener('submit', (e: Event) => {
+                e.preventDefault(); 
+                this.handleProfileUpdate(profileForm);
+            });
+        }
+    }
+
+    private async handleProfileUpdate(form: HTMLFormElement): Promise<void> {
+        const firstNameInput = form.querySelector('#firstName') as HTMLInputElement;
+        const lastNameInput = form.querySelector('#lastName') as HTMLInputElement;
+        const avatarInput = form.querySelector('#imageUpload') as HTMLInputElement;
+
+        const payload: { firstName: string; lastName: string; avatar?: string } = {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+        };
+        
+        const avatarFile = avatarInput.files?.[0];
+
+        const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+        });
+
+        this.currentLoadingToastId = toast.show('Updating profile...', { type: 'loading', duration: 0 });
+
+        try {
+            if (avatarFile) {
+                payload.avatar = await toBase64(avatarFile);
+            }
+
+            const response = await this.apiService.put('/auth/profile', payload);
+            const result = await response.json(); 
+
+            if (result.success) {
+                toast.dismiss(this.currentLoadingToastId!);
+                toast.show('Profile updated successfully!', { type: 'success' });
+                
+                if (result.data && result.data.user) {
+                    this.user = result.data.user;
+                    document.querySelectorAll<HTMLImageElement>('.profile-image-container img, #previewImage').forEach(img => {
+                        if (this.user?.avatar) img.src = this.user.avatar;
+                        const saveProfileBtn = document.getElementById('save-profile-btn') as HTMLButtonElement;
+                        if (saveProfileBtn) {
+                            this.showSavedFeedback(saveProfileBtn);
+                        }
+                    });
+                }
+            } else {
+                 throw new Error(result.error || 'Failed to update profile.');
+            }
+
+        } catch (error: any) {
+            toast.dismiss(this.currentLoadingToastId!);
+            toast.show(`Error: ${error.message}`, { type: 'error' });
+        }
+        toast.dismiss(this.currentLoadingToastId!);
+    }
+
+
+
     private getFormData<T>(formId: string, fields: (keyof T)[]): T {
         const form = document.getElementById(formId) as HTMLFormElement;
         const formData = new FormData(form);
@@ -648,6 +688,10 @@ export class SettingsView extends View{
                     type: 'success',
                     duration: 3000
                 });
+                const updatePasswordBtn = document.getElementById('update-password') as HTMLButtonElement;
+                if (updatePasswordBtn) {
+                    this.showSavedFeedback(updatePasswordBtn);
+                }
                 this.clearFormInputs('form-update-password', ['currentPassword', 'newPassword', 'confirmPassword']);
             }
         } catch (error) {
@@ -973,6 +1017,22 @@ export class SettingsView extends View{
                 }
             });
         });
+    }
+
+    private showSavedFeedback(button: HTMLButtonElement, originalText: string = 'Save Changes'): void {
+       
+        button.textContent = 'Saved!';
+        button.classList.add('bg-green-600');
+        button.disabled = true;
+
+       
+        setTimeout(() => {
+            if (button) {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600'); 
+                button.disabled = false; 
+            }
+        }, 2000);
     }
 
     protected setupBoardColorSettings(): void {
