@@ -30,13 +30,6 @@ services:
       - auth_data:/app/data
       - ./backend/user-service:/app
       - /app/node_modules
-  chat-service:
-    build:
-      context: ./backend/chat-service
-      dockerfile: Dockerfile
-    container_name: transcendence-chat
-    ports:
-      - "3003:3003"
     environment:
       - NODE_ENV=development
       - PORT=3001
