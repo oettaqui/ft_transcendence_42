@@ -1,0 +1,28 @@
+{
+    "name": "transcendence-chat-service",
+    "version": "1.0.0",
+    "description": "Chat service for transcendence",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "keywords": [
+        "chat",
+        "pong",
+        "fastify",
+        "websocket",
+        "real-time"
+    ],
+    "author": "hibouzid",
+    "license": "MIT",
+    "dependencies": {
+        "fastify": "^4.24.3",
+        "@fastify/websocket": "^8.3.0",
+        "@fastify/jwt": "^7.2.4",
+        "@fastify/cors": "^8.4.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+  }
+}

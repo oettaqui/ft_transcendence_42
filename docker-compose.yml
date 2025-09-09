@@ -38,6 +38,15 @@ services:
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_APP_PASSWORD=${EMAIL_APP_PASSWORD}
       - FRONTEND_URL=${FRONTEND_URL}
+  chat-service:
+    build:
+      context: ./backend/chat-service
+      dockerfile: Dockerfile
+    container_name: transcendence-chat
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./backend/chat-service:/app
     networks:
       - transcendence-network
   frontend:

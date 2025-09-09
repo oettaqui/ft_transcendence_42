@@ -14,3 +14,10 @@ COPY . .
 EXPOSE 3003
 
 
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
+CMD ["node", "server.js"]
