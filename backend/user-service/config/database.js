@@ -116,7 +116,7 @@ const initDatabase = () => {
                   to_user_id INTEGER NOT NULL,
                   status TEXT NOT NULL CHECK(status IN ('pending', 'accepted', 'declined', 'cancelled')),
                   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                  up CREATE TABLE IF NOT EXISTS usedated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                   FOREIGN KEY (from_user_id) REFERENCES users (id) ON DELETE CASCADE,
                   FOREIGN KEY (to_user_id) REFERENCES users (id) ON DELETE CASCADE,
                   UNIQUE(from_user_id, to_user_id)

@@ -975,7 +975,6 @@ private AnimationGoal() {
 
 		
 		this.ctx.beginPath();
-		
 		this.ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
 		this.ctx.shadowBlur = 15;
 		this.ctx.shadowOffsetX = -this.dx * 2;
