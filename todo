@@ -1,0 +1,4 @@
+1- run server on the chat service and bind to it a port , and register the plugins needed.
+2- create the api /health just for check the status of the server is ready to use.
+3- use this api to check if the server runne and display a message
+

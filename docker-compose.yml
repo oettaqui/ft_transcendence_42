@@ -38,6 +38,8 @@ services:
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_APP_PASSWORD=${EMAIL_APP_PASSWORD}
       - FRONTEND_URL=${FRONTEND_URL}
+    networks:
+      - transcendence-network
   chat-service:
     build:
       context: ./backend/chat-service
@@ -47,6 +49,9 @@ services:
       - "3003:3003"
     volumes:
       - ./backend/chat-service:/app
+      - /app/node_modules
+    depends_on:
+        - user-service
     networks:
       - transcendence-network
   frontend:
@@ -70,4 +75,3 @@ volumes:
 networks:
   transcendence-network:
     driver: bridge
-  
