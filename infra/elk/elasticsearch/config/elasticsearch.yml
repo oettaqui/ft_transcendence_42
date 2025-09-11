@@ -1,0 +1,18 @@
+cluster.name: "ft-transcendence-elk"
+node.name: "elasticsearch-node"
+
+# Network settings
+network.host: 0.0.0.0
+http.port: 9200
+
+# Discovery settings for single node
+discovery.type: single-node
+
+# Monitoring settings
+xpack.monitoring.collection.enabled: false
+
+# License settings
+xpack.license.self_generated.type: basic
+
+# Index settings
+action.auto_create_index: "+*"
