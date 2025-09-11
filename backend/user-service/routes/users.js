@@ -6,6 +6,8 @@ async function usersRoutes(fastify, options) {
     preHandler: authenticate 
   }, UserController.getUsers);
 
+  fastify.get('/profile/:id', UserController.getUserProfileById);
+
 }
 
 module.exports = usersRoutes;

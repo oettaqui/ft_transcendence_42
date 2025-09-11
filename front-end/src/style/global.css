@@ -703,3 +703,30 @@ header h1:hover{
 .chat ,.unreaded-message{
     backdrop-filter: blur(24px);
 }
+
+
+
+
+/* new */
+
+
+
+.glass-card {
+    background: rgba(40, 42, 54, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.coalition-gradient-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* New style for the SVG progress ring animation */
+.progress-ring__circle {
+    transition: stroke-dashoffset 0.8s ease-out;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}

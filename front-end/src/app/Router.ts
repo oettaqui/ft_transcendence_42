@@ -54,7 +54,35 @@ export class Router {
         history.replaceState(null, '', currentPath);
       }
 
-      let route = this.routes.find(r => r.path === currentPath);
+      // --- START: MODIFICATION FOR DYNAMIC ROUTES ---
+      let match = null;
+      let params = {};
+
+      for (const route of this.routes) {
+        // Convert route path to a regex: /dashboard/profile/:id -> /^\/dashboard\/profile\/([^\/]+)$/
+        const regex = new RegExp("^" + route.path.replace(/:\w+/g, "([^\\/]+)") + "$");
+        const potentialMatch = currentPath.match(regex);
+
+        if (potentialMatch) {
+          // Get the values from the URL (e.g., ['/dashboard/profile/42', '42'])
+          const values = potentialMatch.slice(1);
+          // Get the keys from the route path (e.g., ['id'])
+          const keys = Array.from(route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
+          
+          // Combine keys and values into a params object: { id: '42' }
+          params = Object.fromEntries(keys.map((key, i) => {
+            return [key, values[i]];
+          }));
+          
+          match = route;
+          break; // Stop searching once a match is found
+        }
+      }
+
+      let route = match;
+      // --- END: MODIFICATION FOR DYNAMIC ROUTES ---
+
+      // let route = this.routes.find(r => r.path === currentPath);
       if (!route) {
         console.warn(`Route not found: ${currentPath}. Redirecting to 404.`);
         route = { path: '/404', view: ErrorView404 };
@@ -65,7 +93,9 @@ export class Router {
           this.currentView.unMount();
       }
       const ViewClass = route.view;
-      this.currentView = new ViewClass();
+      // this.currentView = new ViewClass();
+      console.log("params ==> ", params);
+      this.currentView = new ViewClass(params); 
 
       const allowedDashboardRoutes = [
         "/dashboard",
@@ -74,15 +104,17 @@ export class Router {
         "/dashboard/game/gamewithIA",
         "/dashboard/chat",
         "/dashboard/settings",
-        "/dashboard/profile",
+        // "/dashboard/profile",
         "/dashboard/tournament",
         "/dashboard/analytics",
       ];
+      const isDashboardRoute = allowedDashboardRoutes.includes(currentPath) || currentPath.startsWith('/dashboard/profile/');
       const publicPages = ["/", "/login", "/register"];
 
       const loggedIn = await this.isLoggedIn();
 
-      if (allowedDashboardRoutes.includes(currentPath)) {
+      // if (allowedDashboardRoutes.includes(currentPath)) {
+      if (isDashboardRoute) {
         if (!loggedIn) { this.navigateTo("/login"); return; }
         
 

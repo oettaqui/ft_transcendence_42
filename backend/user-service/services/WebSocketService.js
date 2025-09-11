@@ -86,7 +86,7 @@ class WebSocketService {
       message: `${fromUserData.username} sent you a friend request`
     });
   }
-
+// howa ana
   async notifyFriendRequestAccepted(fromUserId, toUserId,friendIds, toUserData) {
     return await this.broadcastToUsers(friendIds, 'friend_request_accepted', {
       toUserId: toUserId,
@@ -133,9 +133,6 @@ class WebSocketService {
   }
 
   async getUserFriends(userId) {
-    // This should call your friendship model/service
-    // Return array of friend user IDs
-    // You'll implement this based on your Friendship model
     return [];
   }
 }

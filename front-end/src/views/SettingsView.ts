@@ -38,7 +38,7 @@ export class SettingsView extends View{
     private wsListeners: (() => void)[] = [];
     constructor(){
         super();
-        // this.setupWebSocketListeners();
+        this.setupWebSocketListeners();
     }
 
     render(user: User | null) : HTMLElement{
@@ -77,9 +77,9 @@ export class SettingsView extends View{
                         <div class="flex flex-col !gap-4 md:!gap-6 xl:!gap-8 sticky">
                             <!-- Profile Card -->
                             <div class="flex items-center !gap-2 md:!gap-3 !pl-2 md:!pl-4 !py-3 md:!py-4 w-[90%] md:w-[80%] rounded-2xl md:rounded-4xl border border-white/10 bg-[rgba(220,219,219,0.05)]">
-                                <img class="w-[35px] md:w-[45px] xl:w-[50px] h-[35px] md:h-[45px] xl:h-[50px] rounded-full" src="${this.user?.avatar}"/>
+                                <img class="w-[35px] md:w-[45px] xl:w-[50px] h-[35px] md:h-[45px] xl:h-[50px] rounded-full" src="${this.user?.avatar}" id="img-profile"/>
                                 <div class="flex flex-col justify-between">
-                                    <div class="text-[11px] md:text-[13px] xl:text-[14px]">${this.user?.firstName} ${this.user?.lastName}</div>
+                                    <div id="full-name" class="text-[11px] md:text-[13px] xl:text-[14px]">${this.user?.firstName} ${this.user?.lastName}</div>
                                     <div class="text-[9px] md:text-[11px] xl:text-[12px] opacity-50">Account settings</div>
                                 </div>
                             </div>
@@ -529,6 +529,14 @@ export class SettingsView extends View{
         const firstNameInput = form.querySelector('#firstName') as HTMLInputElement;
         const lastNameInput = form.querySelector('#lastName') as HTMLInputElement;
         const avatarInput = form.querySelector('#imageUpload') as HTMLInputElement;
+
+        if(firstNameInput.value.trim() == '' || lastNameInput.value.trim() == '')
+        {
+            if (firstNameInput.value.trim() == '')
+                firstNameInput.value = this.user?.firstName || '';
+            if (lastNameInput.value.trim() == '')
+                 lastNameInput.value = this.user?.lastName || '';
+        }
 
         const payload: { firstName: string; lastName: string; avatar?: string } = {
             firstName: firstNameInput.value,
@@ -1082,17 +1090,51 @@ export class SettingsView extends View{
         if (!boardPreview) return;
         boardPreview.style.background = color;
     }
+    private setupWebSocketListeners(): void {
+        // Profile updates
+      const profileListener = async (data: any) => {
+            if (this.user && data.userId === this.user.id) {
+                // Update user profile display if needed
+                // this.refreshUserDisplay();
+            console.log("ayaaaaah rak alwd 9ahba bdlti profile (dash listener)");
+            try {
+                this.user = await this.fetchUser();
+                this.update_profile_data();
+                console.log("User profile updated successfully");
+            } catch (error) {
+                console.error("Failed to fetch updated user profile:", error);
+            }
+            }
+        };
+        wsService.on('profile_updated', profileListener);
+        this.wsListeners.push(() => wsService.off('profile_updated', profileListener));
+    }
 
-    // private setupWebSocketListeners(): void {
-    //     // Profile updates - refresh user data display
-    //     const profileListener = (data: any) => {
-    //         if (this.user && data.userId === this.user.id) {
-    //             toast.show('password_updated!', { type: 'success' });
-    //             // Update user profile display if needed
-    //             // this.refreshUserDisplay();
-    //         }
-    //     };
-    //     wsService.on('password_updated', profileListener);
-    //     this.wsListeners.push(() => wsService.off('profile_updated', profileListener));
-    // }
+    private async fetchUser(): Promise<User | null> {
+        try {
+            const response = await this.apiService.get<User>("/auth/me");
+            const user = response.data?.user;
+            if (user && user.avatar == null) user.avatar = "../../public/assets/default.jpg";
+            this.user = user;
+            return user;
+        } catch (err) {
+            console.error("Failed to fetch user:", err);
+            return null;
+        }
+    }
+    private update_profile_data(): void
+    {
+        // full-name
+        const imgProfile = document.getElementById("img-profile");
+        const fullName = document.getElementById("full-name");
+        if(imgProfile)
+        {
+            imgProfile.setAttribute('src', `${this.user?.avatar}`);
+        }
+        if(fullName)
+        {
+            fullName.innerHTML = '';
+            fullName.innerHTML = `${this.user?.firstName} ${this.user?.lastName}`;
+        }
+    }
 }

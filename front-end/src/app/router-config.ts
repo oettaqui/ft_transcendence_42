@@ -10,6 +10,7 @@ import { SettingsView } from "../views/SettingsView";
 import { TournamentView } from "../views/TournamentView";
 import { LocalGameView } from "../views/Game/LocalGameView";
 import { GameWithAiView } from "../views/Game/GameWithAiView";
+import { ProfileView } from "../views/ProfileView";
 
 
 export const routes: RouteConfig[] = [
@@ -23,5 +24,6 @@ export const routes: RouteConfig[] = [
   { path: '/dashboard/game/localgame', view: LocalGameView},
   { path: '/dashboard/game/gamewithIA', view: GameWithAiView},
   { path: '/dashboard/settings', view: SettingsView},
-  { path: '/dashboard/tournament', view: TournamentView}
+  { path: '/dashboard/tournament', view: TournamentView},
+  { path: '/dashboard/profile/:id', view: ProfileView }
 ];

@@ -28,4 +28,9 @@ export interface User {
   googleId:number,
   intraId:number,
   stats: UserStats;
+
+
+  is_friend?: boolean;
+  pending_flag?: boolean;
+  sent_flag?: boolean;
 }

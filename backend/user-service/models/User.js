@@ -312,6 +312,7 @@ class User {
         params.push(firstName);
         this.firstName = firstName;
       }
+
       if (lastName !== undefined) {
         updates.push('last_name = ?');
         params.push(lastName);
@@ -407,6 +408,66 @@ class User {
   static async hashPassword(password) {
     return await bcrypt.hash(password, 12);
   }
+
+
+  // static async findProfileById(userId) {
+  //   return new Promise((resolve, reject) => {
+  //   const query = `
+  //     SELECT
+  //       u.id, u.username, u.first_name, u.last_name, u.avatar,
+  //       u.coalition, u.created_at,
+  //       s.games_played, s.games_won, s.games_lost, 
+  //       s.ranking_points, s.user_rank, s.coins, s.exp, s.best_score
+  //     FROM
+  //       users u
+  //     LEFT JOIN
+  //       user_stats s ON u.id = s.user_id
+  //     WHERE
+  //       u.id = ?;
+  //   `;
+  //   db.get(query, [userId], (err, row) => {
+  //     if (err) return reject(err);
+  //     resolve(row || null);
+  //   });
+  // });
+  // }
+
+
+  static async findProfileById(profileUserId, currentUserId) {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT
+        u.id, u.username, u.first_name, u.last_name, u.avatar,
+        u.coalition, u.created_at,
+        s.games_played, s.games_won, s.games_lost,
+        s.ranking_points, s.user_rank, s.coins, s.exp, s.best_score,
+        CASE WHEN f.status = 'accepted' THEN 1 ELSE 0 END as is_friend,
+        CASE WHEN fr_received.status = 'pending' THEN 1 ELSE 0 END as pending_flag,
+        CASE WHEN fr_sent.status = 'pending' THEN 1 ELSE 0 END as sent_flag
+      FROM
+        users u
+      LEFT JOIN user_stats s ON u.id = s.user_id
+      LEFT JOIN friendships f ON f.status = 'accepted' AND 
+        ((f.user1_id = u.id AND f.user2_id = ?) OR (f.user1_id = ? AND f.user2_id = u.id))
+      LEFT JOIN friend_requests fr_sent ON fr_sent.from_user_id = ? AND fr_sent.to_user_id = u.id AND fr_sent.status = 'pending'
+      LEFT JOIN friend_requests fr_received ON fr_received.from_user_id = u.id AND fr_received.to_user_id = ? AND fr_received.status = 'pending'
+      WHERE u.id = ?;
+    `;
+    
+    const params = [currentUserId, currentUserId, currentUserId, currentUserId, profileUserId];
+
+    db.get(query, params, (err, row) => {
+      if (err) {
+        console.error('SQL Error in findProfileById:', err);
+        return reject(err);
+      }
+      resolve(row || null);
+    });
+  });
+}
+
+
+
 
   toJSON() {
     const { password, emailVerificationToken, twoFactorSecret, twoFactorCode, ...userWithoutSensitiveData } = this;

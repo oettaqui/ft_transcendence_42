@@ -8,6 +8,11 @@ export abstract class View {
         event: string;
         handler: EventListener;
     }> = [];
+    protected params: { [key: string]: string };
+    
+    constructor(params: { [key: string]: string } = {}) {
+    this.params = params;
+  }
 
     abstract render(user: User | null):  HTMLElement | null | Promise<HTMLElement | null>;
 
