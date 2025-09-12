@@ -117,7 +117,7 @@ export class DashboardLayout {
 
             <div class="relative hidden md:flex items-center !gap-7">
               <input type="text" class="bg-[var(--secondary)] w-[300px] lg:w-[400px] h-[36px] lg:h-[42px] border border-[var(--accent)] rounded-[8px] !pl-6 !pr-12 focus:outline-none focus:ring-0 focus:ring-[var(--accent)] transition-transform focus:scale-97" placeholder="Search..." aria-label="Search" />
-              <div class="rounded-full w-[38px] h-[38px] lg:w-[38px] lg:h-[38px] flex justify-center items-center absolute right-[5px] top-[2px] hover:bg-[var(--accent)] hover:text-white transition-all cursor-pointer">
+              <div class="rounded-full w-[38px] h-[38px] lg:w-[38px] lg:h-[38px] flex justify-center items-center absolute right-[5px] top-[2px] transition-all ">
                 <i class="ti ti-search text-lg lg:text-[18px]"></i>
               </div>
             </div>
@@ -694,37 +694,50 @@ private setupFriendActionButtons(): void {
     }
 
     private setupSearchBarEvent(): void {
-        if (!this.element) return;
+    if (!this.element) return;
 
-        const searchInput = this.element.querySelector<HTMLInputElement>('input[placeholder="Search..."]');
-        if (!searchInput) return;
+    const searchInput = this.element.querySelector<HTMLInputElement>('input[placeholder="Search..."]');
+    if (!searchInput) return;
 
-        this.searchResultsContainer = document.createElement("div");
-        this.searchResultsContainer.className = `
-            absolute top-full left-0 !mt-2 w-full bg-[var(--secondary)] border border-gray-700 z-50 max-h-[280px] overflow-y-auto
-        `;
-        this.searchResultsContainer.style.display = "none";
-        searchInput.parentElement?.appendChild(this.searchResultsContainer);
+    this.searchResultsContainer = document.createElement("div");
+    this.searchResultsContainer.className = `
+        absolute top-full left-0 !mt-2 w-full bg-[var(--secondary)] border border-gray-700 z-50 max-h-[280px] overflow-y-auto
+    `;
+    this.searchResultsContainer.style.display = "none";
+    searchInput.parentElement?.appendChild(this.searchResultsContainer);
 
-        const inputHandler = (e: Event) => {
-            const value = (e.target as HTMLInputElement).value.trim();
+    const inputHandler = (e: Event) => {
+        const value = (e.target as HTMLInputElement).value.trim();
+        if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
-            if (this.searchTimeout) clearTimeout(this.searchTimeout);
-
-            if (value.length >= 2) {
-                this.searchTimeout = window.setTimeout(() => {
-                    this.fetchUsersSearch(value);
-                }, 300);
-            } else {
-                if (this.searchResultsContainer) {
-                    this.searchResultsContainer.innerHTML = "";
-                    this.searchResultsContainer.style.display = "none";
-                }
+        if (value.length >= 2) {
+            this.searchTimeout = window.setTimeout(() => {
+                this.fetchUsersSearch(value);
+            }, 300);
+        } else {
+            if (this.searchResultsContainer) {
+                this.searchResultsContainer.innerHTML = "";
+                this.searchResultsContainer.style.display = "none";
             }
-        };
+        }
+    };
+    this.addEventListener(searchInput, "input", inputHandler);
 
-        this.addEventListener(searchInput, "input", inputHandler);
-    }
+    const documentClickHandler = (e: Event) => {
+        if (!this.searchResultsContainer) return;
+
+        const target = e.target as Node;
+        
+        const isClickInsideSearch = searchInput.contains(target) || this.searchResultsContainer.contains(target);
+
+
+        if (!isClickInsideSearch) {
+            this.searchResultsContainer.style.display = "none";
+        }
+    };
+
+    this.addEventListener(document, "click", documentClickHandler);
+}
 
     private setupSearchBarSockets(): void {
         if (!this.element) return;

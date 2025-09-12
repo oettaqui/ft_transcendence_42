@@ -10,6 +10,20 @@ type Match = {
   userScore: number; opponentScore: number; result: 'Win' | 'Loss';
 };
 
+type TopPlayer = {
+  rank: number;
+  username:string;
+  avatar: string;
+  score: number;
+};
+
+type GlobalPlayer = {
+    rank: number;
+    username: string;
+    avatar: string;
+    score: number;
+};
+
 export class ProfileView extends View {
   private element: HTMLElement | null = null;
   private userId: string;
@@ -56,11 +70,36 @@ export class ProfileView extends View {
     ];
   }
 
+
+  private async fetchTopPlayers(): Promise<TopPlayer[]> {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return [
+      { rank: 1, username: 'yakhay', avatar: '/public/assets/yakhay.jpeg', score: 2500 },
+      { rank: 2, username: 'oettaqui', avatar: '/public/assets/oettaqui.jpeg', score: 2350 },
+      { rank: 3, username: 'bchokri', avatar: '/public/assets/bchokri.jpeg', score: 2100 },
+    ];
+  }
+
+   // NEW: Fetch data for the global ranking chart
+  private async fetchGlobalRanking(): Promise<GlobalPlayer[]> {
+      await new Promise(resolve => setTimeout(resolve, 600)); // Simulate network delay
+      return [
+        { rank: 1, username: 'yakhay', avatar: '/public/assets/yakhay.jpeg', score: 2500 },
+        { rank: 2, username: 'oettaqui', avatar: '/public/assets/oettaqui.jpeg', score: 2350 },
+        { rank: 3, username: 'bchokri', avatar: '/public/assets/bchokri.jpeg', score: 2100 },
+        { rank: 4, username: 'user_404', avatar: '/public/assets/default.jpg', score: 1980 },
+        { rank: 5, username: 'gamer_x', avatar: '/public/assets/default.jpg', score: 1850 },
+        { rank: 6, username: 'ping_master', avatar: '/public/assets/default.jpg', score: 1700 },
+      ];
+  }
+
   private async fetchAndRenderProfile(): Promise<void> {
     try {
-      const [profileResponse, matchHistory] = await Promise.all([
+      // Fetch top players along with other data
+      const [profileResponse, matchHistory, topPlayers] = await Promise.all([
         this.apiService.get<{ user: User }>(`/users/profile/${this.userId}`),
-        this.fetchMatchHistory() 
+        this.fetchMatchHistory(),
+        this.fetchTopPlayers()
       ]);
       
       this.profileUser = profileResponse.user;
@@ -69,6 +108,20 @@ export class ProfileView extends View {
       
       this.updateDOMWithUserData(this.profileUser);
       this.renderMatchHistory(matchHistory);
+      const colorClasses = {
+        'Bios': 'var(--bios)', 'Freax': 'var(--freax)', 'Commodore': 'var(--commodore)', 'Pandora': 'var(--pandora)'
+      };
+      const colorTheme = colorClasses[this.profileUser.coalition] || '';
+      const isOwnProfile = this.loggedInUser && this.profileUser.id === this.loggedInUser.id;
+
+      if (isOwnProfile) {
+        const topPlayers = await this.fetchTopPlayers();
+        this.renderTopPlayers(topPlayers, colorTheme);
+      } else {
+        const globalRanking = await this.fetchGlobalRanking();
+        this.renderGlobalRanking(globalRanking, colorTheme);
+      }
+      // === END OF LOGIC CHANGE ===
 
     } catch (error) {
       console.error("Failed to fetch profile data:", error);
@@ -96,6 +149,9 @@ export class ProfileView extends View {
     const bgUrl = bgClasses[user.coalition] || '';
     const colorTheme = colorClasses[user.coalition] || '';
     
+
+
+
     this.element.innerHTML = `
       <aside class="w-full h-full lg:w-[67%] flex flex-col !gap-4 !py-4 lg:!pl-4">
         <div class="relative w-full h-[40%]">
@@ -126,37 +182,115 @@ export class ProfileView extends View {
             </div>
         </div>   
         <div class="w-full h-[100%] rounded-2xl lg:rounded-3xl bg-[var(--secondary)] flex flex-col lg:flex-row justify-center items-center !gap-4 lg:!gap-0 !p-4 lg:!p-0">
-            <div style="border-color: ${colorTheme}" class="border rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
+            <div id="chart" style="border-color: ${colorTheme}" class="border rounded-2xl flex flex-col lg:flex-row justify-between items-center w-full lg:w-[50%] !px-3 lg:!px-4 !py-4 lg:!py-6 lg:!ml-15 !gap-2">
                 <canvas id="donutChart" width="200" height="200" class="sm:w-[180px] sm:h-[180px] lg:w-[200px] lg:h-[200px]"></canvas>
                 <div class="flex flex-row lg:flex-col !gap-3 text-center lg:text-left">
                     <div class="flex flex-col"><div class="text-xs lg:text-sm">Balance</div> <div style="color: ${colorTheme}" id="balanceValue" class="text-lg lg:text-2xl"></div></div>
                     <div class="flex flex-col"><div class="text-xs lg:text-sm">Level</div> <div style="color: ${colorTheme}" id="levelValue" class="text-lg lg:text-2xl"></div></div>
                 </div>
             </div>
-            <div class="flex flex-col !gap-2 lg:!mr-10 !p-2 lg:!p-4 w-full lg:w-auto">
-                <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
-                    <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2"><div class="opacity-[0.7] text-[11px] lg:text-[14px]">Matches Played</div><div style="color: ${colorTheme}" id="matchesPlayed" class="text-lg lg:text-2xl"></div></div>
-                    <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2"><div class="opacity-[0.7] text-[11px] lg:text-[14px]">Best Score</div><div style="color: ${colorTheme}" id="bestScore" class="text-lg lg:text-2xl"></div></div>
-                </div>
-                <div class="grid grid-cols-2 lg:flex lg:justify-center lg:items-center !gap-2">
-                    <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2"><div class="opacity-[0.7] text-[11px] lg:text-[14px]">Global Rank</div><div style="color: ${colorTheme}" id="globalRank" class="text-lg lg:text-2xl"></div></div>
-                    <div style="border-color: ${colorTheme}" class="border rounded-2xl w-full sm:w-[120px] lg:w-[140px] h-[100px] lg:h-[125px] flex flex-col justify-center items-center !gap-2"><div class="opacity-[0.7] text-[11px] lg:text-[14px]">Win Rate</div><div style="color: ${colorTheme}" id="winRate" class="text-lg lg:text-2xl"></div></div>
-                </div>
+            <div id="dynamic-ranking-container" class="flex flex-col justify-center items-center w-full lg:w-[50%] h-full !p-4 lg:!ml-4">
+                 <div class="loader"></div>
             </div>
-        </div>
+            <div id="top-players-container" class="w-[80%]"></div>
       </aside>
       <aside id="match-history-container" class="w-full lg:w-[30%] overflow-y-auto overflow-x-hidden rounded-2xl lg:rounded-3xl bg-[var(--secondary)] !p-4 !mr-0 lg:!mr-4 !my-2 lg:!my-4">
         <div class="flex justify-center items-center h-full"><div class="loader"></div></div>
       </aside>
     `;
+
     this.animateProgress();
-    this.chatWinLose(user, colorTheme);
-    this.animateNumber('balanceValue', user.stats.coins);
-    this.animateNumber('levelValue', user.stats.exp, 1000, 2);
-    this.animateNumber('matchesPlayed', user.stats.gamesPlayed);
-    this.animateNumber('bestScore', user.stats.bestScore);
-    this.animateNumber('globalRank', user.stats.userRank);
-    this.animateNumber('winRate', user.stats.winRate, 1000, 1);
+    const isOwnProfile = this.loggedInUser && this.profileUser?.id === this.loggedInUser.id;
+    if (isOwnProfile)
+    {
+      const chart = document.querySelector("#chart");
+      const ranking = document.querySelector("#dynamic-ranking-container");
+      if (chart || ranking) {
+          chart?.classList.add("hidden");
+          ranking?.classList.add("hidden");
+      }
+    }else{
+      const topRank = document.querySelector("#top-players-container");
+      if (topRank)
+          topRank?.classList.add("hidden");
+      this.chatWinLose(user, colorTheme);
+      this.animateNumber('balanceValue', user.stats.coins);
+      this.animateNumber('levelValue', user.stats.exp, 1000, 2);
+
+    }
+  
+  }
+
+
+  // NEW: Renders the scrollable global ranking list
+  private renderGlobalRanking(players: GlobalPlayer[], coalitionColor: string): void {
+      const container = document.getElementById('dynamic-ranking-container');
+      if (!container) return;
+
+      const playersHtml = players.map(player => `
+          <div class="flex items-center justify-between bg-[var(--primary)] rounded-lg !px-2 !py-2 !mb-2 w-full max-w-sm ">
+              <div class="flex items-center !gap-3">
+                  <span style="color: ${coalitionColor}" class="font-bold text-lg w-6 text-center">#${player.rank}</span>
+                  <img src="${player.avatar}" class="w-10 h-10 rounded-full object-cover">
+                  <span class="font-medium text-sm">${player.username}</span>
+              </div>
+              <span class="text-[10px] opacity-80">${player.score}</span>
+          </div>
+      `).join('');
+
+      container.innerHTML = `
+          <h3 class="text-lg font-bold !mb-3 text-center w-full" style="color: ${coalitionColor}">Global Ranking</h3>
+          <div class="flex flex-col items-center w-full h-[220px] overflow-y-auto">
+              ${playersHtml}
+          </div>
+      `;
+  }
+
+  // New method to render the top 3 players as a podium
+  private renderTopPlayers(players: TopPlayer[], coalitionColor: string): void {
+    const container = document.getElementById('top-players-container');
+    if (!container || players.length < 3) {
+      if (container) container.innerHTML = '<p class="text-center text-gray-400">Not enough data for a podium.</p>';
+      return;
+    }
+
+    const [first, second, third] = players;
+
+    container.innerHTML = `
+      <h3 class="text-lg font-bold !mt-6 text-center" style="color: ${coalitionColor}">Top Players</h3>
+      <div class="flex justify-around items-end w-full h-full max-w-[70%] !mx-auto !pt-4 gap-8">
+        
+        <div class="order-2 text-center w-1/3">
+          <div class="flex flex-col items-center relative">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-400 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">2</span>
+            <img src="${second.avatar}" class="w-14 h-14 lg:w-16 lg:h-16 rounded-full object-cover border-4 border-gray-400">
+            <p class="font-bold text-sm truncate !mt-1">${second.username}</p>
+            <p class="text-xs opacity-80" style="color: ${coalitionColor}">${second.score} pts</p>
+          </div>
+          <div class="bg-gray-500/50 !mt-2 h-[60px] rounded-t-lg"></div>
+        </div>
+
+        <div class="order-1 text-center w-1/3">
+          <div class="flex flex-col items-center relative">
+          <span class="absolute -top-4 text-2xl">👑</span>
+            <img src="${first.avatar}" class="w-16 h-16 lg:w-20 lg:h-20 rounded-full object-cover border-4 border-yellow-400">
+            <p class="font-bold text-md truncate !mt-1">${first.username}</p>
+            <p class="text-sm opacity-90" style="color: ${coalitionColor}">${first.score} pts</p>
+          </div>
+          <div class="bg-yellow-500/50 !mt-2 h-[90px] rounded-t-lg"></div>
+        </div>
+        
+        <div class="order-3 text-center w-1/3">
+          <div class="flex flex-col items-center relative">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-400 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">3</span>
+            <img src="${third.avatar}" class="w-12 h-12 lg:w-14 lg:h-14 rounded-full object-cover border-4 border-orange-400">
+            <p class="font-bold text-xs truncate !mt-1">${third.username}</p>
+            <p class="text-xs opacity-70" style="color: ${coalitionColor}">${third.score} pts</p>
+          </div>
+          <div class="bg-orange-500/50 !mt-2 h-[40px] rounded-t-lg"></div>
+        </div>
+      </div>
+    `;
   }
 
   
@@ -182,7 +316,7 @@ export class ProfileView extends View {
           </div>
         `;
     }).join('');
-    container.innerHTML = `<h2 class="text-lg font-bold !mb-4 sticky top-0 bg-[var(--secondary)] !py-2">Match History</h2><div class="flex flex-col">${listHtml}</div>`;
+    container.innerHTML = `<h2 class="text-lg font-bold !mb-4 sticky top-0  text-center !py-2">Match History</h2><div class="flex flex-col">${listHtml}</div>`;
   }
 
   animateProgress(): void {
@@ -209,6 +343,7 @@ export class ProfileView extends View {
     };
     requestAnimationFrame(update);
   }
+
   chatWinLose(user: User, color: string): void {
     const canvas = document.getElementById('donutChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
