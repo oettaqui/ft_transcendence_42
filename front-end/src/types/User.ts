@@ -29,3 +29,5 @@ export interface User {
   intraId:number,
   stats: UserStats;
 }
+
+

@@ -63,6 +63,14 @@ class WebSocketService {
     });
   }
 
+  async notifyNotifCreated(userId) {
+    return await this.broadcastToUser(userId, 'notification_created', {
+      userId: userId,
+      message: 'Notification created'
+    });
+  }
+
+
   async notifyPasswordupdate(userId) {
     return await this.broadcastToUser(userId, 'password_updated', {
       userId: userId,

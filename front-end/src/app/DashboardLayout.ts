@@ -7,7 +7,10 @@ import { ApiService } from "../utils/ApiService";
 import { toast } from "../views/ToastNotification";
 import { User } from "../types/User";
 import { UserSearch } from "../types/UserSearch";
+import { Notification } from "../types/Notification";
 import { wsService } from "../utils/WebSocketService";
+
+
 
 export class DashboardLayout {
     private view: View;
@@ -18,9 +21,13 @@ export class DashboardLayout {
     private readonly API_BASE = "http://localhost:3000/api";
     private apiService = new ApiService(this.API_BASE);
     public user: User | null = null;
+    public notification: Notification[] | null = null;
+    public unread_nofif: number | null = 0;
     private currentLoadingToastId: string | null = null;
     //search
     private searchResultsContainer: HTMLElement | null = null;
+    private notificationContainer: HTMLElement | null = null;
+    private isNotificationDropdownOpen = false;
     private searchTimeout: number | null = null;
 
     private idUser: string | null = null;
@@ -43,7 +50,6 @@ export class DashboardLayout {
             this.setChildView(this.view);
             return;
         }
-
         this.element = await this.render();
         if (!this.element) return;
 
@@ -132,11 +138,22 @@ export class DashboardLayout {
               </div>
 
               <div class="relative flex items-end !gap-4 lg:!gap-8 justify-end">
-                <div class="relative flex justify-center items-center">
-                  <i class="ti ti-bell-filled text-2xl lg:text-[34px] font-light text-gray-300 hover:text-white transition-colors cursor-pointer"></i>
-                  <div class="absolute -top-1 -right-1 bg-red-600 rounded-full text-[9px] lg:text-[10px] w-[16px] h-[16px] lg:w-[19px] lg:h-[19px] flex items-center justify-center text-white font-medium">3</div>
+                <div class="relative flex justify-center items-center" id="notifDropdown">
+                    <div id="notifTrigger" class="cursor-pointer">
+                        <i class="ti ti-bell-filled text-2xl lg:text-[34px] font-light text-gray-300 hover:text-white transition-colors"></i>
+                        <div id="unread_notif" class="absolute -top-1 -right-1 bg-red-600 rounded-full text-[9px] lg:text-[10px] w-[20px] h-[20px] flex items-center justify-center text-white font-medium">${this.unread_nofif}</div>
+                    </div>
+                    <div id="notificationDropdownMenu" class="absolute right-0 top-full !mt-2 w-80 lg:w-96 bg-[var(--secondary)] border border-gray-700 rounded-lg shadow-2xl opacity-0 invisible transform translate-y-2 transition-all duration-200 ease-out z-50">
+                        <div class="!py-2 max-h-80 overflow-y-auto" id="notificationContainer">
+                            <!-- Notifications will be rendered here -->
+                        </div>
+                        <div class="border-t border-gray-700 !px-4 !py-2">
+                            <button id="markAllReadBtn" class="w-full text-center text-xs text-[var(--accent)] hover:text-white transition-colors !py-1">
+                                Mark all as read
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
                 <div class="relative" id="profileDropdown">
                   <div class="profil w-[36px] h-[36px] lg:w-[42px] lg:h-[42px] rounded-full flex justify-center items-center cursor-pointer hover:ring-2  hover:ring-[var(--accent)] transition-all duration-200" id="profileTrigger">
                     <img class="w-[34px] h-[34px] lg:w-[40px] lg:h-[40px] rounded-full object-cover" src=${this.user?.avatar} id="img-profile-dash"/>
@@ -258,59 +275,112 @@ export class DashboardLayout {
         }
     }
 
+    private async fetchNotifications(): Promise<Notification[]> {
+        try {
+            const response = await this.apiService.get<void>("/users/notifications");
+            this.unread_nofif = response.data?.unreadCount;
+            this.updateNotificationCount(); 
+            return response.data?.notifications || [];
+        } catch (err) {
+            console.error("Failed to fetch notifications:", err);
+            return [];
+        }
+    }
 
+private updateNotificationCount(): void {
+    if (!this.element) return;
+    
+    const unreadElement = this.element.querySelector('#unread_notif') as HTMLElement;
+    if (unreadElement) {
+        if(this.unread_nofif)
+        {
+            if(this.unread_nofif > 9)
+            {
+                const subElement = document.createElement('span');
+                if (subElement){
+                    subElement.innerHTML = '+';
+                    subElement.classList.add('text-[16px]');
+                    subElement.classList.add('font-medium');
+                    unreadElement.textContent = "9";
+                    unreadElement.appendChild(subElement);
+                }
+            }
+            else
+                unreadElement.textContent = this.unread_nofif.toString();
+        }
+        if (this.unread_nofif === 0) {
+            unreadElement.style.display = 'none';
+        } else {
+            unreadElement.style.display = 'flex';
+        }
+    }
+}
 
-// private renderSearchResults(users: UserSearch[]): void {
-//     if (!this.searchResultsContainer) return;
+private formatNotificationTime(createdAt: string): string {
+    const now = new Date();
+    const notifTime = new Date(createdAt.replace(' ', 'T') + 'Z');
+    
+    
+    const diffInSeconds = Math.floor((now.getTime() - notifTime.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return 'Just now';
+    
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes} min ago`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+}
 
-//     if (users.length === 0) {
-//         this.searchResultsContainer.innerHTML = `<div class="!py-4 !px-6 text-gray-400 text-sm">No users found</div>`;
-//         this.searchResultsContainer.style.display = "block";
-//         return;
-//     }
+private async renderNotifResults(): Promise<void> {
+    if (!this.notificationContainer) return;
 
-//     this.searchResultsContainer.innerHTML = users.map(user => `
-//       <div class="w-full border-b border-gray-700 last:border-0 !px-3 !py-2 hover:bg-gray-700 transition-colors flex items-center justify-between cursor-pointer">
-      
-//       <a class="flex items-center gap-3 w-full !transform-none !transition-none" href="/dashboard/profile/${user.id}">
-//         <div class="relative">
-//           <img src="${user.avatar || "../../public/assets/default.jpg"}" 
-//                class="w-10 h-10 rounded-full object-cover"/>
-//           ${user.isOnline
-//             ? `<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-800 rounded-full"></span>`
-//             : ""
-//           }
-//         </div>
-//         <div class="flex flex-col">
-//           <span class="!text-white font-semibold hover:!text-white">${user.username}</span>
-//         </div>
-//       </a>
-      
-//       <div>
-//         ${user.is_friend
-          
-//           ? `<button class="message-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
-//                 <i class="ti ti-message text-xl lg:text-2xl"></i>
-//             </button>`
-          
-//           : user.pending_flag || user.sent_flag
-             
-//               ? `<button class="pending-btn !px-3 !py-1 text-xs rounded-md border border-yellow-600 text-gray-400 font-semibold cursor-not-allowed" disabled>
-//                     <i class="ti ti-hourglass-empty text-xl lg:text-2xl"></i>
-//                 </button>`
-      
-//               : `<button class="add-friend-btn !px-3 !py-1 text-xs rounded-md border border-[var(--accent)] text-[var(--accent)] font-semibold hover:bg-[var(--accent)] hover:text-white transition cursor-pointer" data-user-id="${user.id}">
-//                     <i class="ti ti-users-plus text-xl lg:text-2xl"></i>
-//                 </button>`
-//         }
-//       </div>
+    this.notification = await this.fetchNotifications();
 
-//     </div>
-//     `).join("");
+    if (this.notification.length === 0) {
+        this.notificationContainer.innerHTML = `
+            <div class="!py-4 !px-6 text-gray-400 text-sm text-center">
+                <i class="ti ti-bell-off text-2xl mb-2"></i>
+                <div>No this.notification</div>
+            </div>
+        `;
+        return;
+    }
 
-//     this.searchResultsContainer.style.display = "block";
-//     this.setupFriendRequestButtons();
-// }
+    this.notificationContainer.innerHTML = this.notification.map((notif: Notification) => `
+        <div class="notification-item flex items-center !px-3 lg:!px-4 !py-3 text-sm hover:bg-gray-700 transition-colors border-b border-gray-700 last:border-0 cursor-pointer ${!notif.isRead ? 'bg-gray-800' : ''}">
+            <div class="flex items-center gap-3 w-full">
+                <div class="relative flex-shrink-0">
+                    <img src="${notif.friendId_avatar || '../../public/assets/default.jpg'}" class="w-10 h-10 rounded-full object-cover"/>
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center">
+                        ${this.getNotificationIcon(notif.type)}
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-gray-300 text-sm leading-relaxed">${notif.message}</p>
+                    <p class="text-xs text-gray-500 mt-1">${this.formatNotificationTime(notif.createdAt)}</p>
+                </div>
+                ${!notif.isRead ? '<div class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>' : ''}
+            </div>
+        </div>
+    `).join("");
+}
+
+private getNotificationIcon(type: string): string {
+    const iconMap: { [key: string]: string } = {
+        'friend_request': '<i class="ti ti-user-plus text-xs text-blue-400"></i>',
+        'decline_request': '<i class="ti ti-user-minus text-xs text-red-400"></i>',
+        'accept_request': '<i class="ti ti-user-check text-xs text-green-400"></i>',
+        'game_invite': '<i class="ti ti-device-gamepad-2 text-xs text-green-400"></i>',
+        'tournament': '<i class="ti ti-trophy text-xs text-yellow-400"></i>',
+        'achievement': '<i class="ti ti-medal text-xs text-purple-400"></i>',
+        'system': '<i class="ti ti-settings text-xs text-gray-400"></i>'
+    };
+    return iconMap[type] || '<i class="ti ti-bell text-xs text-blue-400"></i>';
+}
 
 
 private renderSearchResults(users: UserSearch[]): void {
@@ -487,7 +557,7 @@ private setupFriendActionButtons(): void {
         const logoutBtn = this.element.querySelector('#logoutBtn') as HTMLButtonElement | null;
 
         if (profileTrigger && dropdownMenu && profileDropdown) {
-            const profileClickHandler = (e: Event) => { e.stopPropagation(); this.toggleDropdown(); };
+            const profileClickHandler = (e: Event) => { e.stopPropagation(); this.toggleDropdown(); this.closeNotificationDropdown();};
             this.addEventListener(profileTrigger, 'click', profileClickHandler);
 
             const documentClickHandler = (e: Event) => {
@@ -674,6 +744,7 @@ private setupFriendActionButtons(): void {
     private setupEventListeners(): void {
         this.setupDropdownEventListeners();
         this.setupSearchBarEvent();
+        this.setupNotificationDropdownEventListeners();
     }
 
     updateSidebarActiveStates(path: string): void {
@@ -912,6 +983,17 @@ private setupFriendActionButtons(): void {
         };
         wsService.on('profile_updated', profileListener);
         this.wsListeners.push(() => wsService.off('profile_updated', profileListener));
+
+        const notificationListener = async (data: any) => {
+            if (this.user && data.userId === this.user.id) {
+            console.log("**********************************");
+            console.log("whed notif ra jatttt)");
+            this.renderNotifResults(); 
+            console.log("**********************************");
+            }
+        };
+        wsService.on('notification_created', notificationListener);
+        this.wsListeners.push(() => wsService.off('notification_created', notificationListener));
     }
 
     private update_profile_data(): void
@@ -921,6 +1003,95 @@ private setupFriendActionButtons(): void {
         if(imgProfile)
         {
             imgProfile.setAttribute('src', `${this.user?.avatar}`);
+        }
+    }
+
+    private setupNotificationDropdownEventListeners(): void {
+        if (!this.element) return;
+
+        const notifTrigger = this.element.querySelector('#notifTrigger') as HTMLElement | null;
+        const notificationDropdownMenu = this.element.querySelector('#notificationDropdownMenu') as HTMLElement | null;
+        const notifDropdown = this.element.querySelector('#notifDropdown') as HTMLElement | null;
+
+        if (notifTrigger && notificationDropdownMenu && notifDropdown) {
+            this.notificationContainer = notificationDropdownMenu.querySelector('div') as HTMLElement;
+            
+            const notifClickHandler = (e: Event) => { 
+                e.stopPropagation(); 
+                this.closeDropdown();
+                this.toggleNotificationDropdown(); 
+            };
+            this.addEventListener(notifTrigger, 'click', notifClickHandler);
+
+            const documentClickHandler = (e: Event) => {
+                if (!notifDropdown.contains(e.target as Node)) this.closeNotificationDropdown();
+            };
+            this.addEventListener(document, 'click', documentClickHandler);
+
+            const keydownHandler = (e: KeyboardEvent) => { 
+                if (e.key === 'Escape') this.closeNotificationDropdown(); 
+            };
+            this.addEventListener(document, 'keydown', keydownHandler);
+
+            const dropdownClickHandler = (e: Event) => { e.stopPropagation(); };
+            this.addEventListener(notificationDropdownMenu, 'click', dropdownClickHandler);
+
+
+            const markAllReadBtn = this.element.querySelector('#markAllReadBtn') as HTMLButtonElement | null;
+            if (markAllReadBtn) {
+            const markAllReadHandler = (e: Event) => {
+                e.stopPropagation();
+                this.markAllNotificationsAsRead();
+            };
+            this.addEventListener(markAllReadBtn, 'click', markAllReadHandler);
+            }
+            this.renderNotifResults(); 
+        }
+    }
+
+    private toggleNotificationDropdown(): void {
+        if (!this.element) return;
+        const dropdownMenu = this.element.querySelector('#notificationDropdownMenu') as HTMLElement | null;
+        if (!dropdownMenu) return;
+        
+        this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+        if (this.isNotificationDropdownOpen) {
+            dropdownMenu.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+            dropdownMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+        } else {
+            dropdownMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+            dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+        }
+    }
+
+    private closeNotificationDropdown(): void {
+        if (!this.element || !this.isNotificationDropdownOpen) return;
+        const dropdownMenu = this.element.querySelector('#notificationDropdownMenu') as HTMLElement | null;
+        if (!dropdownMenu) return;
+        
+        this.isNotificationDropdownOpen = false;
+        dropdownMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+        dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+    }
+
+    private async markAllNotificationsAsRead(): Promise<void> {
+        try {
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                const response = await this.apiService.put('/users/notifications/read-all', {});
+                
+                if (response) {
+                    console.log('All notifications marked as read successfully');
+                    this.unread_nofif = 0;
+                    this.updateNotificationCount();
+                    this.renderNotifResults();
+                }
+            } else {
+                console.log('Something went wrong with marking notifications as read');
+            }
+        } catch (error) {
+            console.log(`Error marking notifications as read: ${error}`);
         }
     }
 }

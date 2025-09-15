@@ -4,11 +4,11 @@ const fs = require('fs');
 
 const dbPath = process.env.DB_PATH || path.join('../data/auth.db', 'auth.db');
 
-const dbDir = path.dirname(dbPath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-  console.log(`📁 Created database directory: ${dbDir}`);
-}
+// const dbDir = path.dirname(dbPath);
+// if (!fs.existsSync(dbDir)) {
+//   fs.mkdirSync(dbDir, { recursive: true });
+//   console.log(`📁 Created database directory: ${dbDir}`);
+// }
 
 console.log(`🗄️  Database path: ${dbPath}`);
 
@@ -123,20 +123,54 @@ const initDatabase = () => {
                 )
               `, (err) => {
                 if (err) return reject(err);
-                db.run('CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id)', (err) => {
-                  if (err) console.error('Error creating google_id index:', err);
-                });
                 
-                db.run('CREATE INDEX IF NOT EXISTS idx_users_intra_id ON users(intra_id)', (err) => {
-                  if (err) console.error('Error creating intra_id index:', err);
-                });
+                // Create simple notifications table
+                db.run(`
+                  CREATE TABLE IF NOT EXISTS notifications (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    friend_id INTEGER NOT NULL,
+                    message TEXT NOT NULL,
+                    type TEXT NOT NULL,
+                    is_read BOOLEAN DEFAULT FALSE,
+                    read_at DATETIME,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+                    FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
+                  )
+                `, (err) => {
+                  if (err) return reject(err);
                 
-                db.run('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)', (err) => {
-                  if (err) console.error('Error creating email index:', err);
+                  // Create indexes for better performance
+                  db.run('CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id)', (err) => {
+                    if (err) console.error('Error creating google_id index:', err);
+                  });
+                  
+                  db.run('CREATE INDEX IF NOT EXISTS idx_users_intra_id ON users(intra_id)', (err) => {
+                    if (err) console.error('Error creating intra_id index:', err);
+                  });
+                  
+                  db.run('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)', (err) => {
+                    if (err) console.error('Error creating email index:', err);
+                  });
+                  
+                  // Notifications indexes
+                  db.run('CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id)', (err) => {
+                    if (err) console.error('Error creating notifications user_id index:', err);
+                  });
+                  
+                  db.run('CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(is_read)', (err) => {
+                    if (err) console.error('Error creating notifications is_read index:', err);
+                  });
+                  
+                  db.run('CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at)', (err) => {
+                    if (err) console.error('Error creating notifications created_at index:', err);
+                  });
+                  
+                  console.log('✅ Auth Service database initialized successfully with Google & Intra OAuth, email verification, 2FA support, and simple notifications system');
+                  resolve();
                 });
-                
-                console.log('✅ Auth Service database initialized successfully with Google & Intra OAuth, email verification and 2FA support');
-                resolve();
               });
             });
           });

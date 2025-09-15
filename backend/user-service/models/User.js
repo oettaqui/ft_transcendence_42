@@ -409,6 +409,190 @@ class User {
     return await bcrypt.hash(password, 12);
   }
 
+  // ========================================
+  // NOTIFICATION METHODS FOR USER MODEL
+  // ========================================
+
+  // Get all notifications for a user
+  static async getNotifications(userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT 
+          id,
+          user_id,
+          friend_id,
+          message,
+          type,
+          is_read,
+          read_at,
+          created_at,
+          updated_at
+        FROM notifications 
+        WHERE user_id = ? 
+        ORDER BY created_at DESC
+      `;
+      
+      db.all(query, [userId], (err, rows) => {
+        if (err) {
+          console.error('Error getting notifications:', err);
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
+
+  // Get only unread notifications for a user
+  static async getUnreadNotifications(userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT 
+          id,
+          user_id,
+          friend_id,
+          message,
+          type,
+          is_read,
+          read_at,
+          created_at,
+          updated_at
+        FROM notifications 
+        WHERE user_id = ? AND is_read = FALSE 
+        ORDER BY created_at DESC
+      `;
+      
+      db.all(query, [userId], (err, rows) => {
+        if (err) {
+          console.error('Error getting unread notifications:', err);
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
+
+  // Create a new notification for a user
+  static async createNotification(userId, message,friend_id,type) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        INSERT INTO notifications (user_id, friend_id, message, type) 
+        VALUES (?, ?, ?, ?)
+      `;
+      
+      db.run(query, [userId,friend_id, message, type], function(err) {
+        if (err) {
+          console.error('Error creating notification:', err);
+          reject(err);
+        } else {
+          // Return the created notification
+          const getQuery = `
+            SELECT 
+              id,
+              user_id,
+              friend_id,
+              message,
+              type,
+              is_read,
+              read_at,
+              created_at,
+              updated_at
+            FROM notifications 
+            WHERE id = ?
+          `;
+          
+          db.get(getQuery, [this.lastID], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        }
+      });
+    });
+  }
+
+  // Mark a specific notification as read
+  static async markNotificationAsRead(notificationId, userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        UPDATE notifications 
+        SET is_read = TRUE, read_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = ? AND user_id = ?
+      `;
+      
+      db.run(query, [notificationId, userId], function(err) {
+        if (err) {
+          console.error('Error marking notification as read:', err);
+          reject(err);
+        } else {
+          resolve(this.changes > 0);
+        }
+      });
+    });
+  }
+
+  // Mark all notifications as read for a user
+  static async markAllNotificationsAsRead(userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        UPDATE notifications 
+        SET is_read = TRUE, read_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP 
+        WHERE user_id = ? AND is_read = FALSE
+      `;
+      
+      db.run(query, [userId], function(err) {
+        if (err) {
+          console.error('Error marking all notifications as read:', err);
+          reject(err);
+        } else {
+          resolve(this.changes);
+        }
+      });
+    });
+  }
+
+  // Get count of unread notifications for a user
+  static async getUnreadNotificationCount(userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT COUNT(*) as count 
+        FROM notifications 
+        WHERE user_id = ? AND is_read = FALSE
+      `;
+      
+      db.get(query, [userId], (err, row) => {
+        if (err) {
+          console.error('Error getting unread count:', err);
+          reject(err);
+        } else {
+          resolve(row.count);
+        }
+      });
+    });
+  }
+
+  // Delete a notification
+  static async deleteNotification(notificationId, userId) {
+    return new Promise((resolve, reject) => {
+      const query = `
+        DELETE FROM notifications 
+        WHERE id = ? AND user_id = ?
+      `;
+      
+      db.run(query, [notificationId, userId], function(err) {
+        if (err) {
+          console.error('Error deleting notification:', err);
+          reject(err);
+        } else {
+          resolve(this.changes > 0);
+        }
+      });
+    });
+  }
+
   toJSON() {
     const { password, emailVerificationToken, twoFactorSecret, twoFactorCode, ...userWithoutSensitiveData } = this;
     return {

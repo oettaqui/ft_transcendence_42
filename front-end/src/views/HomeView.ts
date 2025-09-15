@@ -7,6 +7,19 @@ import { User } from "../types/User";
 import { toast } from "../views/ToastNotification";
 import { wsService } from "../utils/WebSocketService";
 
+interface ApiResponse {
+    success?: boolean;
+    requiresTwoFactor?: boolean;
+    data?: {
+        token: string;
+        user?: any;
+        authUrl?: string;
+        state?: string;
+    };
+    message?: string;
+    error?: string;
+}
+
 export class HomeView extends View{
     private API_BASE = 'http://localhost:3000/api';
     private currentTab: string = 'all';
@@ -754,6 +767,7 @@ chatWinLose() {
             if (this.user && data.id === this.user.id) {
                 console.log("============== user with notif ============");
                 console.log(`${data.message}`);
+                this.addNotification(data.message,data.fromUserId,"friend_request");
                 console.log("==========================");
                 this.friendsData = this.getStaticFriendsData();
                 this.setupTabFilteringActive();
@@ -775,6 +789,7 @@ chatWinLose() {
             if (this.user && data.id === this.user.id) {
                 console.log("============== user with notif ============");
                 console.log(`${data.message}`);
+                this.addNotification(data.message,data.toUserId,"decline_request");
                 console.log("==========================");
                 this.friendsData = this.getStaticFriendsData();
                 this.setupTabFilteringActive();
@@ -796,6 +811,7 @@ chatWinLose() {
             if (this.user && data.id === this.user.id) {
                 console.log("============== user with notif ============");
                 console.log(`${data.message}`);
+                this.addNotification(data.message,data.toUserId,"Accept_request");
                 console.log("==========================");
                 this.friendsData = this.getStaticFriendsData();
                 this.setupTabFilteringActive();
@@ -843,6 +859,56 @@ chatWinLose() {
         };
         wsService.on('friend_status_changed', FriendLogoutlListiner);
         this.wsListeners.push(() => wsService.off('friend_status_changed', FriendLogoutlListiner));
+    }
+
+        private async addNotification(msg : string, id:number,type_param:string): Promise<void> {
+        try {
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                const response = await this.apiCall('/users/notifications', {
+                    method: 'POST',
+                    body: JSON.stringify({ user_id: this.user?.id,message:msg,friend_id:id,type:type_param})
+                });
+                
+                if (response) {
+                    console.log('the notification created successfully');
+                }
+            } else {
+                console.log('somting go wrong with the creation of the notification');
+            }
+        } catch (error) {
+            console.log(`Error1: ${error}`);
+        }
+    }
+
+    private async apiCall(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {
+        const token = localStorage.getItem('token');
+        const config: RequestInit = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            },
+            ...options
+        };
+
+        try {
+            const response = await fetch(`${this.API_BASE}${endpoint}`, config);
+
+            if (response.status === 401) {
+                throw new Error('Invalid data');
+            }
+
+            const data = await response.json();
+
+            if (!response.ok && !data.requiresTwoFactor) {
+                throw new Error(data.error || 'Something went wrong');
+            }
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
     }
 
 };
