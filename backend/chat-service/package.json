@@ -17,12 +17,13 @@
     "author": "hibouzid",
     "license": "MIT",
     "dependencies": {
-        "fastify": "^4.24.3",
-        "@fastify/websocket": "^8.3.0",
+        "@fastify/cors": "^8.4.0",
         "@fastify/jwt": "^7.2.4",
-        "@fastify/cors": "^8.4.0"
+        "@fastify/websocket": "^8.3.0",
+        "fastify": "^4.24.3",
+        "sqlite3": "^5.1.7"
     },
     "devDependencies": {
         "nodemon": "^3.0.1"
-  }
+    }
 }

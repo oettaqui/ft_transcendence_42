@@ -6,8 +6,13 @@ RUN apk add --no-cache wget
 
 COPY package.json .
 
+RUN mkdir -p /app/data && chmod 755 /app/data
+
+
 RUN npm cache clean --force && \
-	npm install --omit=dev --no-optional
+npm install --omit=dev --no-optional
+
+RUN npm install
 
 COPY . .
 
@@ -20,4 +25,4 @@ RUN addgroup -g 1001 -S nodejs && \
 
 USER nodejs
 
-CMD ["node", "server.js"]
+CMD ["npm", "run", "dev"]

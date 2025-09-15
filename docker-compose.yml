@@ -28,6 +28,7 @@ services:
       - "3001:3001"
     volumes:
       - auth_data:/app/data
+      - ./backend/data:/app/data
       - ./backend/user-service:/app
       - /app/node_modules
     environment:
@@ -50,6 +51,7 @@ services:
     volumes:
       - ./backend/chat-service:/app
       - /app/node_modules
+      - ./backend/data:/app/data
     depends_on:
         - user-service
     networks:
