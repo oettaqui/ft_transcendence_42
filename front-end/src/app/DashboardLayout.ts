@@ -902,12 +902,13 @@ private setupFriendActionButtons(): void {
                 this.updateUserActionUI(data.toUserId, {});
             }
             else
-            {
-                console.log("============== user with no notif ============");
-                console.log(`${data.message}`);
-                console.log("==========================");
-                this.setupSearchBarSockets();
-                this.updateUserActionUI(data.id, {});
+                {
+                    console.log("============== user with no notif ============");
+                    console.log(`${data.message}`);
+                    console.log("==========================");
+                    this.setupSearchBarSockets();
+                    this.updateUserActionUI(data.id, {});
+                    this.renderNotifResults(); 
             }
         };
         wsService.on('friend_request_rejected', FriendDeclineListiner);
@@ -943,6 +944,7 @@ private setupFriendActionButtons(): void {
                 console.log("==========================");
                 this.setupSearchBarSockets();
                 this.updateUserActionUI(data.toUserId, {});
+                this.renderNotifResults(); 
             }
             else
             {

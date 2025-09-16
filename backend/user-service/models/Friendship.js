@@ -81,6 +81,17 @@ class Friendship {
   }
 
   static async declineRequest(userId, friendId) {
+    // return new Promise((resolve, reject) => {
+    //   db.run(
+    //     `DELETE FROM friend_requests 
+    //     WHERE from_user_id = ? AND to_user_id = ? AND status = 'pending'`,
+    //     [friendId, userId],
+    //     function(err) {
+    //       if (err) return reject(err);
+    //       resolve(this.changes);
+    //     }
+    //   );
+    // });
     return new Promise((resolve, reject) => {
       db.run(
         `DELETE FROM friend_requests 
@@ -88,7 +99,21 @@ class Friendship {
         [friendId, userId],
         function(err) {
           if (err) return reject(err);
-          resolve(this.changes);
+          
+          const friendRequestChanges = this.changes;
+          
+          db.run(
+            `DELETE FROM notifications 
+            WHERE user_id = ? AND friend_id = ? AND type = 'friend_request'`,
+            [userId, friendId],
+            function(err) {
+              if (err) return reject(err);
+              resolve({
+                friendRequestsDeleted: friendRequestChanges,
+                notificationsDeleted: this.changes
+              });
+            }
+          );
         }
       );
     });
@@ -102,7 +127,21 @@ static async cancelRequest(userId, friendId) {
       [userId, friendId],
       function(err) {
         if (err) return reject(err);
-        resolve(this.changes);
+        
+        const friendRequestChanges = this.changes;
+        
+        db.run(
+          `DELETE FROM notifications 
+           WHERE user_id = ? AND friend_id = ? AND type = 'friend_request'`,
+          [friendId, userId],
+          function(err) {
+            if (err) return reject(err);
+            resolve({
+              friendRequestsDeleted: friendRequestChanges,
+              notificationsDeleted: this.changes
+            });
+          }
+        );
       }
     );
   });
